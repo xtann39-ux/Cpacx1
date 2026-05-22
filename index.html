@@ -27,11 +27,10 @@
         .tab-content { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
         .tab-content.active { display: block; opacity: 1; transform: translateY(0); }
         
-        /* Hide Scrollbar for horizontal lists */
+        /* Hide Scrollbar */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* General Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -40,10 +39,8 @@
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
-        /* Custom Leaflet Map styling to fit UI */
         .leaflet-container { font-family: 'Prompt', sans-serif; z-index: 10; }
         
-        /* Focus styles for inputs */
         .modern-input {
             background-color: #f1f5f9;
             border: 1px solid transparent;
@@ -55,390 +52,460 @@
             box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
             outline: none;
         }
+
+        /* Styles สำหรับเวลาสั่งพิมพ์ PDF เท่านั้น */
+        @media print {
+            @page { margin: 10mm; size: A4 portrait; }
+            body { background-color: white !important; }
+            .print\:hidden { display: none !important; }
+            .print\:block { display: block !important; }
+            #printable-document {
+                position: absolute;
+                left: 0; top: 0;
+                width: 100%;
+                background: white;
+                color: black;
+            }
+        }
     </style>
 </head>
 <body class="text-slate-800 antialiased pb-28 md:pb-12 selection:bg-emerald-100 selection:text-emerald-900 flex flex-col min-h-screen">
 
-    <!-- App Header (Fixed) -->
-    <header class="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-xl border-b border-slate-200/60 shadow-sm">
-        <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shadow-md">
-                    <i data-lucide="truck" class="w-5 h-5"></i>
-                </div>
-                <div class="flex flex-col">
-                    <h1 class="text-lg font-bold tracking-tight text-slate-900 leading-none mt-1">ProConcrete <span class="text-emerald-600">Eco</span></h1>
-                    <span class="text-[10px] font-medium text-slate-500">Low Carbon Ready-Mixed</span>
-                </div>
-            </div>
-            <div class="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 border border-emerald-100">
-                <span class="relative flex h-2 w-2">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                เปิดรับคิว
-            </div>
-        </div>
-    </header>
-
-    <!-- Main App Container -->
-    <main class="max-w-3xl mx-auto w-full flex-1 px-4 pt-6">
+    <!-- === ส่วนห่อหุ้มแอปทั้งหมด (จะถูกซ่อนเวลาสั่งพิมพ์ PDF) === -->
+    <div id="app-container" class="print:hidden flex flex-col min-h-screen">
         
-        <!-- App-like Tabs -->
-        <div class="flex bg-slate-200/60 p-1.5 rounded-2xl mb-8 border border-slate-200/50">
-            <button onclick="window.openTab(event, 'order-page')" class="tab-btn active flex-1 py-2.5 px-4 text-center font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-2 bg-white text-emerald-700 shadow-sm" data-state="active">
-                <i data-lucide="edit-3" class="w-4 h-4"></i> จองคิวปูน
-            </button>
-            <button onclick="window.openTab(event, 'track-page')" class="tab-btn flex-1 py-2.5 px-4 text-center font-semibold rounded-xl transition-all text-sm flex items-center justify-center gap-2 text-slate-500 hover:text-slate-700 hover:bg-slate-200/50" data-state="inactive">
-                <i data-lucide="map-pinned" class="w-4 h-4"></i> ติดตามรถ
-            </button>
-        </div>
+        <!-- App Header -->
+        <header class="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-xl border-b border-slate-200/60 shadow-sm">
+            <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shadow-md p-1">
+                        <!-- ไอคอนโลโก้ขนาดเล็กบน Navbar (ถ้ามีโลโก้ขนาดเล็กใส่ตรงนี้แทน <i> ได้เลย) -->
+                        <i data-lucide="truck" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <h1 class="text-lg font-bold tracking-tight text-slate-900 leading-none mt-1">ProConcrete <span class="text-emerald-600">Eco</span></h1>
+                        <span class="text-[10px] font-medium text-slate-500">Low Carbon Ready-Mixed</span>
+                    </div>
+                </div>
+                <div class="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 border border-emerald-100">
+                    <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    เปิดรับคิว
+                </div>
+            </div>
+        </header>
 
-        <!-- ========================================== -->
-        <!-- 📝 หน้าสั่งซื้อและคำนวณราคา (Order Page) -->
-        <!-- ========================================== -->
-        <div class="tab-content active" id="order-page">
-            <form id="orderForm" onsubmit="window.handleCalculateOrder(event)" class="space-y-6">
+        <!-- Main App Container -->
+        <main class="max-w-3xl mx-auto w-full flex-1 px-4 pt-6 pb-10">
+
+            <!-- 🎨 กราฟิกแบรนด์ด้านบน (Hero Banner) -->
+            <div class="relative bg-gradient-to-tr from-slate-900 via-emerald-950 to-emerald-900 text-white p-8 md:p-12 rounded-3xl md:rounded-[2.5rem] shadow-xl overflow-hidden border border-white/10 mb-8">
                 
-                <!-- Section 1: สเปคคอนกรีต -->
-                <div class="bg-white rounded-3xl p-5 md:p-7 border border-slate-200 shadow-sm relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+                <!-- 🛑 [1] ภาพพื้นหลัง (Banner Background) -->
+                <!-- แนะนำขนาด: 1200x400 px | ไฟล์ .webp หรือ .jpg | ขนาดไม่เกิน 200KB -->
+                <!-- นำลิงก์จาก GitHub มาใส่ตรง src ด้านล่างนี้แทนรูปเดิม -->
+                <img src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&q=80&w=1200" 
+                     class="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-luminosity" alt="ProConcrete Background">
+                
+                <!-- แสงสว่างตกแต่งให้ภาพดูมีมิติ -->
+                <div class="absolute -right-24 -top-24 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-24 -bottom-24 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="relative z-10 flex flex-col md:flex-row items-center gap-6 max-w-4xl mx-auto text-center md:text-left">
+                    <div class="relative">
+                        <!-- 🛑 [2] ภาพโลโก้บริษัท (Company Logo) -->
+                        <!-- แนะนำขนาด: 512x512 px | ไฟล์ .png (พื้นใส) | ขนาดไม่เกิน 50KB -->
+                        <div class="w-24 h-24 md:w-28 md:h-28 rounded-[2rem] bg-white/10 backdrop-blur-md shadow-2xl flex items-center justify-center p-2 border-2 border-emerald-400/50 transform hover:scale-105 transition duration-300">
+                            <!-- ลบอิโมจิ 🌱 ออก แล้วใส่แท็ก img ตามตัวอย่างด้านล่าง -->
+                            <!-- <img src="ใส่ลิงก์ภาพโลโก้จาก_GITHUB_ตรงนี้.png" alt="ProConcrete Logo" class="w-full h-full object-contain drop-shadow-md"> -->
+                            <span class="text-5xl drop-shadow-lg">🌱</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-3 backdrop-blur-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> คอนกรีตคาร์บอนต่ำ เพื่อความยั่งยืน
+                        </div>
+                        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-2 drop-shadow-sm">
+                            PRO CONCRETE <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-300">ECO</span>
+                        </h2>
+                        <p class="text-slate-200 text-sm md:text-base font-light max-w-md leading-relaxed">
+                            ระบบจองคิวคอนกรีตผสมเสร็จอัจฉริยะ ออกแบบมาเพื่อความสะดวก รวดเร็ว และเป็นมิตรต่อสิ่งแวดล้อม
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- App-like Tabs -->
+            <div class="flex bg-slate-200/60 p-1.5 rounded-2xl mb-8 border border-slate-200/50 overflow-x-auto hide-scrollbar">
+                <button onclick="window.openTab(event, 'order-page')" class="tab-btn active flex-1 min-w-[110px] py-2.5 px-3 text-center font-bold rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 bg-white text-emerald-700 shadow-sm" data-state="active">
+                    <i data-lucide="edit-3" class="w-4 h-4"></i> จองคิว
+                </button>
+                <button onclick="window.openTab(event, 'payment-page')" class="tab-btn flex-1 min-w-[110px] py-2.5 px-3 text-center font-semibold rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-200/50" data-state="inactive">
+                    <i data-lucide="receipt" class="w-4 h-4"></i> ชำระเงิน / PDF
+                </button>
+                <button onclick="window.openTab(event, 'track-page')" class="tab-btn flex-1 min-w-[110px] py-2.5 px-3 text-center font-semibold rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-200/50" data-state="inactive">
+                    <i data-lucide="map-pinned" class="w-4 h-4"></i> ติดตามรถ
+                </button>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 📝 หน้าสั่งซื้อและคำนวณราคา (Order Page) -->
+            <!-- ========================================== -->
+            <div class="tab-content active" id="order-page">
+                <form id="orderForm" onsubmit="window.handleCalculateOrder(event)" class="space-y-6">
                     
-                    <div class="flex items-center gap-3 mb-5 relative z-10">
-                        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">1</div>
-                        <h2 class="text-lg font-bold text-slate-900">เลือกกำลังอัด (KSC)</h2>
-                    </div>
-
-                    <!-- แนะนำ (Shortcuts) -->
-                    <div class="mb-6 relative z-10">
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <button type="button" onclick="window.selectPresetStrength('240')" class="group text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-emerald-500 hover:shadow-md transition-all">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-semibold text-slate-500 group-hover:text-emerald-600 flex items-center gap-1.5"><i data-lucide="home" class="w-3.5 h-3.5"></i> งานบ้านทั่วไป</span>
-                                </div>
-                                <div class="text-xl font-black text-slate-900 group-hover:text-emerald-700">240 KSC</div>
-                            </button>
-                            <button type="button" onclick="window.selectPresetStrength('280')" class="group text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 hover:shadow-md transition-all relative overflow-hidden">
-                                <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-lg">ฮิตสุด</div>
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-semibold text-emerald-700 flex items-center gap-1.5"><i data-lucide="building-2" class="w-3.5 h-3.5"></i> โครงสร้างหลัก</span>
-                                </div>
-                                <div class="text-xl font-black text-emerald-900">280 KSC</div>
-                            </button>
-                            <button type="button" onclick="window.selectPresetStrength('320')" class="group text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-emerald-500 hover:shadow-md transition-all">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-semibold text-slate-500 group-hover:text-emerald-600 flex items-center gap-1.5"><i data-lucide="factory" class="w-3.5 h-3.5"></i> รับน้ำหนักสูง</span>
-                                </div>
-                                <div class="text-xl font-black text-slate-900 group-hover:text-emerald-700">320 KSC</div>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- รายละเอียดทั้งหมด (Pill Options) -->
-                    <div class="relative z-10">
-                        <p class="text-xs font-medium text-slate-500 mb-3">หรือเลือกกำลังอัดแบบละเอียด:</p>
-                        <div class="flex flex-wrap gap-2">
-                            <!-- KSC Radio Buttons (Pills) -->
-                            <label class="cursor-pointer">
-                                <input type="radio" name="strength" value="180" class="peer sr-only" onchange="window.calculatePrices()">
-                                <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">180</div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="strength" value="210" class="peer sr-only" onchange="window.calculatePrices()">
-                                <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">210</div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="strength" value="240" class="peer sr-only" onchange="window.calculatePrices()">
-                                <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">240</div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="strength" value="280" class="peer sr-only" checked onchange="window.calculatePrices()">
-                                <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">280</div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="strength" value="300" class="peer sr-only" onchange="window.calculatePrices()">
-                                <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">300</div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="strength" value="320" class="peer sr-only" onchange="window.calculatePrices()">
-                                <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">320</div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="strength" value="350" class="peer sr-only" onchange="window.calculatePrices()">
-                                <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">350</div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="strength" value="380" class="peer sr-only" onchange="window.calculatePrices()">
-                                <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">380</div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="strength" value="400" class="peer sr-only" onchange="window.calculatePrices()">
-                                <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">400</div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- การ์ดแสดงราคาย่อย -->
-                    <div class="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-100 flex justify-between items-center relative z-10">
-                        <span class="text-sm font-semibold text-slate-600">ราคาคอนกรีตวันนี้</span>
-                        <div class="text-right">
-                            <span id="selectedPriceDisplay" class="text-xl font-black text-emerald-600">1,900</span> 
-                            <span class="text-sm font-medium text-slate-500">บ./คิว</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section 2: ข้อมูลการจัดส่ง & ปริมาณ -->
-                <div class="bg-white rounded-3xl p-5 md:p-7 border border-slate-200 shadow-sm relative overflow-hidden">
-                    <div class="flex items-center gap-3 mb-5">
-                        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">2</div>
-                        <h2 class="text-lg font-bold text-slate-900">การจัดส่งและปริมาณ</h2>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- ชนิดรถ -->
-                        <div class="space-y-2.5">
-                            <label class="text-xs font-semibold text-slate-500 mb-1 block">ประเภทรถโม่ที่รองรับ</label>
-                            <label class="relative flex cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-50 focus:outline-none transition-all has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/50 has-[:checked]:ring-1 has-[:checked]:ring-emerald-500 shadow-sm">
-                                <input type="radio" name="truckType" value="รถโม่ใหญ่ (6-7 คิว)" class="peer sr-only" checked onchange="window.calculatePrices()">
-                                <div class="flex w-full items-center justify-between">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 peer-checked:bg-emerald-100 peer-checked:text-emerald-600 transition-colors">
-                                            <i data-lucide="truck" class="w-5 h-5"></i>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-bold text-slate-900">รถโม่ใหญ่ (6-7 คิว)</p>
-                                            <p class="text-xs text-slate-500 mt-0.5">จัดส่งฟรีไม่มีบวกเพิ่ม</p>
-                                        </div>
-                                    </div>
-                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 opacity-0 transition-opacity peer-checked:opacity-100"></i>
-                                </div>
-                            </label>
-                            <label class="relative flex cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-50 focus:outline-none transition-all has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/50 has-[:checked]:ring-1 has-[:checked]:ring-emerald-500 shadow-sm">
-                                <input type="radio" name="truckType" value="รถโม่เล็ก (2-3 คิว)" class="peer sr-only" onchange="window.calculatePrices()">
-                                <div class="flex w-full items-center justify-between">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 peer-checked:bg-emerald-100 peer-checked:text-emerald-600 transition-colors">
-                                            <i data-lucide="caravan" class="w-5 h-5"></i>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-bold text-slate-900">รถโม่เล็ก (2-3 คิว)</p>
-                                            <p class="text-xs text-slate-500 mt-0.5">บวกเพิ่ม <span id="display_shipping_fee">500</span> บ./เที่ยว</p>
-                                        </div>
-                                    </div>
-                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 opacity-0 transition-opacity peer-checked:opacity-100"></i>
-                                </div>
-                            </label>
-                        </div>
-
-                        <!-- ปริมาณ -->
-                        <div class="space-y-2.5">
-                            <label class="text-xs font-semibold text-slate-500 mb-1 block">ปริมาณที่ต้องการ (คิว/M³)</label>
-                            <div class="flex items-center justify-between rounded-2xl border border-slate-200 p-2 bg-slate-50 shadow-inner h-[88px]">
-                                <button type="button" onclick="window.adjustVolume(-0.5)" class="flex h-full w-16 items-center justify-center rounded-xl bg-white text-slate-600 shadow-sm border border-slate-200 hover:bg-slate-100 transition active:scale-95">
-                                    <i data-lucide="minus" class="w-6 h-6"></i>
-                                </button>
-                                <div class="flex flex-col items-center">
-                                    <input type="number" id="volumeInput" name="volume" value="5.0" step="0.5" min="1" max="1000" onchange="window.calculatePrices()" class="w-24 text-center font-black text-4xl text-emerald-600 bg-transparent border-none p-0 focus:ring-0">
-                                </div>
-                                <button type="button" onclick="window.adjustVolume(0.5)" class="flex h-full w-16 items-center justify-center rounded-xl bg-white text-slate-600 shadow-sm border border-slate-200 hover:bg-slate-100 transition active:scale-95">
-                                    <i data-lucide="plus" class="w-6 h-6"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section 3: ข้อมูลหน้างานและแผนที่ -->
-                <div class="bg-white rounded-3xl p-5 md:p-7 border border-slate-200 shadow-sm">
-                    <div class="flex items-center gap-3 mb-5">
-                        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">3</div>
-                        <h2 class="text-lg font-bold text-slate-900">กำหนดวันและสถานที่</h2>
-                    </div>
-
-                    <div class="space-y-4">
-                        <!-- วันเวลา -->
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">วันจัดส่ง</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="calendar" class="w-4 h-4"></i></div>
-                                    <input type="date" id="deliveryDate" name="deliveryDate" required class="modern-input w-full pl-10 pr-3 py-3 rounded-xl text-sm font-semibold text-slate-800">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">เวลาเริ่มเท</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="clock" class="w-4 h-4"></i></div>
-                                    <input type="time" name="deliveryTime" required class="modern-input w-full pl-10 pr-3 py-3 rounded-xl text-sm font-semibold text-slate-800">
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr class="border-slate-100 my-2">
-
-                        <!-- ผู้ติดต่อ -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">ชื่อผู้ติดต่อ / ไซต์งาน</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="user" class="w-4 h-4"></i></div>
-                                    <input type="text" name="customerName" placeholder="นายช่าง / หมู่บ้าน..." required class="modern-input w-full pl-10 pr-3 py-3 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 placeholder:font-medium">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">เบอร์โทรศัพท์</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="phone" class="w-4 h-4"></i></div>
-                                    <input type="tel" name="customerPhone" placeholder="08xxxxxxxx" pattern="[0-9]{10}" required class="modern-input w-full pl-10 pr-3 py-3 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 placeholder:font-medium">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">รายละเอียดสถานที่</label>
-                            <textarea name="deliveryAddress" placeholder="ซอย, เลขที่, จุดสังเกตชัดเจน..." rows="2" required class="modern-input w-full p-3 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 placeholder:font-medium resize-none"></textarea>
-                        </div>
+                    <!-- Section 1: สเปคคอนกรีต -->
+                    <div class="bg-white rounded-3xl p-5 md:p-7 border border-slate-200 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
                         
-                        <!-- แผนที่แบบแอป -->
-                        <div class="pt-2">
-                            <label class="text-xs font-semibold text-slate-500 mb-2 block pl-1">ปักหมุดพิกัดจัดส่ง</label>
-                            <div class="relative rounded-2xl overflow-hidden border-2 border-slate-200 h-[220px] shadow-inner bg-slate-100">
-                                <div id="map" class="absolute inset-0 z-10"></div>
-                                
-                                <!-- Floating Location Button -->
-                                <button type="button" onclick="window.getCurrentLocation()" class="absolute bottom-4 right-4 z-[400] bg-white text-slate-700 hover:text-emerald-600 px-3 py-2.5 rounded-xl shadow-lg border border-slate-200/50 flex items-center gap-2 text-xs font-bold transition-all active:scale-95">
-                                    <i data-lucide="navigation" class="w-4 h-4 text-blue-500 fill-blue-500/20"></i> ตำแหน่งฉัน
-                                </button>
+                        <div class="flex items-center gap-3 mb-5 relative z-10">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">1</div>
+                            <h2 class="text-lg font-bold text-slate-900">เลือกกำลังอัด (KSC)</h2>
+                        </div>
 
-                                <!-- Distance Badge -->
-                                <div class="absolute top-4 left-4 z-[400] bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm border border-slate-200/50 flex items-center gap-1.5 pointer-events-none">
-                                    <i data-lucide="route" class="w-3 h-3 text-slate-400"></i>
-                                    <span class="text-[10px] font-bold text-slate-600">ระยะทาง: <span id="display_distance" class="text-emerald-600">0.0</span> กม.</span>
+                        <div class="mb-6 relative z-10">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <button type="button" onclick="window.selectPresetStrength('240')" class="group text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-emerald-500 hover:shadow-md transition-all">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-semibold text-slate-500 group-hover:text-emerald-600 flex items-center gap-1.5"><i data-lucide="home" class="w-3.5 h-3.5"></i> งานบ้านทั่วไป</span>
+                                    </div>
+                                    <div class="text-xl font-black text-slate-900 group-hover:text-emerald-700">240 KSC</div>
+                                </button>
+                                <button type="button" onclick="window.selectPresetStrength('280')" class="group text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 hover:shadow-md transition-all relative overflow-hidden">
+                                    <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-lg">ฮิตสุด</div>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-semibold text-emerald-700 flex items-center gap-1.5"><i data-lucide="building-2" class="w-3.5 h-3.5"></i> โครงสร้างหลัก</span>
+                                    </div>
+                                    <div class="text-xl font-black text-emerald-900">280 KSC</div>
+                                </button>
+                                <button type="button" onclick="window.selectPresetStrength('320')" class="group text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-emerald-500 hover:shadow-md transition-all">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-semibold text-slate-500 group-hover:text-emerald-600 flex items-center gap-1.5"><i data-lucide="factory" class="w-3.5 h-3.5"></i> รับน้ำหนักสูง</span>
+                                    </div>
+                                    <div class="text-xl font-black text-slate-900 group-hover:text-emerald-700">320 KSC</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="relative z-10">
+                            <p class="text-xs font-medium text-slate-500 mb-3">หรือเลือกกำลังอัดแบบละเอียด:</p>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="strength" value="180" class="peer sr-only" onchange="window.calculatePrices()">
+                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">180</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="strength" value="210" class="peer sr-only" onchange="window.calculatePrices()">
+                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">210</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="strength" value="240" class="peer sr-only" onchange="window.calculatePrices()">
+                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">240</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="strength" value="280" class="peer sr-only" checked onchange="window.calculatePrices()">
+                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">280</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="strength" value="300" class="peer sr-only" onchange="window.calculatePrices()">
+                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">300</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="strength" value="320" class="peer sr-only" onchange="window.calculatePrices()">
+                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">320</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="strength" value="350" class="peer sr-only" onchange="window.calculatePrices()">
+                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">350</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="strength" value="380" class="peer sr-only" onchange="window.calculatePrices()">
+                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">380</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="strength" value="400" class="peer sr-only" onchange="window.calculatePrices()">
+                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">400</div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-100 flex justify-between items-center relative z-10">
+                            <span class="text-sm font-semibold text-slate-600">ราคาคอนกรีตวันนี้</span>
+                            <div class="text-right">
+                                <span id="selectedPriceDisplay" class="text-xl font-black text-emerald-600">1,900</span> 
+                                <span class="text-sm font-medium text-slate-500">บ./คิว</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: ข้อมูลการจัดส่ง & ปริมาณ -->
+                    <div class="bg-white rounded-3xl p-5 md:p-7 border border-slate-200 shadow-sm relative overflow-hidden">
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">2</div>
+                            <h2 class="text-lg font-bold text-slate-900">การจัดส่งและปริมาณ</h2>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- ชนิดรถ -->
+                            <div class="space-y-2.5">
+                                <label class="text-xs font-semibold text-slate-500 mb-1 block">ประเภทรถโม่ที่รองรับ</label>
+                                <label class="relative flex cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-50 focus:outline-none transition-all has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/50 has-[:checked]:ring-1 has-[:checked]:ring-emerald-500 shadow-sm">
+                                    <input type="radio" name="truckType" value="รถโม่ใหญ่ (6-7 คิว)" class="peer sr-only" checked onchange="window.calculatePrices()">
+                                    <div class="flex w-full items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 peer-checked:bg-emerald-100 peer-checked:text-emerald-600 transition-colors">
+                                                <i data-lucide="truck" class="w-5 h-5"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-slate-900">รถโม่ใหญ่ (6-7 คิว)</p>
+                                                <p class="text-xs text-slate-500 mt-0.5">จัดส่งฟรีไม่มีบวกเพิ่ม</p>
+                                            </div>
+                                        </div>
+                                        <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 opacity-0 transition-opacity peer-checked:opacity-100"></i>
+                                    </div>
+                                </label>
+                                <label class="relative flex cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-50 focus:outline-none transition-all has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/50 has-[:checked]:ring-1 has-[:checked]:ring-emerald-500 shadow-sm">
+                                    <input type="radio" name="truckType" value="รถโม่เล็ก (2-3 คิว)" class="peer sr-only" onchange="window.calculatePrices()">
+                                    <div class="flex w-full items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 peer-checked:bg-emerald-100 peer-checked:text-emerald-600 transition-colors">
+                                                <i data-lucide="caravan" class="w-5 h-5"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-slate-900">รถโม่เล็ก (2-3 คิว)</p>
+                                                <p class="text-xs text-slate-500 mt-0.5">บวกเพิ่ม <span id="display_shipping_fee">500</span> บ./เที่ยว</p>
+                                            </div>
+                                        </div>
+                                        <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 opacity-0 transition-opacity peer-checked:opacity-100"></i>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- ปริมาณ -->
+                            <div class="space-y-2.5">
+                                <label class="text-xs font-semibold text-slate-500 mb-1 block">ปริมาณที่ต้องการ (คิว/M³)</label>
+                                <div class="flex items-center justify-between rounded-2xl border border-slate-200 p-2 bg-slate-50 shadow-inner h-[88px]">
+                                    <button type="button" onclick="window.adjustVolume(-0.5)" class="flex h-full w-16 items-center justify-center rounded-xl bg-white text-slate-600 shadow-sm border border-slate-200 hover:bg-slate-100 transition active:scale-95">
+                                        <i data-lucide="minus" class="w-6 h-6"></i>
+                                    </button>
+                                    <div class="flex flex-col items-center">
+                                        <input type="number" id="volumeInput" name="volume" value="5.0" step="0.5" min="1" max="1000" onchange="window.calculatePrices()" class="w-24 text-center font-black text-4xl text-emerald-600 bg-transparent border-none p-0 focus:ring-0">
+                                    </div>
+                                    <button type="button" onclick="window.adjustVolume(0.5)" class="flex h-full w-16 items-center justify-center rounded-xl bg-white text-slate-600 shadow-sm border border-slate-200 hover:bg-slate-100 transition active:scale-95">
+                                        <i data-lucide="plus" class="w-6 h-6"></i>
+                                    </button>
                                 </div>
                             </div>
-                            <input type="hidden" id="gpsLinkInput" name="gpsLink" value="">
                         </div>
-
                     </div>
-                </div>
 
-                <!-- Spacer for floating bar -->
-                <div class="h-10 md:h-0"></div>
-
-                <!-- Floating Bottom Bar (App Style) -->
-                <div class="fixed bottom-0 inset-x-0 md:sticky md:bottom-6 z-40 p-4 md:p-0 pointer-events-none">
-                    <div class="max-w-3xl mx-auto bg-slate-900 border border-slate-700 shadow-2xl rounded-2xl md:rounded-3xl p-3 md:p-4 flex items-center justify-between pointer-events-auto">
-                        <div class="pl-2">
-                            <p class="text-[10px] font-medium text-slate-400">ยอดประเมินเบื้องต้น</p>
-                            <div class="flex items-baseline gap-1">
-                                <span class="text-2xl md:text-3xl font-black text-white" id="quickTotalText">0.00</span>
-                                <span class="text-xs font-medium text-slate-400">฿</span>
-                            </div>
+                    <!-- Section 3: ข้อมูลหน้างาน, นิติบุคคล, และแผนที่ -->
+                    <div class="bg-white rounded-3xl p-5 md:p-7 border border-slate-200 shadow-sm">
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">3</div>
+                            <h2 class="text-lg font-bold text-slate-900">สถานที่ และ ใบกำกับภาษี</h2>
                         </div>
-                        <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3 px-5 md:px-8 rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2 text-sm md:text-base">
-                            ดูใบเสนอราคา <i data-lucide="arrow-right" class="w-4 h-4"></i>
+
+                        <div class="space-y-4">
+                            <!-- วันเวลา -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">วันจัดส่ง</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="calendar" class="w-4 h-4"></i></div>
+                                        <input type="date" id="deliveryDate" name="deliveryDate" required class="modern-input w-full pl-10 pr-3 py-3 rounded-xl text-sm font-semibold text-slate-800">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">เวลาเริ่มเท</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="clock" class="w-4 h-4"></i></div>
+                                        <input type="time" name="deliveryTime" required class="modern-input w-full pl-10 pr-3 py-3 rounded-xl text-sm font-semibold text-slate-800">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="border-slate-100 my-2">
+
+                            <!-- ผู้ติดต่อ -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">ชื่อผู้ติดต่อ / ไซต์งาน</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="user" class="w-4 h-4"></i></div>
+                                        <input type="text" id="customerName" name="customerName" placeholder="นายช่าง / หมู่บ้าน..." required class="modern-input w-full pl-10 pr-3 py-3 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 placeholder:font-medium">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">เบอร์โทรศัพท์</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="phone" class="w-4 h-4"></i></div>
+                                        <input type="tel" id="customerPhone" name="customerPhone" placeholder="08xxxxxxxx" pattern="[0-9]{10}" required class="modern-input w-full pl-10 pr-3 py-3 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 placeholder:font-medium">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ใบกำกับภาษี (Tax Invoice Toggle) -->
+                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 mt-2">
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" id="requestTaxInvoice" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" onchange="window.toggleTaxFields()">
+                                    <span class="text-sm font-bold text-slate-700">ขอใบกำกับภาษี (สำหรับนิติบุคคล)</span>
+                                </label>
+                                <div id="taxInvoiceFields" class="hidden mt-4 space-y-3 pt-3 border-t border-slate-200">
+                                    <div>
+                                        <label class="text-xs font-semibold text-slate-500 mb-1 block">ชื่อบริษัท / นิติบุคคล</label>
+                                        <input type="text" id="companyName" placeholder="บริษัท เอบีซี จำกัด" class="modern-input w-full p-3 rounded-xl text-sm font-semibold text-slate-800">
+                                    </div>
+                                    <div>
+                                        <label class="text-xs font-semibold text-slate-500 mb-1 block">เลขประจำตัวผู้เสียภาษี (13 หลัก)</label>
+                                        <input type="text" id="taxId" maxlength="13" placeholder="01055xxxxxxxx" class="modern-input w-full p-3 rounded-xl text-sm font-semibold text-slate-800">
+                                    </div>
+                                    <div>
+                                        <label class="text-xs font-semibold text-slate-500 mb-1 block">ที่อยู่จดทะเบียนบริษัท</label>
+                                        <textarea id="companyAddress" rows="2" placeholder="เลขที่ตั้ง หมู่ ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="modern-input w-full p-3 rounded-xl text-sm font-semibold text-slate-800 resize-none"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">รายละเอียดสถานที่จัดส่ง</label>
+                                <textarea id="deliveryAddress" name="deliveryAddress" placeholder="ซอย, เลขที่, จุดสังเกตชัดเจน..." rows="2" required class="modern-input w-full p-3 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 placeholder:font-medium resize-none"></textarea>
+                            </div>
+                            
+                            <!-- แผนที่แบบแอป -->
+                            <div class="pt-2">
+                                <label class="text-xs font-semibold text-slate-500 mb-2 block pl-1">ปักหมุดพิกัดจัดส่ง</label>
+                                <div class="relative rounded-2xl overflow-hidden border-2 border-slate-200 h-[220px] shadow-inner bg-slate-100">
+                                    <div id="map" class="absolute inset-0 z-10"></div>
+                                    
+                                    <!-- Floating Location Button -->
+                                    <button type="button" onclick="window.getCurrentLocation()" class="absolute bottom-4 right-4 z-[400] bg-white text-slate-700 hover:text-emerald-600 px-3 py-2.5 rounded-xl shadow-lg border border-slate-200/50 flex items-center gap-2 text-xs font-bold transition-all active:scale-95">
+                                        <i data-lucide="navigation" class="w-4 h-4 text-blue-500 fill-blue-500/20"></i> ตำแหน่งฉัน
+                                    </button>
+
+                                    <!-- Distance Badge -->
+                                    <div class="absolute top-4 left-4 z-[400] bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm border border-slate-200/50 flex items-center gap-1.5 pointer-events-none">
+                                        <i data-lucide="route" class="w-3 h-3 text-slate-400"></i>
+                                        <span class="text-[10px] font-bold text-slate-600">ระยะทาง: <span id="display_distance" class="text-emerald-600">0.0</span> กม.</span>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="gpsLinkInput" name="gpsLink" value="">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Spacer for floating bar -->
+                    <div class="h-10 md:h-0"></div>
+
+                    <!-- Floating Bottom Bar (App Style) -->
+                    <div class="fixed bottom-0 inset-x-0 md:sticky md:bottom-6 z-40 p-4 md:p-0 pointer-events-none">
+                        <div class="max-w-3xl mx-auto bg-slate-900 border border-slate-700 shadow-2xl rounded-2xl md:rounded-3xl p-3 md:p-4 flex items-center justify-between pointer-events-auto">
+                            <div class="pl-2">
+                                <p class="text-[10px] font-medium text-slate-400">ยอดประเมินเบื้องต้น</p>
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-2xl md:text-3xl font-black text-white" id="quickTotalText">0.00</span>
+                                    <span class="text-xs font-medium text-slate-400">฿</span>
+                                </div>
+                            </div>
+                            <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3 px-5 md:px-8 rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2 text-sm md:text-base">
+                                ดูใบเสนอราคา <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 💳 หน้าการชำระเงินและเอกสาร (Payment Page) -->
+            <!-- ========================================== -->
+            <div class="tab-content" id="payment-page">
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm text-center mb-6">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 mb-4 shadow-sm ring-1 ring-emerald-100">
+                        <i data-lucide="file-text" class="w-8 h-8"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 mb-2">เอกสารและใบแจ้งหนี้</h2>
+                    <p class="text-sm text-slate-500 mb-6">ค้นหาเพื่อดูยอดชำระเงิน พิมพ์ใบเสนอราคา หรือใบกำกับภาษี</p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                        <div class="relative flex-1">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                                <i data-lucide="search" class="w-5 h-5"></i>
+                            </div>
+                            <input type="text" id="searchPaymentInput" placeholder="เบอร์โทร หรือ ชื่อลูกค้า..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-emerald-500 focus:bg-white transition-all shadow-sm">
+                        </div>
+                        <button onclick="window.searchPayment()" class="bg-emerald-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-emerald-700 transition shadow-md w-full sm:w-auto flex items-center justify-center gap-2">
+                            ค้นหา
                         </button>
                     </div>
                 </div>
-            </form>
-        </div>
 
-        <!-- ========================================== -->
-        <!-- 🔍 หน้าติดตาม (Tracking Page) -->
-        <!-- ========================================== -->
-        <div class="tab-content" id="track-page">
-            <div class="bg-white rounded-3xl p-8 md:p-12 border border-slate-200 shadow-sm text-center mb-6">
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-emerald-50 text-emerald-600 mb-6 shadow-sm ring-1 ring-emerald-100">
-                    <i data-lucide="map-pinned" class="w-10 h-10"></i>
+                <div id="paymentResult" class="hidden space-y-4 pb-8">
+                    <!-- ผลลัพธ์การชำระเงิน -->
                 </div>
-                <h2 class="text-2xl font-black tracking-tight text-slate-900 mb-2">ติดตามสถานะจัดส่ง</h2>
-                <p class="text-sm text-slate-500 mb-8">ตรวจสอบพิกัดรถโม่ปูนแบบ Real-time</p>
-                
-                <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                    <div class="relative flex-1">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-                            <i data-lucide="search" class="w-5 h-5"></i>
-                        </div>
-                        <input type="text" id="searchNameInput" placeholder="เบอร์โทร หรือ ชื่อลูกค้า..." class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-emerald-500 focus:bg-white transition-all shadow-sm">
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 🔍 หน้าติดตาม (Tracking Page) -->
+            <!-- ========================================== -->
+            <div class="tab-content" id="track-page">
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm text-center mb-6">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 text-blue-600 mb-4 shadow-sm ring-1 ring-blue-100">
+                        <i data-lucide="map-pinned" class="w-8 h-8"></i>
                     </div>
-                    <button onclick="window.searchTracking()" class="bg-slate-900 text-white font-bold py-3.5 px-8 rounded-xl hover:bg-slate-800 transition shadow-md w-full sm:w-auto">
-                        ค้นหา
-                    </button>
+                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 mb-2">ติดตามสถานะรถปูน</h2>
+                    <p class="text-sm text-slate-500 mb-6">ตรวจสอบตำแหน่งรถโม่ปูนของคุณแบบ Real-time</p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                        <div class="relative flex-1">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                                <i data-lucide="search" class="w-5 h-5"></i>
+                            </div>
+                            <input type="text" id="searchNameInput" placeholder="เบอร์โทร หรือ ชื่อลูกค้า..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-blue-500 focus:bg-white transition-all shadow-sm">
+                        </div>
+                        <button onclick="window.searchTracking()" class="bg-slate-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-slate-800 transition shadow-md w-full sm:w-auto">
+                            ค้นหา
+                        </button>
+                    </div>
+                </div>
+
+                <div id="trackingResult" class="hidden space-y-4 pb-8">
+                    <!-- ผลลัพธ์ -->
                 </div>
             </div>
 
-            <div id="trackingResult" class="hidden space-y-5 pb-8">
-                <!-- ผลลัพธ์ -->
-            </div>
-        </div>
-
-    </main>
+        </main>
+    </div> <!-- End App Container -->
 
     <!-- ========================================== -->
-    <!-- 📄 Modal ใบเสนอราคา (Receipt Style) -->
+    <!-- 📄 Modal ใบเสนอราคาสำหรับดูและอัปโหลดสลิป -->
     <!-- ========================================== -->
-    <div id="quotationModal" class="fixed inset-0 z-[60] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <!-- Ticket Shape Container -->
+    <div id="quotationModal" class="fixed inset-0 z-[60] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
         <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-[fadeIn_0.2s_ease-out] relative">
             
-            <!-- Header Ticket -->
             <div class="bg-slate-900 px-6 py-5 text-white flex justify-between items-center relative">
                 <div>
-                    <h3 class="text-lg font-bold tracking-wide">ใบเสนอราคาชั่วคราว</h3>
+                    <h3 class="text-lg font-bold tracking-wide">สรุปยอดชำระเงิน</h3>
                     <p class="text-xs text-slate-400 font-mono mt-0.5">REF: <span id="quoteDocNo" class="text-emerald-400">CPAC-xxxxxx</span></p>
                 </div>
                 <button onclick="window.closeQuotation()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
                     <i data-lucide="x" class="w-4 h-4 text-white"></i>
                 </button>
-                <!-- Decorative zig-zag bottom -->
-                <div class="absolute -bottom-2 left-0 right-0 h-4 bg-white" style="mask-image: radial-gradient(4px at 8px 0px, transparent 50%, white 51%); mask-size: 16px 16px; mask-position: 0 0;"></div>
             </div>
 
-            <!-- Body Scrollable -->
-            <div class="p-6 overflow-y-auto space-y-6 pt-8 bg-[#fafafa]">
-                
-                <!-- Customer Info -->
-                <div class="text-sm space-y-1.5 text-slate-600">
-                    <div class="flex justify-between"><span class="text-slate-400">ลูกค้า:</span><span id="quoteCustomerName" class="font-semibold text-slate-900">...</span></div>
-                    <div class="flex justify-between"><span class="text-slate-400">เบอร์โทร:</span><span id="quoteCustomerPhone" class="font-semibold text-slate-900">...</span></div>
-                    <div class="flex justify-between"><span class="text-slate-400">กำหนดส่ง:</span><span id="quoteDeliveryTime" class="font-semibold text-slate-900">...</span></div>
+            <div class="p-6 overflow-y-auto space-y-6 pt-6 bg-[#fafafa]">
+                <!-- โชว์เตือนนิติบุคคล -->
+                <div id="quoteTaxNotice" class="hidden bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2">
+                    <i data-lucide="building" class="w-4 h-4"></i> มีการร้องขอใบกำกับภาษีนิติบุคคลในออเดอร์นี้
                 </div>
-
-                <div class="border-t-2 border-dashed border-slate-200"></div>
-
-                <!-- Items -->
-                <div class="text-sm">
-                    <div class="flex justify-between font-bold text-slate-400 text-xs uppercase mb-3 px-1">
-                        <span>รายการ</span>
-                        <span>รวม (บาท)</span>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="font-bold text-slate-900">คอนกรีต <span id="quoteStrength">...</span> KSC</p>
-                                <p class="text-xs text-slate-500"><span id="quoteVolume">...</span> คิว x <span id="quoteUnitPrice">...</span> ฿</p>
-                            </div>
-                            <div id="quoteSubtotal" class="font-semibold text-slate-900">...</div>
-                        </div>
-                        
-                        <div id="quoteExtraFeeRow" class="hidden flex justify-between items-start">
-                            <div>
-                                <p class="font-bold text-slate-900">บริการรถโม่เล็ก</p>
-                                <p class="text-xs text-slate-500">1 เที่ยว x <span id="quoteShippingFeeUnit">...</span> ฿</p>
-                            </div>
-                            <div id="quoteShippingFeeTotal" class="font-semibold text-slate-900">...</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border-t-2 border-dashed border-slate-200"></div>
 
                 <!-- Totals -->
-                <div class="space-y-2 text-sm">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-2 text-sm">
                     <div class="flex justify-between text-slate-500"><span>มูลค่าสินค้ารวม:</span><span id="quoteTotalBeforeVat">0.00</span></div>
                     <div class="flex justify-between text-slate-500"><span>ภาษีมูลค่าเพิ่ม (7%):</span><span id="quoteVat">0.00</span></div>
-                    <div class="flex justify-between items-end pt-3 mt-1">
+                    <div class="flex justify-between items-end pt-3 mt-1 border-t border-slate-100">
                         <span class="text-sm font-bold text-slate-900">ยอดโอนสุทธิ:</span>
                         <span id="quoteGrandTotal" class="text-2xl font-black text-emerald-600 leading-none">0.00</span>
                     </div>
@@ -446,8 +513,6 @@
 
                 <!-- Payment Block -->
                 <div class="bg-white rounded-2xl border border-emerald-100 p-4 shadow-sm relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-50 rounded-full blur-xl -mr-4 -mt-4"></div>
-                    
                     <div class="flex items-center gap-3 mb-4 relative z-10">
                         <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
                             <i data-lucide="landmark" class="w-4 h-4 text-emerald-700"></i>
@@ -500,7 +565,7 @@
     </div>
 
     <!-- Alert Modal -->
-    <div id="globalModal" class="fixed inset-0 z-[110] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div id="globalModal" class="fixed inset-0 z-[110] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-[fadeIn_0.2s_ease-out]">
             <div class="p-6 text-center">
                 <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center mx-auto mb-4">
@@ -511,7 +576,90 @@
             </div>
             <div class="p-4 bg-slate-50 border-t border-slate-100 flex gap-2 justify-center">
                 <button id="modalCancelBtn" class="hidden flex-1 py-2.5 rounded-xl font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition text-sm">ยกเลิก</button>
-                <button id="modalOkBtn" class="flex-1 py-2.5 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition text-sm shadow-sm">ตกลงเข้าใจ</button>
+                <button id="modalOkBtn" class="flex-1 py-2.5 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition text-sm shadow-sm">ตกลง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 📄 เอกสาร A4 (ซ่อนไว้เสมอ จะแสดงเฉพาะตอนสั่ง Print) -->
+    <!-- ========================================== -->
+    <div id="printable-document" class="hidden print:block absolute inset-0 bg-white text-black p-8 text-sm">
+        <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
+            <div>
+                <h1 class="text-2xl font-black text-slate-900 mb-1">PRO CONCRETE ECO</h1>
+                <p class="text-xs text-slate-600">บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)</p>
+                <p class="text-xs text-slate-600">123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110</p>
+                <p class="text-xs text-slate-600">โทร. 02-123-4567 | เลขประจำตัวผู้เสียภาษี: 01055xxxxxxxx</p>
+            </div>
+            <div class="text-right">
+                <h2 id="printDocTitle" class="text-xl font-bold text-slate-800 uppercase">ใบเสนอราคา / ใบแจ้งหนี้</h2>
+                <p class="text-xs font-bold text-slate-800 mt-2">เลขที่เอกสาร: <span id="printDocNo"></span></p>
+                <p class="text-xs text-slate-600">วันที่: <span id="printCreateDate"></span></p>
+            </div>
+        </div>
+        
+        <div class="flex justify-between mb-6">
+            <div class="w-1/2">
+                <p class="text-[10px] font-bold text-slate-500 mb-1 uppercase bg-slate-100 p-1">ข้อมูลลูกค้า (Customer)</p>
+                <p class="font-bold text-slate-800 text-base mt-1" id="printCustomerName">...</p>
+                <p class="text-xs text-slate-600 mt-1" id="printCustomerCompanyInfo"></p>
+                <p class="text-xs text-slate-600 mt-1">โทร: <span id="printCustomerPhone"></span></p>
+            </div>
+            <div class="w-1/2 pl-4 text-right">
+                <p class="text-[10px] font-bold text-slate-500 mb-1 uppercase bg-slate-100 p-1">ข้อมูลการจัดส่ง (Delivery)</p>
+                <p class="font-bold text-slate-800 text-base mt-1" id="printDeliveryTime">...</p>
+                <p class="text-xs text-slate-600 mt-1" id="printAddress">...</p>
+            </div>
+        </div>
+
+        <table class="w-full text-xs mb-6 border-collapse">
+            <thead>
+                <tr class="bg-slate-100 border-y-2 border-slate-300">
+                    <th class="p-2 text-left">ลำดับ</th>
+                    <th class="p-2 text-left">รายการ (Description)</th>
+                    <th class="p-2 text-center">จำนวน (Qty)</th>
+                    <th class="p-2 text-right">ราคาหน่วย (Unit Price)</th>
+                    <th class="p-2 text-right">จำนวนเงิน (Amount)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b border-slate-200">
+                    <td class="p-2 text-center">1</td>
+                    <td class="p-2">คอนกรีตผสมเสร็จ (Low Carbon) กำลังอัด <span id="printStrength"></span> KSC</td>
+                    <td class="p-2 text-center"><span id="printVolume"></span> คิว</td>
+                    <td class="p-2 text-right"><span id="printUnitPrice"></span></td>
+                    <td class="p-2 text-right"><span id="printSubtotal"></span></td>
+                </tr>
+                <tr id="printExtraFeeRow" class="hidden border-b border-slate-200">
+                    <td class="p-2 text-center">2</td>
+                    <td class="p-2">ค่าบริการจัดส่งรถโม่เล็ก</td>
+                    <td class="p-2 text-center">1 เที่ยว</td>
+                    <td class="p-2 text-right"><span id="printShippingFeeUnit"></span></td>
+                    <td class="p-2 text-right"><span id="printShippingFeeTotal"></span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="flex justify-end mt-4">
+            <div class="w-64 space-y-1 text-xs">
+                <div class="flex justify-between"><span class="text-slate-600">รวมเป็นเงิน:</span><span id="printTotalBeforeVat"></span></div>
+                <div class="flex justify-between"><span class="text-slate-600">ภาษีมูลค่าเพิ่ม (VAT 7%):</span><span id="printVat"></span></div>
+                <div class="flex justify-between font-bold text-sm pt-2 border-t border-slate-800 mt-1">
+                    <span>จำนวนเงินรวมทั้งสิ้น:</span>
+                    <span>฿ <span id="printGrandTotal"></span></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-20 pt-4 border-t border-slate-300 flex justify-between text-[10px] text-slate-500">
+            <div>
+                <p>เอกสารออกโดยระบบคอมพิวเตอร์ / Computer Generated Document</p>
+                <p class="font-bold mt-1 text-slate-800">โอนชำระเงินที่: ธ.กสิกรไทย 123-4-56789-0 (บจก. โปร คอนกรีต ประเทศไทย)</p>
+            </div>
+            <div class="text-right">
+                <p>_____________________________________</p>
+                <p class="mt-1">ผู้มีอำนาจลงนาม / ผู้อนุมัติ</p>
             </div>
         </div>
     </div>
@@ -547,12 +695,21 @@
             modal.classList.remove('hidden');
         };
 
-        // Initialize Lucide Icons after load
         window.addEventListener('DOMContentLoaded', () => {
             if(window.lucide) lucide.createIcons();
         });
 
-        // ฟังก์ชันลัดเลือกสเปค
+        // Toggle Tax Fields
+        window.toggleTaxFields = function() {
+            const checkbox = document.getElementById('requestTaxInvoice');
+            const fields = document.getElementById('taxInvoiceFields');
+            if(checkbox.checked) {
+                fields.classList.remove('hidden');
+            } else {
+                fields.classList.add('hidden');
+            }
+        };
+
         window.selectPresetStrength = function(strengthVal) {
             const radio = document.querySelector(`input[name="strength"][value="${strengthVal}"]`);
             if (radio) {
@@ -566,7 +723,6 @@
             return `CPAC${String(d.getFullYear()).slice(-2)}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
         }
 
-        // Haversine Distance
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371; 
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -577,7 +733,7 @@
             return R * c; 
         }
 
-        const YOUR_LINE_ID = "@357eluip"; 
+        const YOUR_LINE_ID = "@yourlineid"; 
         const PLANT_LAT = 17.36272647627392; 
         const PLANT_LNG = 102.76275159235519;
 
@@ -600,7 +756,6 @@
         let map, marker; 
         window.activeTrackingMaps = {}; 
 
-        // ราคากลางสำรอง
         let priceSettings = {
             price_180: 1650, price_210: 1720, price_240: 1800, price_280: 1900, price_300: 1980,
             price_320: 2050, price_350: 2150, price_380: 2250, price_400: 2350, shipping_fee: 500
@@ -781,14 +936,13 @@
                         updateGpsLink(userLat, userLng);
                     },
                     (error) => {
-                        window.showModal("ดึงพิกัดไม่สำเร็จ", "กรุณาเปิดสิทธิ์ GPS หรือเลื่อนหมุดบนแผนที่แทนครับ");
+                        window.showModal("ดึงพิกัดไม่สำเร็จ", "กรุณาเลื่อนหมุดบนแผนที่แทนครับ");
                     },
                     { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
                 );
             }
         };
 
-        // Tabs Toggle
         window.openTab = function(evt, tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
@@ -805,6 +959,7 @@
             activeBtn.classList.remove('text-slate-500');
 
             if(tabId === 'order-page' && map) setTimeout(() => { map.invalidateSize(); }, 100);
+            if(window.lucide) lucide.createIcons();
         };
 
         window.adjustVolume = function(change) {
@@ -815,7 +970,7 @@
         };
 
         // =====================================
-        // การออกใบเสนอราคา
+        // การเก็บข้อมูลและเปิดใบเสนอราคา
         // =====================================
         let tempOrderData = null;
         let base64SlipImage = ""; 
@@ -833,14 +988,24 @@
             const time = formData.get('deliveryTime');
             const dateTimeText = `${d}/${m}/${y} เวลา ${time} น.`;
 
-            const name = formData.get('customerName').trim();
-            const phone = formData.get('customerPhone').trim();
-            const address = formData.get('deliveryAddress').trim();
-            const gpsLink = formData.get('gpsLink').trim(); 
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            const address = document.getElementById('deliveryAddress').value.trim();
+            const gpsLink = document.getElementById('gpsLinkInput').value.trim(); 
+
+            // ข้อมูลใบกำกับภาษีนิติบุคคล
+            const reqTax = document.getElementById('requestTaxInvoice').checked;
+            const compName = document.getElementById('companyName').value.trim();
+            const taxId = document.getElementById('taxId').value.trim();
+            const compAddr = document.getElementById('companyAddress').value.trim();
+
+            if(reqTax && (!compName || !taxId || !compAddr)) {
+                window.showModal('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูลนิติบุคคลให้ครบถ้วนเพื่อออกใบกำกับภาษีครับ');
+                return;
+            }
 
             const priceInfo = window.calculatePrices();
             const orderNum = generateOrderNumber();
-
             const markerLatLng = marker ? marker.getLatLng() : { lat: PLANT_LAT, lng: PLANT_LNG };
 
             tempOrderData = {
@@ -859,31 +1024,23 @@
                 totalBeforeVat: priceInfo.subtotal,
                 vat: priceInfo.vat,
                 grandTotal: priceInfo.grandTotal,
-                slipImage: "" 
+                slipImage: "",
+                // ข้อมูลใบกำกับภาษี
+                reqTaxInvoice: reqTax,
+                companyName: reqTax ? compName : "",
+                taxId: reqTax ? taxId : "",
+                companyAddress: reqTax ? compAddr : ""
             };
 
+            // อัปเดต UI หน้า Modal
             document.getElementById('quoteDocNo').innerText = orderNum;
             document.getElementById('quoteCustomerName').innerText = name;
             document.getElementById('quoteCustomerPhone').innerText = phone;
             document.getElementById('quoteDeliveryTime').innerText = dateTimeText;
-            document.getElementById('quoteStrength').innerText = strength;
-            document.getElementById('quoteVolume').innerText = volume;
-            document.getElementById('quoteUnitPrice').innerText = priceInfo.unitPrice.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-            document.getElementById('quoteSubtotal').innerText = priceInfo.concreteCost.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-
-            const extraFeeRow = document.getElementById('quoteExtraFeeRow');
-            const quoteShippingFeeUnit = document.getElementById('quoteShippingFeeUnit');
-            const quoteShippingFeeTotal = document.getElementById('quoteShippingFeeTotal');
-
-            if (priceInfo.shippingFee > 0) {
-                extraFeeRow.classList.remove('hidden');
-                extraFeeRow.classList.add('flex');
-                if (quoteShippingFeeUnit) quoteShippingFeeUnit.innerText = priceSettings.shipping_fee.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-                if (quoteShippingFeeTotal) quoteShippingFeeTotal.innerText = priceSettings.shipping_fee.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-            } else {
-                extraFeeRow.classList.add('hidden');
-                extraFeeRow.classList.remove('flex');
-            }
+            
+            const taxNotice = document.getElementById('quoteTaxNotice');
+            if(reqTax) taxNotice.classList.remove('hidden');
+            else taxNotice.classList.add('hidden');
 
             document.getElementById('quoteTotalBeforeVat').innerText = priceInfo.subtotal.toLocaleString('th-TH', { minimumFractionDigits: 2 });
             document.getElementById('quoteVat').innerText = priceInfo.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 });
@@ -899,12 +1056,10 @@
         window.handleSlipUpload = function(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             if (file.size > 1 * 1024 * 1024) {
                 window.showModal("ขนาดไฟล์ใหญ่เกินไป", "กรุณาอัปโหลดรูปภาพที่มีขนาดไม่เกิน 1MB");
                 return;
             }
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 base64SlipImage = e.target.result;
@@ -935,11 +1090,12 @@
 
             tempOrderData.slipImage = base64SlipImage;
 
-            const lineMsg = `🏗️ จองคิวใหม่!\n🔖 REF: ${tempOrderData.orderNumber}\n👤 ลูกค้า: ${tempOrderData.name}\n📞 โทร: ${tempOrderData.phone}\n📅 ส่ง: ${tempOrderData.deliveryDateTime}\n⚙️ สเปค: ${tempOrderData.strength} KSC\n📏 ปริมาณ: ${tempOrderData.volume} คิว\n💰 ยอดโอน: ${tempOrderData.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 })} บาท\n📍 พิกัด: ${tempOrderData.gpsLink || '-'}`;
+            const lineMsg = `🏗️ จองคิวใหม่!\n🔖 REF: ${tempOrderData.orderNumber}\n👤 ลูกค้า: ${tempOrderData.name}\n📞 โทร: ${tempOrderData.phone}\n📅 ส่ง: ${tempOrderData.deliveryDateTime}\n⚙️ สเปค: ${tempOrderData.strength} KSC\n📏 ปริมาณ: ${tempOrderData.volume} คิว\n💰 ยอดโอน: ${tempOrderData.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 })} บาท\n${tempOrderData.reqTaxInvoice ? '🏢 ต้องการใบกำกับภาษี\n' : ''}📍 พิกัด: ${tempOrderData.gpsLink || '-'}`;
 
             if (isOfflineMode || (!currentUser && typeof __firebase_config === 'undefined')) {
                 allOrdersMemory.unshift(tempOrderData);
                 document.getElementById('orderForm').reset();
+                document.getElementById('taxInvoiceFields').classList.add('hidden');
                 window.closeQuotation();
                 window.open(`https://line.me/R/ti/p/~${YOUR_LINE_ID}?text=${encodeURIComponent(lineMsg)}`, '_blank');
                 window.showModal('สำเร็จ (Offline)', `ระบบได้บันทึกคิวแล้ว\nREF: ${tempOrderData.orderNumber}`);
@@ -949,6 +1105,7 @@
             try {
                 await addDoc(collection(db, ordersCollectionPath), tempOrderData);
                 document.getElementById('orderForm').reset();
+                document.getElementById('taxInvoiceFields').classList.add('hidden');
                 window.closeQuotation();
                 window.removeSlip(); 
 
@@ -960,7 +1117,102 @@
         };
 
         // ==========================================
-        // 🔍 ระบบดึงสถานะคิวงาน และพิกัดเรียลไทม์
+        // 💳 ระบบค้นหาใบเสนอราคา และ สั่งพิมพ์ PDF
+        // ==========================================
+        window.searchPayment = function() {
+            const nameInput = document.getElementById('searchPaymentInput');
+            if(!nameInput) return;
+            const name = nameInput.value.trim().toLowerCase();
+            const resultDiv = document.getElementById('paymentResult');
+            if(!name || !resultDiv) return;
+
+            const found = allOrdersMemory.filter(o => o.name.toLowerCase().includes(name) || o.phone.includes(name));
+            if(found.length === 0) {
+                resultDiv.innerHTML = `<div class="rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center text-sm text-slate-500 font-medium">ไม่พบเอกสารใบเสนอราคาของ "${name}"</div>`;
+                resultDiv.classList.remove('hidden');
+            } else {
+                let html = `<div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4 px-2">รายการที่พบ (${found.length})</div>`;
+                
+                found.forEach(order => {
+                    html += `
+                        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden transition-all flex flex-col md:flex-row items-center p-5 gap-5 hover:border-emerald-300">
+                            <div class="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100">
+                                <i data-lucide="file-text" class="w-6 h-6"></i>
+                            </div>
+                            <div class="flex-1 text-center md:text-left">
+                                <h3 class="font-bold text-slate-900 text-lg">${order.name}</h3>
+                                <p class="text-[11px] text-slate-500 font-mono mt-0.5">REF: ${order.orderNumber} | ส่ง: ${order.deliveryDateTime}</p>
+                                ${order.reqTaxInvoice ? '<span class="inline-block mt-2 bg-blue-50 text-blue-600 border border-blue-200 px-2 py-0.5 rounded text-[10px] font-bold">ออกใบกำกับภาษี</span>' : ''}
+                            </div>
+                            <div class="text-center md:text-right w-full md:w-auto">
+                                <p class="text-[10px] font-bold text-slate-400 mb-0.5 uppercase tracking-wider">ยอดชำระสุทธิ</p>
+                                <div class="font-black text-emerald-600 text-2xl mb-3">฿${order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '0.00'}</div>
+                                <button onclick="window.printDocument('${order.id}')" class="w-full md:w-auto inline-flex items-center justify-center rounded-lg text-sm font-semibold transition-colors focus-visible:outline-none bg-slate-900 text-white hover:bg-slate-800 h-10 px-5 gap-2 shadow-sm active:scale-95">
+                                    <i data-lucide="printer" class="w-4 h-4"></i> พิมพ์ / บันทึก PDF
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                resultDiv.innerHTML = html;
+                resultDiv.classList.remove('hidden');
+                lucide.createIcons();
+            }
+        };
+
+        window.printDocument = function(orderId) {
+            const order = allOrdersMemory.find(o => o.id === orderId);
+            if(!order) {
+                window.showModal('ข้อผิดพลาด', 'ไม่พบข้อมูลออเดอร์นี้');
+                return;
+            }
+
+            // เตรียมข้อมูลลงในหน้าเอกสารซ่อน
+            document.getElementById('printDocNo').innerText = order.orderNumber;
+            const d = new Date(order.createdAt);
+            document.getElementById('printCreateDate').innerText = d.toLocaleDateString('th-TH');
+            
+            // ข้อมูลลูกค้าและนิติบุคคล
+            document.getElementById('printCustomerName').innerText = order.reqTaxInvoice ? order.companyName : order.name;
+            let companyInfoHtml = "";
+            if(order.reqTaxInvoice) {
+                document.getElementById('printDocTitle').innerText = "ใบเสนอราคา / ใบกำกับภาษี";
+                companyInfoHtml = `เลขประจำตัวผู้เสียภาษี: ${order.taxId}<br>ที่อยู่: ${order.companyAddress}`;
+            } else {
+                document.getElementById('printDocTitle').innerText = "ใบเสนอราคา";
+                companyInfoHtml = `ผู้ติดต่อ: ${order.name}`;
+            }
+            document.getElementById('printCustomerCompanyInfo').innerHTML = companyInfoHtml;
+            document.getElementById('printCustomerPhone').innerText = order.phone;
+            
+            document.getElementById('printDeliveryTime').innerText = order.deliveryDateTime;
+            document.getElementById('printAddress').innerText = order.address || '-';
+            
+            document.getElementById('printStrength').innerText = order.strength;
+            document.getElementById('printVolume').innerText = order.volume;
+            document.getElementById('printUnitPrice').innerText = order.unitPrice ? order.unitPrice.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-';
+            document.getElementById('printSubtotal').innerText = order.concreteCost ? order.concreteCost.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-';
+            
+            const extraFeeRow = document.getElementById('printExtraFeeRow');
+            if(order.shippingFee > 0) {
+                extraFeeRow.classList.remove('hidden');
+                document.getElementById('printShippingFeeUnit').innerText = order.shippingFee.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+                document.getElementById('printShippingFeeTotal').innerText = order.shippingFee.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+            } else {
+                extraFeeRow.classList.add('hidden');
+            }
+
+            document.getElementById('printTotalBeforeVat').innerText = order.totalBeforeVat ? order.totalBeforeVat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-';
+            document.getElementById('printVat').innerText = order.vat ? order.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-';
+            document.getElementById('printGrandTotal').innerText = order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-';
+
+            // เรียกคำสั่ง Print ของเบราว์เซอร์
+            window.print();
+        };
+
+        // ==========================================
+        // 🔍 ระบบดึงสถานะคิวงาน
         // ==========================================
         window.searchTracking = function() {
             const nameInput = document.getElementById('searchNameInput');
@@ -1054,11 +1306,11 @@
                 lucide.createIcons();
             }
 
-            const truckIconHtml = '<div style="background-color:white;padding:5px;border-radius:50%;box-shadow:0 3px 6px rgba(0,0,0,0.15);border:1px solid #e2e8f0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><path d="M14 17h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>';
-            const truckIcon = L.divIcon({ html: truckIconHtml, iconSize: [32, 32], iconAnchor: [16, 16], className: '' });
+            const truckIconHtml = '<div style="background-color:white;padding:4px;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><path d="M14 17h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>';
+            const truckIcon = L.divIcon({ html: truckIconHtml, iconSize: [28, 28], iconAnchor: [14, 14], className: '' });
 
-            const destIconHtml = '<div style="background-color:#10b981;padding:5px;border-radius:50%;box-shadow:0 3px 6px rgba(0,0,0,0.15);border:2px solid white"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>';
-            const destIcon = L.divIcon({ html: destIconHtml, iconSize: [30, 30], iconAnchor: [15, 15], className: '' });
+            const destIconHtml = '<div style="background-color:white;padding:4px;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>';
+            const destIcon = L.divIcon({ html: destIconHtml, iconSize: [28, 28], iconAnchor: [14, 14], className: '' });
 
             if (window.activeTrackingMaps[order.id]) {
                 const liveMapObj = window.activeTrackingMaps[order.id];
