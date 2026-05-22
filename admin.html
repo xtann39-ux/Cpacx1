@@ -46,23 +46,25 @@
         @media print {
             @page { margin: 10mm; size: A4 portrait; }
             body { background-color: white !important; }
-            .print\:hidden { display: none !important; }
-            .print\:block { display: block !important; }
-            #printable-document {
+            
+            /* ซ่อนแอปทั้งหมดขณะทำการพิมพ์เพื่อป้องกันอินเทอร์เฟซหลักปะปน */
+            .print\:hidden, #app-container { display: none !important; }
+            
+            /* ซ่อนเอกสารพิมพ์ทั้งหมดเป็นค่าเริ่มต้น */
+            #printable-document, #printable-report { display: none !important; }
+            
+            /* แสดงผลเอกสารแบบเต็มแผ่นเฉพาะตามคลาสที่ถูกควบคุมโดย JavaScript บน Body */
+            body.print-invoice #printable-document {
+                display: block !important;
                 position: absolute;
                 left: 0; top: 0;
                 width: 100%;
-                background: white;
-                color: black;
-                display: block !important;
             }
-            #printable-report {
+            body.print-report #printable-report {
+                display: block !important;
                 position: absolute;
                 left: 0; top: 0;
                 width: 100%;
-                background: white;
-                color: black;
-                display: block !important;
             }
         }
     </style>
@@ -294,33 +296,64 @@
                         </div>
                     </div>
 
-                    <!-- รายการตารางรายละเอียดสรุปยอดรายวัน -->
-                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-                        <div class="p-6 border-b border-slate-100 bg-slate-50/50">
-                            <h3 class="font-bold text-slate-900 flex items-center gap-2">
-                                <i data-lucide="table" class="text-emerald-600"></i> รายละเอียดแจกแจงรายวัน
-                            </h3>
+                    <!-- ตารางแจกแจงรายวัน & 🏆 จัดอันดับลูกค้าสูงสุด (Two-Column Layout) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        
+                        <!-- ฝั่งซ้าย: รายละเอียดแจกแจงรายวัน -->
+                        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                            <div class="p-5 border-b border-slate-100 bg-slate-50/50">
+                                <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                                    <i data-lucide="table" class="text-emerald-600"></i> รายละเอียดแจกแจงรายวัน
+                                </h3>
+                            </div>
+                            <div class="overflow-x-auto flex-1">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="bg-slate-50 text-slate-500 border-b border-slate-100 text-xs">
+                                        <tr>
+                                            <th class="p-4 font-bold">วันที่</th>
+                                            <th class="p-4 font-bold text-center">จำนวนบิล</th>
+                                            <th class="p-4 font-bold text-right">ปริมาณปูนสะสม (คิว)</th>
+                                            <th class="p-4 font-bold text-right">ยอดขายรวม (บาท)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reportTableBody" class="divide-y divide-slate-100 font-medium">
+                                        <tr>
+                                            <td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีข้อมูลการคำนวณ กรุณากดปุ่มประมวลผล</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm text-left">
-                                <thead class="bg-slate-50 text-slate-500 border-b border-slate-100 text-xs">
-                                    <tr>
-                                        <th class="p-4 font-bold">วันที่</th>
-                                        <th class="p-4 font-bold text-center">จำนวนบิล</th>
-                                        <th class="p-4 font-bold text-right">ปริมาณปูนสะสม (คิว)</th>
-                                        <th class="p-4 font-bold text-right">ยอดขายรวม (บาท)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="reportTableBody" class="divide-y divide-slate-100 font-medium">
-                                    <tr>
-                                        <td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีข้อมูลการคำนวณ กรุณากดปุ่มประมวลผล</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+
+                        <!-- ฝั่งขวา: 🏆 10 อันดับลูกค้าที่มียอดสั่งซื้อสูงสุดในช่วงเวลานั้น -->
+                        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                            <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                                <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                                    <i data-lucide="trophy" class="text-amber-500 animate-pulse"></i> 10 อันดับลูกค้าที่สั่งซื้อสูงสุด
+                                </h3>
+                                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded">เรียงตามยอดซื้อ</span>
+                            </div>
+                            <div class="overflow-x-auto flex-1">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="bg-slate-50 text-slate-500 border-b border-slate-100 text-xs">
+                                        <tr>
+                                            <th class="p-4 font-bold">อันดับ / ลูกค้า</th>
+                                            <th class="p-4 font-bold text-center">จำนวนบิล</th>
+                                            <th class="p-4 font-bold text-right">ปริมาณรวม (คิว)</th>
+                                            <th class="p-4 font-bold text-right">ยอดซื้อสุทธิ (บาท)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="topCustomersTableBody" class="divide-y divide-slate-100 font-medium">
+                                        <tr>
+                                            <td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีข้อมูลการประมวลผลจัดอันดับลูกค้า</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- ค้นหารายไซต์งานเดิม -->
+                    <!-- ค้นหารายไซต์งานเดิม (ประวัติรายบุคคล) -->
                     <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm max-w-4xl">
                         <h3 class="font-bold text-lg text-slate-900 mb-5 flex items-center gap-2">
                             <i data-lucide="search" class="w-5 h-5 text-emerald-600"></i> ค้นหาประวัติรายลูกค้า
@@ -385,12 +418,29 @@
         </div>
     </div>
 
+    <!-- Alert Modal -->
+    <div id="globalModal" class="fixed inset-0 z-[110] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+            <div class="p-6 text-center">
+                <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="info" class="w-6 h-6"></i>
+                </div>
+                <h3 id="modalTitle" class="text-lg font-bold text-slate-900 mb-1">Title</h3>
+                <p id="modalMessage" class="text-sm text-slate-500">Message</p>
+            </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-100 flex gap-2 justify-center">
+                <button id="modalCancelBtn" class="hidden flex-1 py-2.5 rounded-xl font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition text-sm">ยกเลิก</button>
+                <button id="modalOkBtn" class="flex-1 py-2.5 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition text-sm shadow-sm">ตกลง</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ========================================== -->
     <!-- 📄 เอกสาร A4 (ซ่อนไว้เสมอ จะแสดงเฉพาะตอนสั่ง Print) -->
     <!-- ========================================== -->
     
     <!-- 1. สำหรับพิมพ์ใบเสนอราคา / ใบกำกับภาษีทีละบิล -->
-    <div id="printable-document" class="hidden print:block absolute inset-0 bg-white text-black p-8 text-sm">
+    <div id="printable-document" class="hidden absolute bg-white text-black p-8 text-sm">
         <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
             <div>
                 <h1 class="text-2xl font-black text-slate-900 mb-1">PRO CONCRETE ECO</h1>
@@ -470,8 +520,8 @@
         </div>
     </div>
 
-    <!-- 2. สำหรับพิมพ์สรุปรายงานยอดขายทั้งหมด -->
-    <div id="printable-report" class="hidden print:block absolute inset-0 bg-white text-black p-8 text-sm">
+    <!-- 2. สำหรับพิมพ์สรุปรายงานยอดขายทั้งหมด (พิมพ์รายงาน PDF) -->
+    <div id="printable-report" class="hidden absolute bg-white text-black p-8 text-sm">
         <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
             <div>
                 <h1 class="text-2xl font-black text-slate-900 mb-1">PRO CONCRETE ECO</h1>
@@ -505,21 +555,42 @@
         </div>
 
         <!-- รายการตารางรายวันบนแผ่นพิมพ์ -->
-        <table class="w-full text-xs border-collapse">
-            <thead>
-                <tr class="bg-slate-100 border-y-2 border-slate-300">
-                    <th class="p-2 text-left">วันที่จัดส่ง</th>
-                    <th class="p-2 text-center">จำนวนบิล</th>
-                    <th class="p-2 text-right">ปริมาณปูนสะสม (คิว)</th>
-                    <th class="p-2 text-right">ยอดขายรวมภาษี (บาท)</th>
-                </tr>
-            </thead>
-            <tbody id="printReportTableBody" class="divide-y divide-slate-200">
-                <!-- Javascript will populate this -->
-            </tbody>
-        </table>
+        <div class="mb-6">
+            <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-wide bg-slate-100 p-1">รายละเอียดแจกแจงรายวัน</p>
+            <table class="w-full text-xs border-collapse">
+                <thead>
+                    <tr class="bg-slate-100 border-y border-slate-300">
+                        <th class="p-2 text-left">วันที่จัดส่ง</th>
+                        <th class="p-2 text-center">จำนวนบิล</th>
+                        <th class="p-2 text-right">ปริมาณปูนสะสม (คิว)</th>
+                        <th class="p-2 text-right">ยอดขายรวมภาษี (บาท)</th>
+                    </tr>
+                </thead>
+                <tbody id="printReportTableBody" class="divide-y divide-slate-200">
+                    <!-- populated by js -->
+                </tbody>
+            </table>
+        </div>
 
-        <div class="mt-20 pt-4 border-t border-slate-300 flex justify-between text-[10px] text-slate-500">
+        <!-- รายการตารางลูกค้าสูงสุด 10 อันดับบนแผ่นพิมพ์ -->
+        <div>
+            <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-wide bg-slate-100 p-1">🏆 10 อันดับลูกค้าที่สั่งซื้อสูงสุด (Top 10 Customers)</p>
+            <table class="w-full text-xs border-collapse">
+                <thead>
+                    <tr class="bg-slate-100 border-y border-slate-300">
+                        <th class="p-2 text-left">อันดับ / ลูกค้า</th>
+                        <th class="p-2 text-center">จำนวนบิล</th>
+                        <th class="p-2 text-right">ปริมาณรวม (คิว)</th>
+                        <th class="p-2 text-right">ยอดรวมสุทธิ (บาท)</th>
+                    </tr>
+                </thead>
+                <tbody id="printTopCustomersTableBody" class="divide-y divide-slate-200">
+                    <!-- populated by js -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-16 pt-4 border-t border-slate-300 flex justify-between text-[10px] text-slate-500">
             <div>
                 <p>เอกสารสรุปยอดขายภายในองค์กรของแอดมิน ProConcrete Eco</p>
             </div>
@@ -796,19 +867,36 @@
             }
             summaryContainer.innerHTML = summaryHtml;
 
-            // Generate Cards
+            // Generate Cards with custom border and header background colors depending on order status
             allOrdersMemory.forEach(order => {
                 const statusColors = {
-                    'received': 'bg-slate-100 text-slate-700 border-slate-200',
+                    'received': 'bg-amber-100 text-amber-800 border-amber-300',
                     'batching': 'bg-orange-50 text-orange-700 border-orange-200',
                     'delivering': 'bg-blue-50 text-blue-700 border-blue-200',
                     'delivered': 'bg-emerald-50 text-emerald-700 border-emerald-200'
                 };
 
+                const cardBorderColors = {
+                    'received': 'border-amber-300 shadow-amber-50',
+                    'batching': 'border-orange-300 shadow-orange-50',
+                    'delivering': 'border-blue-300 shadow-blue-50',
+                    'delivered': 'border-slate-200 opacity-60'
+                };
+
+                const headerBarColors = {
+                    'received': 'bg-gradient-to-r from-amber-400 to-amber-500',
+                    'batching': 'bg-gradient-to-r from-orange-400 to-orange-500',
+                    'delivering': 'bg-gradient-to-r from-blue-500 to-indigo-500',
+                    'delivered': 'bg-gradient-to-r from-emerald-500 to-teal-500'
+                };
+
                 const card = document.createElement('div');
-                card.className = `bg-white rounded-2xl border ${order.status === 'delivered' ? 'border-slate-200 opacity-70' : 'border-slate-200 shadow-sm hover:shadow-md'} overflow-hidden transition-all flex flex-col`;
+                card.className = `bg-white rounded-2xl border-2 ${cardBorderColors[order.status]} shadow-sm hover:shadow-md overflow-hidden transition-all flex flex-col relative`;
                 
                 card.innerHTML = `
+                    <!-- แถบสีแสดงสัญลักษณ์สถานะเด่นชัดด้านบน -->
+                    <div class="h-2 w-full ${headerBarColors[order.status]}"></div>
+                    
                     <div class="p-5 border-b border-slate-100 flex-1">
                         <div class="flex justify-between items-start mb-3">
                             <div class="flex-1 min-w-0 pr-3">
@@ -953,9 +1041,9 @@
             setVal('printVat', order.vat ? order.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
             setVal('printGrandTotal', order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
 
-            // ซ่อนหน้าจอหลักเพื่อจัดเตรียมพิมพ์เฉพาะ Invoice
-            document.getElementById('printable-document').classList.remove('hidden');
-            document.getElementById('printable-report').classList.add('hidden');
+            // ใช้คลาสควบคุมบน body สำหรับการพิมพ์เฉพาะ Invoice โดยไม่แตะต้อง UI หน้าบ้าน
+            document.body.classList.add('print-invoice');
+            document.body.classList.remove('print-report');
 
             window.print();
         };
@@ -1047,7 +1135,7 @@
             labels.forEach(dateStr => {
                 const data = dailyData[dateStr];
                 const row = document.createElement('tr');
-                row.className = 'hover:bg-slate-50 transition border-b border-slate-100';
+                row.className = 'hover:bg-slate-50/50 transition border-b border-slate-100';
                 row.innerHTML = `
                     <td class="p-4 font-bold text-slate-700">${dateStr}</td>
                     <td class="p-4 text-center font-bold text-slate-500">${data.count}</td>
@@ -1056,6 +1144,55 @@
                 `;
                 tableBody.appendChild(row);
             });
+
+            // 🏆 จัดอันดับลูกค้าที่มียอดสั่งซื้อสูงสุด 10 อันดับแรก
+            const customerGroups = {};
+            filteredOrders.forEach(o => {
+                // จัดกลุ่มด้วยชื่อลูกค้าและเบอร์โทรเป็นหลัก
+                const key = o.name + "_" + (o.phone || "");
+                if (!customerGroups[key]) {
+                    customerGroups[key] = {
+                        name: o.name,
+                        phone: o.phone,
+                        companyName: o.companyName || "",
+                        reqTaxInvoice: o.reqTaxInvoice || false,
+                        totalSpent: 0,
+                        totalVolume: 0,
+                        count: 0
+                    };
+                }
+                customerGroups[key].totalSpent += parseFloat(o.grandTotal || 0);
+                customerGroups[key].totalVolume += parseFloat(o.volume || 0);
+                customerGroups[key].count += 1;
+            });
+
+            const topCustomers = Object.values(customerGroups)
+                .sort((a, b) => b.totalSpent - a.totalSpent)
+                .slice(0, 10);
+
+            // แสดงผลตารางลูกค้าสูงสุด 10 อันดับแรกในหน้า Dashboard
+            const topCustBody = document.getElementById('topCustomersTableBody');
+            topCustBody.innerHTML = '';
+
+            if (topCustomers.length === 0) {
+                topCustBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีข้อมูลยอดซื้อสะสมของลูกค้าในช่วงเวลานี้</td></tr>`;
+            } else {
+                topCustomers.forEach((cust, index) => {
+                    const displayName = cust.companyName ? `${cust.companyName} (${cust.name})` : cust.name;
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-50/50 transition border-b border-slate-100 text-xs sm:text-sm';
+                    row.innerHTML = `
+                        <td class="p-4 font-semibold text-slate-700 flex items-center">
+                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mr-2.5 border border-emerald-100">${index + 1}</span>
+                            <span class="truncate max-w-[150px] sm:max-w-xs" title="${displayName}">${displayName}</span>
+                        </td>
+                        <td class="p-4 text-center font-bold text-slate-500">${cust.count} บิล</td>
+                        <td class="p-4 text-right font-black text-slate-800">${cust.totalVolume.toFixed(1)} คิว</td>
+                        <td class="p-4 text-right font-black text-emerald-600">฿${cust.totalSpent.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>
+                    `;
+                    topCustBody.appendChild(row);
+                });
+            }
         };
 
         // ฟังก์ชันวาดกราฟสถิติ
@@ -1156,11 +1293,10 @@
             document.getElementById('print_kpi_count').innerText = orderCount;
             document.getElementById('print_kpi_avg').innerText = avgOrderValue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
 
-            // คัดลอกตารางมาแสดง
+            // คัดลอกตารางมาแสดง (รายละเอียดแจกแจงรายวัน)
             const printTableBody = document.getElementById('printReportTableBody');
             printTableBody.innerHTML = '';
 
-            // ใช้โครงสร้างข้อมูลรายวันแบบเดียวกับกราฟ
             const dailyData = {};
             let current = new Date(start);
             while(current <= end) {
@@ -1191,12 +1327,60 @@
                 printTableBody.appendChild(row);
             });
 
-            // ตรวจสอบการซ่อนเอกสารชนิดบิลเดี่ยว และ แสดงแผ่นรายงานสรุปยอดขายก่อนพิมพ์
-            document.getElementById('printable-document').classList.add('hidden');
-            document.getElementById('printable-report').classList.remove('hidden');
+            // คัดลอกตาราง 10 อันดับลูกค้าสูงสุดมาพิมพ์เอกสาร
+            const customerGroups = {};
+            filteredOrders.forEach(o => {
+                const key = o.name + "_" + (o.phone || "");
+                if (!customerGroups[key]) {
+                    customerGroups[key] = {
+                        name: o.name,
+                        phone: o.phone,
+                        companyName: o.companyName || "",
+                        totalSpent: 0,
+                        totalVolume: 0,
+                        count: 0
+                    };
+                }
+                customerGroups[key].totalSpent += parseFloat(o.grandTotal || 0);
+                customerGroups[key].totalVolume += parseFloat(o.volume || 0);
+                customerGroups[key].count += 1;
+            });
+
+            const topCustomers = Object.values(customerGroups)
+                .sort((a, b) => b.totalSpent - a.totalSpent)
+                .slice(0, 10);
+
+            const printTopCustBody = document.getElementById('printTopCustomersTableBody');
+            printTopCustBody.innerHTML = '';
+
+            if (topCustomers.length === 0) {
+                printTopCustBody.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-slate-400">ไม่มีข้อมูลในช่วงเวลานี้</td></tr>`;
+            } else {
+                topCustomers.forEach((cust, index) => {
+                    const displayName = cust.companyName ? `${cust.companyName} (${cust.name})` : cust.name;
+                    const row = document.createElement('tr');
+                    row.className = 'border-b border-slate-200';
+                    row.innerHTML = `
+                        <td class="p-2 font-bold">${index + 1}. ${displayName}</td>
+                        <td class="p-2 text-center">${cust.count} บิล</td>
+                        <td class="p-2 text-right">${cust.totalVolume.toFixed(1)} คิว</td>
+                        <td class="p-2 text-right font-bold">฿${cust.totalSpent.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>
+                    `;
+                    printTopCustBody.appendChild(row);
+                });
+            }
+
+            // ใช้คลาสควบคุมบน body สำหรับการพิมพ์เฉพาะสรุปรายงานยอดขาย
+            document.body.classList.add('print-report');
+            document.body.classList.remove('print-invoice');
 
             window.print();
         };
+
+        // สลับคลาสควบคุมกลับทันทีหลังสั่งพิมพ์เสร็จสิ้นหรือยกเลิก เพื่อป้องกันการแสดงผลทับซ้อน
+        window.addEventListener('afterprint', () => {
+            document.body.classList.remove('print-invoice', 'print-report');
+        });
 
         // ----------------------------------------------------
         // ค้นหาประวัติรายไซต์งานของลูกค้าเดิม
@@ -1204,7 +1388,7 @@
         window.generateCustomerReport = function() {
             const name = document.getElementById('reportSearchName').value.trim().toLowerCase();
             const res = document.getElementById('customerReportResult');
-            if (!name) return window.showModal("แจ้งเตือน", "กรุณาพิมพ์ชื่อผู้รับเหมา/เบอร์ติดต่อ");
+            if (!name) return window.showModal("แจ้งเตือน", "กรุณาพิมพ์ชื่อผู้รับเหมา/เบอร์โทร...");
 
             const orders = allOrdersMemory.filter(o => o.name.toLowerCase().includes(name) || o.phone.includes(name) || (o.companyName && o.companyName.toLowerCase().includes(name)));
             if (orders.length === 0) { 
