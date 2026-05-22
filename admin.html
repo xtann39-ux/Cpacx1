@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการหลังบ้านแพลนท์ปูน - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', sans-serif; background-color: #0f172a; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
+</head>
+<body class="text-slate-100 antialiased min-h-screen pb-20">
+
+    <div class="max-w-6xl mx-auto p-4 md:p-8">
+        
+        <!-- ========================================== -->
+        <!-- 🔐 กล่องล็อกอินหลังบ้าน (Admin Login Box) -->
+        <!-- ========================================== -->
+        <div id="adminLoginBox" class="flex flex-col items-center justify-center py-20 max-w-sm mx-auto">
+            <div class="w-24 h-24 bg-slate-800 shadow-xl border-2 border-orange-500 rounded-2xl flex items-center justify-center mb-6 text-5xl">
+                🏢
+            </div>
+            <h2 class="text-2xl font-black text-white mb-2 tracking-wide">PLANT CONTROL</h2>
+            <p class="text-slate-400 mb-8 text-center font-medium text-sm">ระบบจัดการคิวงานเจ้าหน้าที่แพลนท์คอนกรีต</p>
+            
+            <div class="flex flex-col gap-4 w-full">
+                <input type="password" id="adminPasswordInput" placeholder="กรอกรหัส PIN CODE" 
+                       class="w-full p-4 border-2 border-slate-700 rounded-xl bg-slate-800 text-white outline-none focus:border-orange-500 text-center tracking-[0.5em] font-black text-2xl">
+                <button onclick="window.loginAdmin()" class="bg-orange-600 hover:bg-orange-700 active:scale-95 text-white w-full py-4 rounded-xl font-black transition shadow-lg text-lg uppercase tracking-widest border-b-4 border-orange-800">
+                    เข้าสู่ระบบ (Login)
+                </button>
+            </div>
+            <p id="adminErrorText" class="text-red-400 text-sm mt-4 hidden bg-red-500/10 border border-red-500/20 p-3 rounded-xl w-full text-center font-bold">❌ รหัสผ่านผิด กรุณาพิมพ์ใหม่อีกครั้ง</p>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 🏢 เนื้อหาแผงควบคุม (Dispatcher Dashboard) -->
+        <!-- ========================================== -->
+        <div id="adminDashboardContent" class="hidden">
+            
+            <!-- แถบด้านบนแสดงชื่อระบบและเมนูปิดระบบ -->
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 bg-slate-800/50 p-6 rounded-3xl border border-slate-700/50">
+                <div class="flex items-center gap-4">
+                    <div class="text-4xl">🏢</div>
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-black text-white">PRO CONCRETE PANEL</h1>
+                        <p class="text-orange-400 text-xs font-bold tracking-widest uppercase mt-0.5">Dispatcher Dispatch & Control Center</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-center">
+                    <a href="index.html" class="text-slate-400 hover:text-white font-bold text-sm transition">💻 ไปหน้าสั่งของลูกค้า</a>
+                    <button onclick="window.logoutAdmin()" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-5 py-2.5 rounded-xl font-bold text-sm transition">
+                        ออกจากระบบ (Logout)
+                    </button>
+                </div>
+            </header>
+
+            <!-- แถบเลือกสลับหน้าควบคุม -->
+            <div class="flex gap-2 mb-8 bg-slate-800 p-1.5 rounded-2xl w-full max-w-sm shadow-inner">
+                <button onclick="window.switchAdminTab('list')" id="btnAdminList" class="flex-1 py-3 bg-slate-700 shadow-md text-orange-400 font-black rounded-xl transition-all text-sm uppercase tracking-wider">📋 คิวงานในระบบ</button>
+                <button onclick="window.switchAdminTab('report')" id="btnAdminReport" class="flex-1 py-3 text-slate-400 hover:text-slate-200 font-black rounded-xl transition-all text-sm uppercase tracking-wider">📊 รายงานคิวสะสม</button>
+            </div>
+
+            <!-- 1. ส่วนตารางรายการคิวงาน -->
+            <div id="adminListView" class="space-y-8">
+                <!-- ตารางรวมยอดการเทค้างในแต่ละวัน -->
+                <div id="productionSummary" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+
+                <!-- ตารางบันทึกการส่งงาน -->
+                <div class="overflow-x-auto rounded-2xl border border-slate-700 bg-slate-800/50 shadow-xl">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-slate-800 text-slate-300 border-b border-slate-700">
+                            <tr>
+                                <th class="p-4 font-bold uppercase tracking-wider text-xs">ข้อมูลลูกค้า / เวลาจัดส่ง</th>
+                                <th class="p-4 font-bold uppercase tracking-wider text-xs">กำลังอัด KSC / คิว</th>
+                                <th class="p-4 font-bold uppercase tracking-wider text-xs text-center">สถานะรถโม่</th>
+                                <th class="p-4 font-bold uppercase tracking-wider text-xs text-center">ยกเลิกคิว</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody" class="divide-y divide-slate-700/50">
+                            <!-- ข้อมูลจะถูกเขียนขึ้นมาแบบ Real-time ด้วย JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2. ส่วนสรุปรายงานประวัติและปริมาณเทสะสม -->
+            <div id="adminReportView" class="hidden space-y-6">
+                <!-- ค้นหารายไซต์งาน -->
+                <div class="bg-slate-800/50 p-6 md:p-8 rounded-3xl border border-slate-700/50 shadow-lg">
+                    <h3 class="font-black text-lg text-white mb-5 border-l-4 border-orange-500 pl-3">🔍 ค้นหาคิวสะสมรายไซต์งาน</h3>
+                    <div class="flex flex-col md:flex-row gap-3 mb-6">
+                        <input type="text" id="reportSearchName" placeholder="พิมพ์ชื่อผู้ติดต่อ หรือเบอร์โทรศัพท์..." class="flex-1 p-4 border-2 border-slate-700 bg-slate-900 rounded-xl outline-none focus:border-orange-500 font-bold text-white transition">
+                        <button onclick="window.generateCustomerReport()" class="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-xl font-bold transition shadow-md">ตรวจสอบยอด</button>
+                    </div>
+                    <div id="customerReportResult" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/50 p-6 rounded-2xl border border-slate-800"></div>
+                </div>
+
+                <!-- จัดอันดับยอดใช้งานสูงสุด -->
+                <div class="bg-slate-800/50 p-6 md:p-8 rounded-3xl border border-slate-700/50 shadow-lg">
+                    <h3 class="font-black text-lg text-white mb-5 border-l-4 border-orange-500 pl-3">🏆 ลูกค้าที่มียอดสั่งเทปูนสูงสุด 5 อันดับแรก</h3>
+                    <div class="flex flex-col md:flex-row gap-4 mb-6 bg-slate-900/50 p-5 rounded-2xl border border-slate-800">
+                        <div class="flex-1">
+                            <label class="block text-xs text-slate-400 mb-2 font-bold uppercase tracking-wider">ตั้งแต่วันที่</label>
+                            <input type="date" id="reportStartDate" class="w-full p-3 border-2 border-slate-700 bg-slate-800 rounded-xl outline-none font-bold text-slate-200">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-xs text-slate-500 mb-2 font-bold uppercase tracking-wider">ถึงวันที่</label>
+                            <input type="date" id="reportEndDate" class="w-full p-3 border-2 border-slate-700 bg-slate-800 rounded-xl outline-none font-bold text-slate-200">
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="window.generateTopCustomersReport()" class="w-full md:w-auto bg-orange-600 hover:bg-orange-700 text-white px-8 py-3.5 rounded-xl font-bold transition shadow-md">คำนวณสถิติ</button>
+                        </div>
+                    </div>
+                    <div id="topCustomersResult" class="hidden bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-md"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal หน้าต่างแจ้งเตือนทดแทนเบราว์เซอร์แจ้งเตือน -->
+    <div id="globalModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-slate-800 rounded-3xl shadow-2xl max-w-sm w-full p-8 transform scale-95 transition-transform border-t-8 border-orange-500">
+            <h3 id="modalTitle" class="text-2xl font-black text-white mb-3 tracking-wide">Title</h3>
+            <p id="modalMessage" class="text-slate-300 mb-8 text-base whitespace-pre-line leading-relaxed font-medium">Message</p>
+            <div class="flex justify-end gap-3">
+                <button id="modalCancelBtn" class="px-5 py-3 text-slate-400 hover:bg-slate-700 rounded-xl font-bold hidden transition">ยกเลิก</button>
+                <button id="modalOkBtn" class="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold transition shadow-lg w-full md:w-auto tracking-wider">ตกลง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Connection -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // ==========================================
+        // ตั้งรหัสผ่านล็อกอินหน้า Admin ตรงนี้
+        // ==========================================
+        const ADMIN_PASSWORD = '9999'; 
+
+        // Firebase Config ของโปรเจกต์ cpacx1
+        const firebaseConfig = {
+            apiKey: "AIzaSyBID-uSTCksR8AlgWMEzgJWlcRWn0UD7Ks",
+            authDomain: "cpacx1.firebaseapp.com",
+            projectId: "cpacx1",
+            storageBucket: "cpacx1.firebasestorage.app",
+            messagingSenderId: "296556251057",
+            appId: "1:296556251057:web:eebbda30582c34f5865f90",
+            measurementId: "G-70PG94WD08"
+        };
+
+        let app, auth, db;
+        let ordersCollectionPath = 'concrete_orders';
+        let currentUser = null;
+        let allOrdersMemory = []; 
+        let isOfflineMode = false; 
+
+        // ตรวจสอบระบบ Sandbox หรือรันผ่าน Vercel จริง
+        if (typeof __firebase_config !== 'undefined') {
+            const canvasConfig = JSON.parse(__firebase_config);
+            app = initializeApp(canvasConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            ordersCollectionPath = `artifacts/${appId}/public/data/concrete_orders`;
+            
+            const initCanvasAuth = async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (e) { console.error(e); }
+            };
+            initCanvasAuth();
+        } else {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            signInAnonymously(auth).catch((error) => { isOfflineMode = true; });
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) { currentUser = user; setupDatabaseListener(); } 
+            else if (!isOfflineMode) currentUser = null;
+        });
+
+        // ดึงสถานะเชื่อมต่อข้อมูลแบบเรียลไทม์
+        function setupDatabaseListener() {
+            if (!currentUser && !isOfflineMode) return;
+            if (isOfflineMode) return; 
+
+            const ordersRef = collection(db, ordersCollectionPath);
+            onSnapshot(ordersRef, (snapshot) => {
+                allOrdersMemory = [];
+                snapshot.forEach(doc => { allOrdersMemory.push({ id: doc.id, ...doc.data() }); });
+                allOrdersMemory.sort((a, b) => b.createdAt - a.createdAt);
+
+                if (sessionStorage.getItem('isAdminLoggedIn') === 'true') refreshOrdersUI();
+            }, (error) => {
+                console.error("Firestore error:", error);
+            });
+        }
+
+        // ==========================================
+        // ฟังก์ชันระบบยืนยันตนและสลับหน้าแอดมิน
+        // ==========================================
+        window.loginAdmin = function() {
+            const pin = document.getElementById('adminPasswordInput').value;
+            if (pin === ADMIN_PASSWORD) {
+                sessionStorage.setItem('isAdminLoggedIn', 'true');
+                document.getElementById('adminPasswordInput').value = '';
+                document.getElementById('adminErrorText').classList.add('hidden');
+                window.checkAdminAuth();
+            } else {
+                document.getElementById('adminErrorText').classList.remove('hidden');
+            }
+        };
+
+        window.logoutAdmin = function() {
+            sessionStorage.removeItem('isAdminLoggedIn');
+            window.checkAdminAuth();
+        };
+
+        window.checkAdminAuth = function() {
+            if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                document.getElementById('adminLoginBox').classList.add('hidden'); 
+                document.getElementById('adminDashboardContent').classList.remove('hidden');
+                refreshOrdersUI();
+            } else {
+                document.getElementById('adminLoginBox').classList.remove('hidden'); 
+                document.getElementById('adminDashboardContent').classList.add('hidden');
+            }
+        };
+
+        window.switchAdminTab = function(tab) {
+            const btnList = document.getElementById('btnAdminList'); const btnReport = document.getElementById('btnAdminReport');
+            const viewList = document.getElementById('adminListView'); const viewReport = document.getElementById('adminReportView');
+            if (tab === 'list') {
+                btnList.className = 'flex-1 py-3 bg-slate-700 shadow-md text-orange-400 font-black rounded-xl transition-all text-sm uppercase tracking-wider';
+                btnReport.className = 'flex-1 py-3 text-slate-400 hover:text-slate-200 font-black rounded-xl transition-all text-sm uppercase tracking-wider';
+                viewList.classList.remove('hidden'); viewReport.classList.add('hidden');
+                refreshOrdersUI();
+            } else {
+                btnReport.className = 'flex-1 py-3 bg-slate-700 shadow-md text-orange-400 font-black rounded-xl transition-all text-sm uppercase tracking-wider';
+                btnList.className = 'flex-1 py-3 text-slate-400 hover:text-slate-200 font-black rounded-xl transition-all text-sm uppercase tracking-wider';
+                viewReport.classList.remove('hidden'); viewList.classList.add('hidden');
+                if(!document.getElementById('reportStartDate').value) {
+                    const today = new Date(); const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+                    const fmt = (d) => [d.getFullYear(), ('0'+(d.getMonth()+1)).slice(-2), ('0'+d.getDate()).slice(-2)].join('-');
+                    document.getElementById('reportStartDate').value = fmt(firstDay); document.getElementById('reportEndDate').value = fmt(today);
+                }
+            }
+        };
+
+        // ยืนยันการทำงานของระบบแอดมินตอนเริ่มโหลด
+        window.addEventListener('load', () => {
+            window.checkAdminAuth();
+        });
+
+        // ----------------------------------------------------
+        // ฟังก์ชันอัปเดตสถานะคิวงานการผสมคอนกรีต
+        // ----------------------------------------------------
+        function refreshOrdersUI() {
+            const tableBody = document.getElementById('ordersTableBody');
+            const summaryContainer = document.getElementById('productionSummary');
+            if(!tableBody) return;
+            tableBody.innerHTML = ''; 
+
+            if(allOrdersMemory.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="p-12 text-center text-slate-500 font-bold text-lg">📭 ยังไม่มีคิวงานจองเข้ามาในตอนนี้</td></tr>`;
+                if(summaryContainer) summaryContainer.innerHTML = ''; return;
+            }
+
+            const productionMap = {}; let totalPending = 0;
+            allOrdersMemory.forEach(order => {
+                if (order.status === 'received' || order.status === 'batching' || order.status === 'delivering') {
+                    const weight = parseFloat(order.volume) || 0;
+                    const dateOnly = order.deliveryDateTime.split(' ')[0]; 
+                    productionMap[dateOnly] = (productionMap[dateOnly] || 0) + weight;
+                    totalPending += weight;
+                }
+            });
+
+            if(summaryContainer) {
+                let summaryHtml = `<div class="col-span-full"><h3 class="font-black text-slate-200 mb-2 uppercase tracking-wide border-l-4 border-orange-500 pl-3 text-sm">🚚 แผนยอดเตรียมเทสะสมรายวัน (Q)</h3></div>`;
+                if (totalPending > 0) {
+                    summaryHtml += `<div class="bg-orange-600 border-2 border-orange-700 p-5 rounded-2xl text-center shadow-lg"><div class="text-xs text-white/80 font-bold mb-1 uppercase tracking-widest">ยอดรวมทั้งหมด</div><div class="text-3xl font-black text-white">${totalPending.toFixed(1)} <span class="text-sm">คิว</span></div></div>`;
+                    for (const [date, weight] of Object.entries(productionMap)) {
+                        summaryHtml += `<div class="bg-slate-800 border-2 border-slate-700 p-5 rounded-2xl text-center shadow-sm"><div class="text-xs text-slate-400 font-bold mb-1 tracking-wider">${date}</div><div class="text-2xl font-black text-white">${weight.toFixed(1)} <span class="text-sm">คิว</span></div></div>`;
+                    }
+                } else summaryHtml += `<div class="col-span-full text-sm font-bold text-slate-400 bg-slate-800 p-6 rounded-2xl text-center border border-slate-700 border-dashed">ส่งเสร็จครบทุกไซต์แล้วครับ ☕</div>`;
+                summaryContainer.innerHTML = summaryHtml;
+            }
+
+            allOrdersMemory.forEach(order => {
+                const row = document.createElement('tr'); row.className = 'bg-slate-800/30 border-b border-slate-700/50 hover:bg-slate-800/70 transition';
+                row.innerHTML = `
+                    <td class="p-4 align-top">
+                        <div class="font-black text-white text-base">${order.name}</div>
+                        <div class="text-slate-400 font-bold text-xs mt-1">📞 ${order.phone}</div>
+                        ${order.orderNumber ? `<div class="text-[10px] text-white bg-slate-900 border border-slate-700 font-mono mt-2 inline-block px-2 py-0.5 rounded">${order.orderNumber}</div>` : ''}
+                    </td>
+                    <td class="p-4 align-top">
+                        <div class="font-black text-orange-400 text-xl">${order.volume} <span class="text-sm text-slate-400">คิว</span></div>
+                        <div class="text-xs font-bold mt-1 text-slate-200 bg-slate-700 inline-block px-2 py-1 rounded uppercase">${order.strength} KSC</div>
+                        <div class="text-xs font-bold mt-1 text-slate-400">${order.truckType}</div>
+                        <div class="text-xs text-orange-500 bg-orange-500/10 border border-orange-500/20 inline-block px-2 py-1 rounded mt-2 font-bold whitespace-nowrap">⏳ ${order.deliveryDateTime}</div>
+                        ${order.gpsLink ? `<a href="${order.gpsLink}" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 font-bold flex items-center gap-1 mt-2 underline">🗺️ ดูพิกัดหน้างาน</a>` : ''}
+                    </td>
+                    <td class="p-4 align-top text-center">
+                        <select onchange="window.updateStatus('${order.id}', this.value)" class="bg-slate-900 border-2 border-slate-700 rounded-xl p-2.5 text-xs font-black outline-none focus:border-orange-500 text-slate-300 w-full max-w-[140px] cursor-pointer shadow-sm uppercase tracking-wider">
+                            <option value="received" ${order.status === 'received' ? 'selected' : ''}>📝 รับคิว</option>
+                            <option value="batching" ${order.status === 'batching' ? 'selected' : ''}>⚙️ ผสมปูน</option>
+                            <option value="delivering" ${order.status === 'delivering' ? 'selected' : ''}>🚛 กำลังส่ง</option>
+                            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>✅ เทเสร็จ</option>
+                        </select>
+                    </td>
+                    <td class="p-4 align-top text-center">
+                        <button onclick="window.deleteOrder('${order.id}')" class="text-red-400 hover:text-red-300 hover:bg-red-500/10 p-2.5 rounded-xl transition border border-transparent hover:border-red-500/20"><svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        window.updateStatus = async function(id, status) {
+            if (isOfflineMode) {
+                const order = allOrdersMemory.find(o => o.id === id);
+                if (order) order.status = status;
+                refreshOrdersUI(); return;
+            }
+            if (!currentUser) return;
+            try { await updateDoc(doc(db, ordersCollectionPath, id), { status }); } catch(e) { console.error(e); }
+        };
+        
+        window.deleteOrder = async function(id) {
+            window.showConfirm('ลบคิวงาน', 'ยืนยันที่จะลบคิวนี้ใช่หรือไม่?', async () => {
+                if (isOfflineMode) {
+                    allOrdersMemory = allOrdersMemory.filter(o => o.id !== id);
+                    refreshOrdersUI(); return;
+                }
+                if (!currentUser) return;
+                try { await deleteDoc(doc(db, ordersCollectionPath, id)); } catch(e) { console.error(e); }
+            });
+        };
+        
+        window.clearAllOrders = async function() {
+            window.showConfirm('ล้างระบบ', '⚠️ ลบข้อมูลคิวทั้งหมดอย่างถาวร ยืนยันหรือไม่?', async () => {
+                if (isOfflineMode) {
+                    allOrdersMemory = []; refreshOrdersUI(); return;
+                }
+                if (!currentUser) return;
+                try { for (const order of allOrdersMemory) await deleteDoc(doc(db, ordersCollectionPath, order.id)); } catch(e) { console.error(e); }
+            });
+        };
+
+        // ----------------------------------------------------
+        // ฟังก์ชันระบบ Report วิเคราะห์การใช้ปูน
+        // ----------------------------------------------------
+        window.generateCustomerReport = function() {
+            const name = document.getElementById('reportSearchName').value.trim().toLowerCase();
+            const res = document.getElementById('customerReportResult');
+            if (!name) return window.showModal("แจ้งเตือน", "กรุณาพิมพ์ชื่อผู้รับเหมา/เบอร์ติดต่อ");
+
+            const orders = allOrdersMemory.filter(o => o.name.toLowerCase().includes(name) || o.phone.includes(name));
+            if (orders.length === 0) { res.innerHTML = `<div class="col-span-3 text-center text-red-400 py-6 font-bold">ไม่พบประวัติของ "${name}"</div>`; res.classList.remove('hidden'); return; }
+
+            const now = new Date(); const todayStr = now.toLocaleDateString('th-TH');
+            let stats = { today: { c: 0, w: 0 }, month: { c: 0, w: 0 }, all: { c: 0, w: 0 } };
+
+            orders.forEach(o => {
+                const d = new Date(o.createdAt); const w = parseFloat(o.volume) || 0;
+                stats.all.c++; stats.all.w += w;
+                if (d.toLocaleDateString('th-TH') === todayStr) { stats.today.c++; stats.today.w += w; }
+                if (d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) { stats.month.c++; stats.month.w += w; }
+            });
+
+            res.innerHTML = `
+                <div class="col-span-1 md:col-span-3 pb-3 border-b border-slate-700">
+                    <h4 class="font-black text-white uppercase tracking-widest text-base">สรุปยอดส่งปูนให้: <span class="text-orange-500 text-xl">${orders[0].name}</span></h4>
+                </div>
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 text-center shadow-sm"><div class="text-xs text-slate-400 mb-1 font-bold uppercase tracking-wider">สั่งวันนี้</div><div class="text-2xl font-black text-white">${stats.today.w.toFixed(1)} <span class="text-sm font-bold text-slate-400">Q</span></div></div>
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 text-center shadow-sm"><div class="text-xs text-slate-400 mb-1 font-bold uppercase tracking-wider">เดือนนี้</div><div class="text-2xl font-black text-white">${stats.month.w.toFixed(1)} <span class="text-sm font-bold text-slate-400">Q</span></div></div>
+                <div class="bg-slate-700 p-5 rounded-xl border border-slate-600 text-center shadow-lg"><div class="text-xs text-orange-400 mb-1 font-bold uppercase tracking-wider">ยอดรวมสะสมทั้งหมด</div><div class="text-3xl font-black text-white">${stats.all.w.toFixed(1)} <span class="text-sm font-bold text-slate-300">Q</span></div></div>
+            `;
+            res.classList.remove('hidden');
+        };
+
+        window.generateTopCustomersReport = function() {
+            const startVal = document.getElementById('reportStartDate').value; const endVal = document.getElementById('reportEndDate').value;
+            const res = document.getElementById('topCustomersResult');
+            if (!startVal || !endVal) return window.showModal("แจ้งเตือน", "กรุณาเลือกช่วงเวลาให้ครบถ้วน");
+
+            const start = new Date(startVal).setHours(0,0,0,0); const end = new Date(endVal).setHours(23,59,59,999);
+            const filtered = allOrdersMemory.filter(o => o.createdAt >= start && o.createdAt <= end);
+
+            if (filtered.length === 0) { res.innerHTML = `<div class="text-center text-slate-400 py-8 font-bold">ไม่มีประวัติยอดจองเทปูนในวันดังกล่าว</div>`; res.classList.remove('hidden'); return; }
+
+            const map = {};
+            filtered.forEach(o => {
+                const k = o.name.trim().toLowerCase();
+                if (!map[k]) map[k] = { name: o.name.trim(), w: 0, c: 0 };
+                map[k].w += (parseFloat(o.volume) || 0); map[k].c++;
+            });
+
+            const top5 = Object.values(map).sort((a, b) => b.w - a.w).slice(0, 5);
+            let html = `<table class="w-full text-sm text-left"><thead class="bg-slate-800 text-slate-300"><tr><th class="p-4 w-16 text-center font-bold uppercase tracking-widest text-xs">Rank</th><th class="p-4 font-bold uppercase tracking-widest text-xs">ลูกค้า/ผู้รับเหมา</th><th class="p-4 text-right font-bold uppercase tracking-widest text-xs">ปริมาณรวม (M³)</th></tr></thead><tbody class="divide-y divide-slate-700/50">`;
+            const medals = ['👑', '🥈', '🥉', '4️⃣', '5️⃣'];
+            top5.forEach((c, i) => {
+                html += `<tr class="${i === 0 ? 'bg-orange-500/10' : 'bg-slate-800/30'} hover:bg-slate-800/70 transition"><td class="p-4 text-center text-2xl">${medals[i]}</td><td class="p-4 font-black text-white text-base">${c.name} <span class="text-[10px] text-white font-bold ml-2 bg-slate-700 px-2 py-1 rounded uppercase tracking-wider">${c.c} คิว</span></td><td class="p-4 text-right font-black text-orange-500 text-2xl">${c.w.toFixed(1)} <span class="text-sm font-bold text-slate-400">คิว</span></td></tr>`;
+            });
+            res.innerHTML = html + `</tbody></table>`; res.classList.remove('hidden');
+        };
+
+    </script>
+</body>
+</html>
