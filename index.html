@@ -501,6 +501,40 @@
                     <i data-lucide="building" class="w-4 h-4"></i> มีการร้องขอใบกำกับภาษีนิติบุคคลในออเดอร์นี้
                 </div>
 
+                <div class="text-sm space-y-1.5 text-slate-600">
+                    <div class="flex justify-between"><span class="text-slate-400">ลูกค้า:</span><span id="quoteCustomerName" class="font-semibold text-slate-900">...</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">เบอร์โทร:</span><span id="quoteCustomerPhone" class="font-semibold text-slate-900">...</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">กำหนดส่ง:</span><span id="quoteDeliveryTime" class="font-semibold text-slate-900">...</span></div>
+                </div>
+
+                <div class="border-t-2 border-dashed border-slate-200"></div>
+
+                <div class="text-sm">
+                    <div class="flex justify-between font-bold text-slate-400 text-xs uppercase mb-3 px-1">
+                        <span>รายการ</span>
+                        <span>รวม (บาท)</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-bold text-slate-900">คอนกรีต <span id="quoteStrength">...</span> KSC</p>
+                                <p class="text-xs text-slate-500"><span id="quoteVolume">...</span> คิว x <span id="quoteUnitPrice">...</span> ฿</p>
+                            </div>
+                            <div id="quoteSubtotal" class="font-semibold text-slate-900">...</div>
+                        </div>
+                        
+                        <div id="quoteExtraFeeRow" class="hidden flex justify-between items-start">
+                            <div>
+                                <p class="font-bold text-slate-900">บริการรถโม่เล็ก</p>
+                                <p class="text-xs text-slate-500">1 เที่ยว x <span id="quoteShippingFeeUnit">...</span> ฿</p>
+                            </div>
+                            <div id="quoteShippingFeeTotal" class="font-semibold text-slate-900">...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t-2 border-dashed border-slate-200"></div>
+
                 <!-- Totals -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-2 text-sm">
                     <div class="flex justify-between text-slate-500"><span>มูลค่าสินค้ารวม:</span><span id="quoteTotalBeforeVat">0.00</span></div>
@@ -920,9 +954,12 @@
         }
 
         function updateGpsLink(lat, lng) { 
-            document.getElementById('gpsLinkInput').value = `https://www.google.com/maps?q=${lat},${lng}`; 
+            const gpsEl = document.getElementById('gpsLinkInput');
+            if (gpsEl) gpsEl.value = `https://www.google.com/maps?q=${lat},${lng}`; 
+            
             const distance = calculateDistance(PLANT_LAT, PLANT_LNG, lat, lng);
-            document.getElementById('display_distance').innerText = distance.toFixed(1);
+            const distEl = document.getElementById('display_distance');
+            if (distEl) distEl.innerText = distance.toFixed(1);
         }
 
         window.getCurrentLocation = function() {
@@ -1025,26 +1062,51 @@
                 vat: priceInfo.vat,
                 grandTotal: priceInfo.grandTotal,
                 slipImage: "",
-                // ข้อมูลใบกำกับภาษี
                 reqTaxInvoice: reqTax,
                 companyName: reqTax ? compName : "",
                 taxId: reqTax ? taxId : "",
                 companyAddress: reqTax ? compAddr : ""
             };
 
-            // อัปเดต UI หน้า Modal
-            document.getElementById('quoteDocNo').innerText = orderNum;
-            document.getElementById('quoteCustomerName').innerText = name;
-            document.getElementById('quoteCustomerPhone').innerText = phone;
-            document.getElementById('quoteDeliveryTime').innerText = dateTimeText;
-            
-            const taxNotice = document.getElementById('quoteTaxNotice');
-            if(reqTax) taxNotice.classList.remove('hidden');
-            else taxNotice.classList.add('hidden');
+            // อัปเดต UI หน้า Modal ด้วยฟังก์ชันลัดเพื่อหลีกเลี่ยง Error Null
+            const setVal = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = val;
+            };
 
-            document.getElementById('quoteTotalBeforeVat').innerText = priceInfo.subtotal.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-            document.getElementById('quoteVat').innerText = priceInfo.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-            document.getElementById('quoteGrandTotal').innerText = priceInfo.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+            setVal('quoteDocNo', orderNum);
+            setVal('quoteCustomerName', name);
+            setVal('quoteCustomerPhone', phone);
+            setVal('quoteDeliveryTime', dateTimeText);
+            setVal('quoteStrength', strength);
+            setVal('quoteVolume', volume);
+            setVal('quoteUnitPrice', priceInfo.unitPrice.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
+            setVal('quoteSubtotal', priceInfo.concreteCost.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
+            
+            const extraFeeRow = document.getElementById('quoteExtraFeeRow');
+            if (priceInfo.shippingFee > 0) {
+                if(extraFeeRow) {
+                    extraFeeRow.classList.remove('hidden');
+                    extraFeeRow.classList.add('flex');
+                }
+                setVal('quoteShippingFeeUnit', priceSettings.shipping_fee.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
+                setVal('quoteShippingFeeTotal', priceSettings.shipping_fee.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
+            } else {
+                if(extraFeeRow) {
+                    extraFeeRow.classList.add('hidden');
+                    extraFeeRow.classList.remove('flex');
+                }
+            }
+
+            setVal('quoteTotalBeforeVat', priceInfo.subtotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
+            setVal('quoteVat', priceInfo.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
+            setVal('quoteGrandTotal', priceInfo.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
+
+            const taxNotice = document.getElementById('quoteTaxNotice');
+            if(taxNotice) {
+                if(reqTax) taxNotice.classList.remove('hidden');
+                else taxNotice.classList.add('hidden');
+            }
 
             document.getElementById('quotationModal').classList.remove('hidden');
         };
@@ -1168,46 +1230,49 @@
                 return;
             }
 
-            // เตรียมข้อมูลลงในหน้าเอกสารซ่อน
-            document.getElementById('printDocNo').innerText = order.orderNumber;
+            const setVal = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = val;
+            };
+
+            setVal('printDocNo', order.orderNumber);
             const d = new Date(order.createdAt);
-            document.getElementById('printCreateDate').innerText = d.toLocaleDateString('th-TH');
+            setVal('printCreateDate', d.toLocaleDateString('th-TH'));
             
-            // ข้อมูลลูกค้าและนิติบุคคล
-            document.getElementById('printCustomerName').innerText = order.reqTaxInvoice ? order.companyName : order.name;
-            let companyInfoHtml = "";
+            setVal('printCustomerName', order.reqTaxInvoice ? order.companyName : order.name);
+            
+            const printDocTitle = document.getElementById('printDocTitle');
+            const printCustomerCompanyInfo = document.getElementById('printCustomerCompanyInfo');
+            
             if(order.reqTaxInvoice) {
-                document.getElementById('printDocTitle').innerText = "ใบเสนอราคา / ใบกำกับภาษี";
-                companyInfoHtml = `เลขประจำตัวผู้เสียภาษี: ${order.taxId}<br>ที่อยู่: ${order.companyAddress}`;
+                if(printDocTitle) printDocTitle.innerText = "ใบเสนอราคา / ใบกำกับภาษี";
+                if(printCustomerCompanyInfo) printCustomerCompanyInfo.innerHTML = `เลขประจำตัวผู้เสียภาษี: ${order.taxId}<br>ที่อยู่: ${order.companyAddress}`;
             } else {
-                document.getElementById('printDocTitle').innerText = "ใบเสนอราคา";
-                companyInfoHtml = `ผู้ติดต่อ: ${order.name}`;
+                if(printDocTitle) printDocTitle.innerText = "ใบเสนอราคา";
+                if(printCustomerCompanyInfo) printCustomerCompanyInfo.innerHTML = `ผู้ติดต่อ: ${order.name}`;
             }
-            document.getElementById('printCustomerCompanyInfo').innerHTML = companyInfoHtml;
-            document.getElementById('printCustomerPhone').innerText = order.phone;
             
-            document.getElementById('printDeliveryTime').innerText = order.deliveryDateTime;
-            document.getElementById('printAddress').innerText = order.address || '-';
-            
-            document.getElementById('printStrength').innerText = order.strength;
-            document.getElementById('printVolume').innerText = order.volume;
-            document.getElementById('printUnitPrice').innerText = order.unitPrice ? order.unitPrice.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-';
-            document.getElementById('printSubtotal').innerText = order.concreteCost ? order.concreteCost.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-';
+            setVal('printCustomerPhone', order.phone);
+            setVal('printDeliveryTime', order.deliveryDateTime);
+            setVal('printAddress', order.address || '-');
+            setVal('printStrength', order.strength);
+            setVal('printVolume', order.volume);
+            setVal('printUnitPrice', order.unitPrice ? order.unitPrice.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
+            setVal('printSubtotal', order.concreteCost ? order.concreteCost.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
             
             const extraFeeRow = document.getElementById('printExtraFeeRow');
             if(order.shippingFee > 0) {
-                extraFeeRow.classList.remove('hidden');
-                document.getElementById('printShippingFeeUnit').innerText = order.shippingFee.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-                document.getElementById('printShippingFeeTotal').innerText = order.shippingFee.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+                if(extraFeeRow) extraFeeRow.classList.remove('hidden');
+                setVal('printShippingFeeUnit', order.shippingFee.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
+                setVal('printShippingFeeTotal', order.shippingFee.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
             } else {
-                extraFeeRow.classList.add('hidden');
+                if(extraFeeRow) extraFeeRow.classList.add('hidden');
             }
 
-            document.getElementById('printTotalBeforeVat').innerText = order.totalBeforeVat ? order.totalBeforeVat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-';
-            document.getElementById('printVat').innerText = order.vat ? order.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-';
-            document.getElementById('printGrandTotal').innerText = order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-';
+            setVal('printTotalBeforeVat', order.totalBeforeVat ? order.totalBeforeVat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
+            setVal('printVat', order.vat ? order.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
+            setVal('printGrandTotal', order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
 
-            // เรียกคำสั่ง Print ของเบราว์เซอร์
             window.print();
         };
 
@@ -1240,7 +1305,7 @@
                     const isDelivering = order.status === 'delivering';
                     
                     html += `
-                        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden transition-all">
+                        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden transition-all mb-4">
                             <div class="p-5 md:p-6">
                                 <div class="flex justify-between items-start mb-4">
                                     <div>
