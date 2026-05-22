@@ -394,15 +394,15 @@
             };
             initCanvasAuth();
         } else {
-            // ใช้ Config เดิมของคุณ
+            // ใช้ Config ของโปรเจกต์ cpacx1
             const firebaseConfig = {
-                apiKey: "AIzaSyCjxDsLNZI6DcZL6NLTEC_nG3Abq5X_fmY",
-                authDomain: "farmai-fb834.firebaseapp.com",
-                projectId: "farmai-fb834",
-                storageBucket: "farmai-fb834.firebasestorage.app",
-                messagingSenderId: "852319712506",
-                appId: "1:852319712506:web:2e6c464f38c0328b4f8543",
-                measurementId: "G-ZWW0VX65QV"
+                apiKey: "AIzaSyBID-uSTCksR8AlgWMEzgJWlcRWn0UD7Ks",
+                authDomain: "cpacx1.firebaseapp.com",
+                projectId: "cpacx1",
+                storageBucket: "cpacx1.firebasestorage.app",
+                messagingSenderId: "296556251057",
+                appId: "1:296556251057:web:eebbda30582c34f5865f90",
+                measurementId: "G-70PG94WD08"
             };
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
@@ -548,7 +548,7 @@
                 allOrdersMemory.unshift(orderData); 
                 form.reset(); 
                 window.open(`https://line.me/R/ti/p/~${YOUR_LINE_ID}?text=${encodeURIComponent(lineMsg)}`, '_blank');
-                window.showModal('สำเร็จ (Offline)!', `บันทึกคำสั่งซื้อเรียบร้อย!\n📌 รหัสอ้างอิง: ${orderNum}`);
+                window.showModal('สำเร็จ (Offline)!', `บันทึกคำสั่งซื้อเรียบร้อย!\n(อย่าลืมไปตั้งค่า Firebase ของคุณในโค้ดให้ถูกต้อง)\n📌 รหัสอ้างอิง: ${orderNum}`);
                 if (sessionStorage.getItem('isAdminLoggedIn') === 'true') refreshOrdersUI();
                 return;
             }
