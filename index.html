@@ -358,23 +358,30 @@
 
     <!-- Firebase Scripts -->
     <script type="module">
+        // ตัด Analytics ออกชั่วคราว เพื่อป้องกัน Error กรณีตั้งค่า Firebase เบื้องต้นยังไม่สมบูรณ์
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // ==========================================
-        // ตั้งค่าระบบ
-        // ==========================================
         const YOUR_LINE_ID = "@yourlineid"; 
-        const ADMIN_PASSWORD = '9999'; // รหัสผ่าน Admin
+        const ADMIN_PASSWORD = '9999'; 
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBID-uSTCksR8AlgWMEzgJWlcRWn0UD7Ks",
+            authDomain: "cpacx1.firebaseapp.com",
+            projectId: "cpacx1",
+            storageBucket: "cpacx1.firebasestorage.app",
+            messagingSenderId: "296556251057",
+            appId: "1:296556251057:web:eebbda30582c34f5865f90",
+            measurementId: "G-70PG94WD08"
+        };
 
         let app, auth, db;
-        let ordersCollectionPath = 'concrete_orders'; // เปลี่ยนชื่อ Collection
+        let ordersCollectionPath = 'concrete_orders'; 
         let currentUser = null;
         let allOrdersMemory = []; 
         let isOfflineMode = false; 
 
-        // Firebase Config
         if (typeof __firebase_config !== 'undefined') {
             const canvasConfig = JSON.parse(__firebase_config);
             app = initializeApp(canvasConfig);
@@ -394,21 +401,26 @@
             };
             initCanvasAuth();
         } else {
-            // ใช้ Config ของโปรเจกต์ cpacx1
-            const firebaseConfig = {
-                apiKey: "AIzaSyBID-uSTCksR8AlgWMEzgJWlcRWn0UD7Ks",
-                authDomain: "cpacx1.firebaseapp.com",
-                projectId: "cpacx1",
-                storageBucket: "cpacx1.firebasestorage.app",
-                messagingSenderId: "296556251057",
-                appId: "1:296556251057:web:eebbda30582c34f5865f90",
-                measurementId: "G-70PG94WD08"
-            };
+            // ระบบหลัก ทำงานบน Vercel
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
 
-            signInAnonymously(auth).catch((error) => { isOfflineMode = true; });
+            // ดักจับ Error ตรงนี้
+            signInAnonymously(auth)
+                .then(() => {
+                    console.log("🔥 เชื่อมต่อ Firebase สำเร็จ");
+                })
+                .catch((error) => {
+                    console.error("🔥 Auth Error:", error.code, error.message);
+                    isOfflineMode = true;
+                    
+                    // เด้งแจ้งเตือนบนหน้าจอว่าติด Error อะไร
+                    setTimeout(() => {
+                        window.showModal("⚠️ พบปัญหาการเชื่อมต่อ Firebase", 
+                        "ระบบไม่สามารถเชื่อมต่อฐานข้อมูลได้ (ระบบจะปรับเป็นโหมดออฟไลน์ชั่วคราว)\n\nสาเหตุที่เป็นไปได้:\n1. คุณเปิดไฟล์ตรงๆ จากคอมพิวเตอร์ (file://) ต้องเปิดจากลิงก์ Vercel เท่านั้น\n2. ไปที่ Firebase > Authentication เพื่อเปิดโหมด Anonymous\n\nรหัสข้อผิดพลาด:\n" + error.code);
+                    }, 1000);
+                });
         }
 
         onAuthStateChanged(auth, (user) => {
@@ -428,9 +440,16 @@
 
                 if (sessionStorage.getItem('isAdminLoggedIn') === 'true') refreshOrdersUI();
                 if (document.getElementById('track-page').classList.contains('active')) window.searchTracking();
+            }, (error) => {
+                console.error("Firestore Listen Error:", error);
+                // แจ้ง Error ฐานข้อมูลให้รู้ตัว
+                window.showModal("⚠️ พบปัญหาฐานข้อมูล", "ไม่สามารถดึงข้อมูลคิวงานได้ กรุณาเช็ค Firestore Rules ว่าตั้งเป็น 'true' หรือยัง");
             });
         }
 
+        // =====================================
+        // ฟังก์ชัน UI และแผนที่ (เหมือนเดิม)
+        // =====================================
         let map, marker;
         window.addEventListener('load', () => {
             const dateInput = document.getElementById('deliveryDate');
@@ -439,7 +458,6 @@
             initMap();
         });
 
-        // UI Modals
         window.showModal = function(title, message, onOk = null) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalMessage').innerText = message;
@@ -460,7 +478,6 @@
             document.getElementById('globalModal').classList.remove('hidden');
         };
 
-        // MAP
         function initMap() {
             const defaultLat = 13.7649; const defaultLng = 100.5383;
             map = L.map('map').setView([defaultLat, defaultLng], 13);
@@ -488,7 +505,6 @@
             }
         };
 
-        // LOGIC
         window.openTab = function(evt, tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => {
@@ -548,7 +564,7 @@
                 allOrdersMemory.unshift(orderData); 
                 form.reset(); 
                 window.open(`https://line.me/R/ti/p/~${YOUR_LINE_ID}?text=${encodeURIComponent(lineMsg)}`, '_blank');
-                window.showModal('สำเร็จ (Offline)!', `บันทึกคำสั่งซื้อเรียบร้อย!\n(อย่าลืมไปตั้งค่า Firebase ของคุณในโค้ดให้ถูกต้อง)\n📌 รหัสอ้างอิง: ${orderNum}`);
+                window.showModal('สำเร็จ (โหมดออฟไลน์)!', `บันทึกคำสั่งซื้อแล้ว (เฉพาะในเครื่องคุณ)\n\nหมายเหตุ: ระบบอยู่ในโหมด Offline เนื่องจากเชื่อมต่อ Firebase ไม่สำเร็จ\n📌 รหัสอ้างอิง: ${orderNum}`);
                 if (sessionStorage.getItem('isAdminLoggedIn') === 'true') refreshOrdersUI();
                 return;
             }
@@ -560,7 +576,7 @@
                 window.showModal('✅ จองคิวสำเร็จ!', `แพลนท์ได้รับออเดอร์ของท่านแล้ว\n📌 รหัสอ้างอิง (REF): ${orderNum}`);
             } catch (error) { 
                 console.error(error);
-                window.showModal('❌ ผิดพลาด', 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้'); 
+                window.showModal('❌ ผิดพลาด', 'เชื่อมต่อ Firebase ได้ แต่ส่งข้อมูลไม่เข้า กรุณาตรวจสอบแท็บ Rules ใน Firestore Database ครับ'); 
             }
         };
 
@@ -604,7 +620,6 @@
             resultDiv.classList.remove('hidden');
         };
 
-        // ADMIN
         window.checkAdminAuth = function() {
             if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
                 document.getElementById('adminLoginBox').classList.add('hidden'); document.getElementById('adminDashboardContent').classList.remove('hidden');
