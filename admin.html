@@ -46,9 +46,12 @@
             @page { margin: 10mm; size: A4 portrait; }
             body { background-color: white !important; }
             .print\:hidden, #app-container { display: none !important; }
-            #printable-document, #printable-report { display: none !important; }
+            #printable-document, #printable-report, #printable-delivery-ticket { display: none !important; }
+            
+            /* แยกควบคุมการแสดงผลฟอร์มพิมพ์เอกสารแต่ละประเภทตามคลาสบน Body */
             body.print-invoice #printable-document { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
             body.print-report #printable-report { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+            body.print-delivery-ticket #printable-delivery-ticket { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
         }
     </style>
 </head>
@@ -112,10 +115,60 @@
                 <!-- TAB 1: รายการคิวงาน -->
                 <div id="adminListView" class="tab-content active space-y-6">
                     <div id="productionSummary" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-                    <div class="flex justify-between items-end mb-2 mt-4">
-                        <h2 class="text-lg font-bold text-slate-800">คิวงานที่รอจัดส่งและดำเนินการ</h2>
+                    
+                    <!-- ส่วนเครื่องมือค้นหาบิลเก่าย้อนหลัง -->
+                    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                                <i data-lucide="history" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-sm">ค้นหาประวัติการจองและบิลเก่า</h3>
+                                <p class="text-xs text-slate-500">พิมพ์เบอร์โทรศัพท์ของลูกค้าเพื่อดึงข้อมูลออเดอร์เก่าทั้งหมดมาพิมพ์เอกสาร</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 w-full md:w-auto">
+                            <input type="tel" id="orderSearchPhone" placeholder="ระบุเบอร์โทรศัพท์ลูกค้า..." class="modern-input w-full md:w-64 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-800">
+                            <button onclick="window.searchOrderHistory()" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-all flex items-center gap-1.5 shrink-0">
+                                <i data-lucide="search" class="w-4 h-4"></i> ค้นหา
+                            </button>
+                            <button id="btnClearSearch" onclick="window.clearHistorySearch()" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-600 px-4 py-2.5 rounded-xl text-sm font-bold transition-all">
+                                ล้าง
+                            </button>
+                        </div>
                     </div>
-                    <div id="ordersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+                    <!-- พื้นที่แสดงผลลัพธ์การค้นหาบิลเก่า (จะขึ้นเมื่อกดค้นหา) -->
+                    <div id="historySearchResultsSection" class="hidden space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+                            <h3 class="font-bold text-blue-600 text-base flex items-center gap-2">
+                                <i data-lucide="search-code" class="w-5 h-5"></i> ผลการค้นหาประวัติออเดอร์ย้อนหลัง
+                            </h3>
+                            <button onclick="window.clearHistorySearch()" class="text-xs font-bold text-slate-400 hover:text-slate-600">ปิดการค้นหา</button>
+                        </div>
+                        <div id="historySearchResultsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                    </div>
+
+                    <!-- รายการคิวงานปกติแยกสถานะ -->
+                    <div id="normalOrdersSection" class="space-y-8">
+                        <!-- ส่วนที่ 1: กำลังดำเนินการ (Active Orders) -->
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
+                                <span class="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
+                                <h3 class="text-lg font-bold text-slate-800">1. รายการที่กำลังดำเนินการ (Active Orders)</h3>
+                            </div>
+                            <div id="activeOrdersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                        </div>
+
+                        <!-- ส่วนที่ 2: เสร็จสิ้นวันนี้ (Completed Today) -->
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
+                                <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                                <h3 class="text-lg font-bold text-slate-800">2. รายการเทเสร็จสิ้นแล้ววันนี้ (Completed Today)</h3>
+                            </div>
+                            <div id="completedTodayGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- TAB 1.5: จัดการรถและคนขับ -->
@@ -279,7 +332,7 @@
                             </div>
                             <div class="overflow-x-auto"><table class="w-full text-sm"><tbody id="topCustomersTableBody"></tbody></table></div>
                         </div>
-                        <!-- 🚛 ตารางเพิ่มใหม่: ประสิทธิภาพคนขับ (Driver KPI) -->
+                        <!-- 🚛 ตารางประเมินประสิทธิภาพคนขับ (Driver KPI) -->
                         <div class="bg-white rounded-3xl border shadow-sm flex flex-col lg:col-span-1 border-blue-200">
                             <div class="p-5 border-b border-blue-100 bg-blue-50/30 flex justify-between items-center">
                                 <h3 class="font-bold text-slate-900 flex items-center gap-2"><i data-lucide="timer" class="w-5 h-5 text-blue-500"></i> ประสิทธิภาพพนักงานขับรถ</h3>
@@ -306,8 +359,8 @@
         </div>
     </div> <!-- End App Container -->
 
-    <!-- Modals (Adjusted Z-Index to 200+) -->
-    <div id="slipModal" class="fixed inset-0 z-[200] hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
+    <!-- Modals (Adjusted Z-Index to 200+ to ensure overlay on Leaflet maps and elements) -->
+    <div id="slipModal" class="fixed inset-0 z-[200] hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 print:hidden animate-[fadeIn_0.2s_ease-out]">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col">
             <div class="flex justify-between items-center p-4 border-b border-slate-100">
                 <h3 class="font-bold text-slate-900 flex items-center gap-2"><i data-lucide="image" class="w-5 h-5 text-emerald-600"></i> หลักฐานการโอนเงิน</h3>
@@ -317,14 +370,17 @@
                 <img id="slipImageDisplay" src="" alt="Slip Image" class="max-w-full h-auto rounded shadow-sm border border-slate-200">
             </div>
             <div class="p-3 bg-white text-center border-t border-slate-100">
-                <span id="slipRefDisplay" class="text-xs font-bold text-slate-500"></span>
+                <span id="slipRefDisplay" class="text-xs font-bold text-slate-500 font-mono"></span>
             </div>
         </div>
     </div>
 
-    <div id="taxModal" class="fixed inset-0 z-[200] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
+    <div id="taxModal" class="fixed inset-0 z-[200] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 print:hidden animate-[fadeIn_0.2s_ease-out]">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
-            <div class="flex justify-between p-5 border-b bg-slate-50"><h3 class="font-bold text-blue-600">ข้อมูลภาษี</h3><button onclick="document.getElementById('taxModal').classList.add('hidden')"><i data-lucide="x" class="w-5 h-5 text-slate-400 hover:text-red-500"></i></button></div>
+            <div class="flex justify-between p-5 border-b bg-slate-50">
+                <h3 class="font-bold text-blue-600">ข้อมูลภาษี</h3>
+                <button onclick="document.getElementById('taxModal').classList.add('hidden')"><i data-lucide="x" class="w-5 h-5 text-slate-400 hover:text-red-500"></i></button>
+            </div>
             <div class="p-6 space-y-4 text-sm">
                 <p class="font-bold text-slate-900" id="taxCompanyName"></p>
                 <p class="font-mono bg-slate-100 p-2 rounded border" id="taxIdDisplay"></p>
@@ -333,17 +389,26 @@
         </div>
     </div>
 
-    <div id="globalModal" class="fixed inset-0 z-[210] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
+    <div id="globalModal" class="fixed inset-0 z-[210] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 print:hidden animate-[fadeIn_0.2s_ease-out]">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
-            <h3 id="modalTitle" class="text-lg font-bold mb-1">Title</h3><p id="modalMessage" class="text-sm text-slate-500 mb-4">Msg</p>
-            <div class="flex gap-2"><button id="modalCancelBtn" class="hidden flex-1 py-2 bg-slate-100 rounded-lg font-bold text-slate-600 hover:bg-slate-200">ยกเลิก</button><button id="modalOkBtn" class="flex-1 py-2 bg-slate-900 text-white rounded-lg font-bold hover:bg-slate-800">ตกลง</button></div>
+            <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="info" class="w-6 h-6"></i>
+            </div>
+            <h3 id="modalTitle" class="text-lg font-bold mb-1">Title</h3>
+            <p id="modalMessage" class="text-sm text-slate-500 mb-4">Msg</p>
+            <div class="flex gap-2">
+                <button id="modalCancelBtn" class="hidden flex-1 py-2 bg-slate-100 rounded-lg font-bold text-slate-600 hover:bg-slate-200">ยกเลิก</button>
+                <button id="modalOkBtn" class="flex-1 py-2 bg-slate-900 text-white rounded-lg font-bold hover:bg-slate-800">ตกลง</button>
+            </div>
         </div>
     </div>
 
     <!-- ========================================== -->
     <!-- 📄 เอกสาร A4 (ซ่อนไว้เสมอ จะแสดงเฉพาะตอนสั่ง Print) -->
     <!-- ========================================== -->
-    <div id="printable-document" class="hidden print:block absolute bg-white text-black p-8 text-sm">
+    
+    <!-- 1. สำหรับพิมพ์ใบเสนอราคา / ใบกำกับภาษีทีละบิล -->
+    <div id="printable-document" class="hidden absolute bg-white text-black p-8 text-sm">
         <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
             <div>
                 <h1 class="text-2xl font-black text-slate-900 mb-1">PRO CONCRETE ECO</h1>
@@ -417,7 +482,7 @@
         </div>
     </div>
 
-    <!-- 2. สำหรับพิมพ์สรุปรายงานยอดขายและ KPI พนักงาน (พิมพ์รายงาน PDF) -->
+    <!-- 2. สำหรับพิมพ์สรุปรายงานยอดขายทั้งหมด (พิมพ์รายงาน PDF) -->
     <div id="printable-report" class="hidden absolute bg-white text-black p-8 text-sm">
         <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
             <div>
@@ -448,7 +513,6 @@
                 </table>
             </div>
             
-            <!-- ตารางประสิทธิภาพคนขับที่จะพิมพ์ลง PDF -->
             <div class="w-1/2">
                 <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-wide bg-blue-50 text-blue-700 p-1 border-l-2 border-blue-500">🚛 ประสิทธิภาพพนักงานขับรถ (Driver KPI)</p>
                 <table class="w-full text-[11px] border-collapse">
@@ -457,6 +521,102 @@
                     </thead>
                     <tbody id="printDriverKpiTableBody" class="divide-y divide-slate-200"></tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 📄 3. ใบจ่ายสินค้า / ใบส่งคอนกรีต (พิมพ์เพื่อมอบพนักงานจัดส่ง) -->
+    <!-- ========================================== -->
+    <div id="printable-delivery-ticket" class="hidden absolute bg-white text-black p-8 text-sm">
+        <div class="border-b-4 border-double border-slate-900 pb-4 mb-6 flex justify-between items-start">
+            <div>
+                <h1 class="text-3xl font-black tracking-tight text-slate-900 mb-1">PRO CONCRETE ECO</h1>
+                <p class="text-xs text-slate-700 font-bold">บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)</p>
+                <p class="text-xs text-slate-600">123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110</p>
+                <p class="text-xs text-slate-600">โทร. 02-123-4567 | เลขประจำตัวผู้เสียภาษี (ผู้ผลิต): 0105559001234</p>
+            </div>
+            <div class="text-right">
+                <h2 class="text-2xl font-black text-slate-900 uppercase">ใบส่งคอนกรีต</h2>
+                <span class="text-xs font-bold text-slate-500 block mt-0.5">Delivery Ticket / Goods Receipt</span>
+                <div class="mt-4 text-xs space-y-1 text-slate-800 text-left bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                    <p class="font-bold">รหัส Order: <span id="ticketOrderNo" class="font-mono text-emerald-700"></span></p>
+                    <p>วันที่พิมพ์ใบส่ง: <span id="ticketPrintDate"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6 mb-6">
+            <div class="border border-slate-300 rounded-xl p-4">
+                <p class="text-[10px] font-black text-slate-500 uppercase bg-slate-100 p-1 mb-2 tracking-wide">ข้อมูลผู้รับสินค้า (Customer Details)</p>
+                <p class="font-black text-slate-800 text-base mb-1" id="ticketCustomerName">...</p>
+                <p class="text-xs text-slate-600" id="ticketTaxInfo">...</p>
+                <p class="text-xs text-slate-600 mt-1">เบอร์ติดต่อลูกค้า: <span id="ticketCustomerPhone" class="font-bold"></span></p>
+            </div>
+            <div class="border border-slate-300 rounded-xl p-4">
+                <p class="text-[10px] font-black text-slate-500 uppercase bg-slate-100 p-1 mb-2 tracking-wide">สถานที่จัดส่งและพนักงานส่ง (Delivery Destination)</p>
+                <p class="font-black text-slate-800 text-base mb-1" id="ticketDriverName">...</p>
+                <p class="text-xs text-emerald-700 font-bold">พนักงานขับรถส่งมอบคอนกรีต</p>
+                <p class="text-xs text-slate-600 mt-2 font-medium">ไซต์งานจัดส่ง: <span id="ticketAddress" class="text-slate-800 font-semibold"></span></p>
+            </div>
+        </div>
+
+        <!-- รายละเอียดสินค้าที่ส่งมอบ -->
+        <table class="w-full text-xs mb-6 border-collapse">
+            <thead>
+                <tr class="bg-slate-100 border-y-2 border-slate-400">
+                    <th class="p-3 text-center w-12">ลำดับ</th>
+                    <th class="p-3 text-left">รายการวัสดุและเกรดคอนกรีตที่จัดส่ง</th>
+                    <th class="p-3 text-center w-24">กำลังอัด (KSC)</th>
+                    <th class="p-3 text-center w-24">ปริมาณ (คิว)</th>
+                    <th class="p-3 text-right w-36">ยอดเงินรวมภาษี (บาท)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b border-slate-300">
+                    <td class="p-3 text-center font-bold">1</td>
+                    <td class="p-3">
+                        <p class="font-black text-slate-900">คอนกรีตผสมเสร็จ ProConcrete Eco (คาร์บอนต่ำรักษ์โลก)</p>
+                        <p class="text-[10px] text-slate-500 mt-1">ผลิตและผสมภายใต้การควบคุมคุณภาพตามมาตรฐานวิศวกรรมทางโยธา</p>
+                    </td>
+                    <td class="p-3 text-center font-black text-slate-800" id="ticketStrength">...</td>
+                    <td class="p-3 text-center font-black text-slate-800 text-base" id="ticketVolume">...</td>
+                    <td class="p-3 text-right font-black text-slate-800 text-base" id="ticketGrandTotal">...</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- ตารางรายละเอียดเวลา KPI ความสดของคอนกรีต -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-8">
+            <h3 class="font-black text-xs text-slate-800 uppercase tracking-wider mb-2.5 flex items-center gap-1.5"><i data-lucide="timer" class="w-4 h-4 text-emerald-600"></i> บันทึกเวลาขนส่งและการเทคอนกรีตหน้างาน (Logistics KPI)</h3>
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                    <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">เวลาเริ่มผสมปูน (Plant Batching)</p>
+                    <p id="ticketBatchingTime" class="text-sm font-black text-slate-800">-- : -- น.</p>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                    <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">เวลาออกเดินทาง (Departure)</p>
+                    <p id="ticketDepartureTime" class="text-sm font-black text-slate-800">-- : -- น.</p>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                    <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">เวลาเทเสร็จหน้างาน (Completion)</p>
+                    <p class="text-sm font-black text-slate-400">....................... น.</p>
+                </div>
+            </div>
+            <p class="text-[9px] text-slate-400 mt-2 font-medium leading-relaxed">* หมายเหตุ: เพื่อประสิทธิภาพสูงสุด คอนกรีตรักษ์โลกควรเริ่มเทลงแบบและเทให้เสร็จสิ้นภายใน 120 นาทีหลังจากเวลาเริ่มผลิต (เวลาเริ่มผสมปูน) เพื่อให้เนื้อปูนยึดเกาะประสานได้ตามกำลังอัดที่ตกลงกัน</p>
+        </div>
+
+        <!-- ลายเซ็นต์ยืนยันการรับสินค้า -->
+        <div class="grid grid-cols-2 gap-12 mt-16 text-center">
+            <div class="flex flex-col items-center">
+                <p class="text-slate-400 mb-10">.........................................................................</p>
+                <p class="text-xs font-bold text-slate-800">พนักงานขับรถส่งมอบสินค้า</p>
+                <p class="text-[10px] text-slate-500 mt-1">วันที่ ........./........./......... เวลา .........:......... น.</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <p class="text-slate-400 mb-10">.........................................................................</p>
+                <p class="text-xs font-bold text-slate-800">ผู้รับสินค้า / ผู้ควบคุมงานก่อสร้าง</p>
+                <p class="text-[10px] text-slate-500 mt-1">วันที่ ........./........./......... เวลา .........:......... น.</p>
             </div>
         </div>
     </div>
@@ -511,6 +671,7 @@
         let currentUser = null;
         let allOrdersMemory = []; 
         let allTrucksMemory = [];
+        let historySearchResults = []; // คิวงานเก่าที่ค้นพบด้วยเบอร์โทร
         let isOfflineMode = false; 
         let salesChartInstance = null;
         let settingQrBase64 = "";
@@ -805,22 +966,237 @@
             });
         }
 
+        // ค้นหาประวัติการจองและบิลเก่าย้อนหลังจากเบอร์โทรศัพท์
+        window.searchOrderHistory = function() {
+            const phoneInput = document.getElementById('orderSearchPhone');
+            if (!phoneInput) return;
+            const phone = phoneInput.value.trim();
+
+            if (!phone) {
+                window.showModal('แจ้งเตือน', 'กรุณาระบุเบอร์โทรศัพท์ลูกค้าเพื่อใช้ค้นหาครับ');
+                return;
+            }
+
+            // ค้นหาบิลเก่าที่มีเบอร์โทรศัพท์สอดคล้องกันจากความทรงจำทั้งหมด
+            historySearchResults = allOrdersMemory.filter(o => o.phone && o.phone.replace(/\s+/g, '').includes(phone.replace(/\s+/g, '')));
+            
+            const resultsSection = document.getElementById('historySearchResultsSection');
+            const resultsGrid = document.getElementById('historySearchResultsGrid');
+            const clearBtn = document.getElementById('btnClearSearch');
+
+            resultsSection.classList.remove('hidden');
+            if (clearBtn) clearBtn.classList.remove('hidden');
+            resultsGrid.innerHTML = '';
+
+            if (historySearchResults.length === 0) {
+                resultsGrid.innerHTML = `<div class="col-span-full py-10 text-center bg-white rounded-2xl border border-slate-200/80 text-slate-500 font-medium"><i data-lucide="inbox" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i> ไม่พบประวัติออเดอร์เก่าที่มีเบอร์โทร "${phone}"</div>`;
+            } else {
+                historySearchResults.forEach(order => {
+                    const card = createOrderCardElement(order, true);
+                    resultsGrid.appendChild(card);
+                });
+            }
+
+            if(window.lucide) lucide.createIcons();
+        };
+
+        window.clearHistorySearch = function() {
+            historySearchResults = [];
+            const phoneInput = document.getElementById('orderSearchPhone');
+            if (phoneInput) phoneInput.value = '';
+
+            document.getElementById('historySearchResultsSection').classList.add('hidden');
+            const clearBtn = document.getElementById('btnClearSearch');
+            if (clearBtn) clearBtn.classList.add('hidden');
+            
+            renderOrdersGrid();
+        };
+
+        // ฟังก์ชันส่วนกลางสำหรับการวาดการ์ดคิวงาน (มอบหมายพนักงานส่งปูนแบบไม่มีทะเบียนรถเพื่อลดความสับสน)
+        function createOrderCardElement(order, isHistorySearch = false) {
+            const statusColors = {
+                'received': 'bg-amber-100 text-amber-800 border-amber-300',
+                'confirmed': 'bg-teal-50 text-teal-800 border-teal-200',
+                'batching': 'bg-orange-50 text-orange-700 border-orange-200',
+                'delivering': 'bg-blue-50 text-blue-700 border-blue-200',
+                'delivered': 'bg-emerald-50 text-emerald-700 border-emerald-200'
+            };
+
+            const cardBorderColors = {
+                'received': 'border-amber-300 shadow-amber-50',
+                'confirmed': 'border-teal-300 shadow-teal-50',
+                'batching': 'border-orange-300 shadow-orange-50',
+                'delivering': 'border-blue-300 shadow-blue-50',
+                'delivered': 'border-slate-200 opacity-80'
+            };
+
+            const headerBarColors = {
+                'received': 'bg-gradient-to-r from-amber-400 to-amber-500',
+                'confirmed': 'bg-gradient-to-r from-teal-400 to-teal-500',
+                'batching': 'bg-gradient-to-r from-orange-400 to-orange-500',
+                'delivering': 'bg-gradient-to-r from-blue-500 to-indigo-500',
+                'delivered': 'bg-gradient-to-r from-emerald-500 to-teal-500'
+            };
+
+            const assignedTruckId = order.assignedTruck ? order.assignedTruck.truckId : '';
+
+            // ทำการแยกแปลงเวลาจาก String เดิม เพื่อนำไปใช้กับ Input ให้สมบูรณ์แบบ
+            let defaultDate = "";
+            let defaultTime = "";
+            try {
+                if (order.deliveryDateTime) {
+                    const parts = order.deliveryDateTime.split(' เวลา ');
+                    if (parts.length === 2) {
+                        const dateParts = parts[0].split('/');
+                        if (dateParts.length === 3) {
+                            defaultDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+                        }
+                        defaultTime = parts[1].replace(' น.', '').trim();
+                    }
+                }
+            } catch (e) { console.error("DateTime parse failed:", e); }
+
+            // รายงานบันทึกเวลาที่ผสมปูนจริงของแพลนท์
+            let batchingTimeText = "";
+            if (order.batchingStartTime) {
+                const timeObj = new Date(order.batchingStartTime);
+                batchingTimeText = `<div class="text-[11px] text-orange-600 font-bold flex items-center gap-1.5 mt-1 bg-orange-50 border border-orange-100 p-1.5 rounded-lg"><i data-lucide="activity" class="w-3.5 h-3.5"></i> เวลาผสมปูน: ${timeObj.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})} น.</div>`;
+            }
+
+            const isTicketPrintable = ['confirmed', 'batching', 'delivering', 'delivered'].includes(order.status);
+
+            const card = document.createElement('div');
+            card.className = `bg-white rounded-2xl border-2 ${cardBorderColors[order.status]} shadow-sm hover:shadow-md overflow-hidden transition-all flex flex-col relative`;
+            
+            card.innerHTML = `
+                <div class="h-2 w-full ${headerBarColors[order.status]}"></div>
+                
+                <div class="p-5 border-b border-slate-100 flex-1 flex flex-col">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex-1 min-w-0 pr-3">
+                            <h3 class="font-bold text-slate-900 text-lg truncate">${order.name}</h3>
+                            <p class="text-[10px] text-slate-400 font-mono mt-0.5">REF: ${order.orderNumber}</p>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <div class="text-2xl font-black text-emerald-600 leading-none">${order.volume} <span class="text-xs text-slate-500 font-medium">คิว</span></div>
+                            <div class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 mt-1.5 inline-block">${order.strength} KSC</div>
+                            
+                            <!-- 💰 แสดงยอดโอนสุทธิรวมภาษีเด่นชัดสำหรับแอดมิน -->
+                            <div class="mt-2.5 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+                                ฿${parseFloat(order.grandTotal || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 })}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ส่วนการแสดงผลวันเวลาเทปูนและกล่องแก้ไขวันเวลา -->
+                    <div class="mt-2 text-xs bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="font-semibold text-slate-500">วันเวลาที่กำหนดเท:</span>
+                            <button onclick="window.toggleEditDateTime('${order.id}')" class="text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1"><i data-lucide="calendar-range" class="w-3 h-3"></i> แก้ไข</button>
+                        </div>
+                        <div class="font-bold text-slate-800 flex items-center gap-1" id="dateTimeText-${order.id}">
+                            <i data-lucide="calendar-clock" class="w-3.5 h-3.5 text-slate-400"></i> ${order.deliveryDateTime}
+                        </div>
+                        
+                        <!-- ช่องแก้ไขลับที่จะปรากฏขึ้นเมื่อแอดมินกดยกเลิก/ตกลงแก้ไขกับลูกค้า -->
+                        <div id="dateTimeEditor-${order.id}" class="hidden mt-3 space-y-2 pt-3 border-t border-slate-200">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="space-y-0.5">
+                                    <span class="text-[9px] font-bold text-slate-400 uppercase">เปลี่ยนวันที่</span>
+                                    <input type="date" id="editDate-${order.id}" value="${defaultDate}" class="w-full p-1.5 rounded border text-[11px] font-bold text-slate-800">
+                                </div>
+                                <div class="space-y-0.5">
+                                    <span class="text-[9px] font-bold text-slate-400 uppercase">เปลี่ยนเวลา</span>
+                                    <input type="time" id="editTime-${order.id}" value="${defaultTime}" class="w-full p-1.5 rounded border text-[11px] font-bold text-slate-800">
+                                </div>
+                            </div>
+                            <div class="flex justify-end gap-1.5 pt-1">
+                                <button onclick="window.toggleEditDateTime('${order.id}')" class="px-2.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-md text-[10px] font-bold">ยกเลิก</button>
+                                <button onclick="window.saveNewDateTime('${order.id}')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-md text-[10px] font-bold">บันทึก</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5 text-xs text-slate-600 mt-3 mb-4">
+                        <div class="flex gap-2 items-center"><i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400"></i> โทร: ${order.phone}</div>
+                        ${order.reqTaxInvoice ? `<div class="flex gap-2 items-center text-blue-600 font-bold"><i data-lucide="building-2" class="w-3.5 h-3.5"></i> ร้องขอใบกำกับภาษี</div>` : ''}
+                        ${batchingTimeText}
+                    </div>
+
+                    <!-- ส่วนมอบหมายพนักงานขับรถโม่ (แสดงเฉพาะชื่อคนขับเพื่อตัดความสับสน) -->
+                    <div class="mt-auto mb-4 bg-slate-50 border border-slate-200 p-3 rounded-xl">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase mb-1.5 flex items-center gap-1"><i data-lucide="truck" class="w-3 h-3"></i> พนักงานขับโม่ส่งปูน</label>
+                        <select onchange="window.assignTruck('${order.id}', this.value)" class="w-full text-xs font-semibold rounded-lg border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 px-2 py-1.5 outline-none bg-white">
+                            <option value="">-- เลือกพนักงานคนขับ --</option>
+                            ${allTrucksMemory.map(t => `<option value="${t.id}" ${assignedTruckId === t.id ? 'selected' : ''}>${t.driverName}</option>`).join('')}
+                        </select>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mb-3 mt-auto">
+                        ${(order.slipImage && order.slipImage.length > 0) ? `
+                            <button onclick="window.viewSlip('${order.id}')" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 border border-emerald-200">
+                                <i data-lucide="image" class="w-3.5 h-3.5"></i> ตรวจสลิปโอนเงิน
+                            </button>
+                        ` : `<div class="flex-1 bg-red-50 text-red-500 text-xs font-bold py-2 px-3 rounded-lg text-center border border-red-100 flex justify-center items-center gap-1.5"><i data-lucide="image-off" class="w-3.5 h-3.5"></i> ไม่มีสลิป</div>`}
+                        
+                        ${order.reqTaxInvoice ? `
+                            <button onclick="window.viewTaxInfo('${order.id}')" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 border border-blue-200">
+                                <i data-lucide="file-text" class="w-3.5 h-3.5"></i> ข้อมูลภาษี
+                            </button>
+                        ` : ''}
+                    </div>
+
+                    <!-- แผงปุ่มจัดพิมพ์เอกสารแบบเลือกได้ -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="window.printDocument('${order.id}')" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-2.5 px-3 rounded-lg transition flex items-center justify-center gap-1.5 shadow-sm">
+                            <i data-lucide="printer" class="w-3.5 h-3.5"></i> ใบเสร็จ / VAT
+                        </button>
+                        <button onclick="window.printDeliveryTicket('${order.id}')" ${!isTicketPrintable ? 'disabled class="bg-slate-100 text-slate-400 text-xs font-bold py-2.5 px-3 rounded-lg flex items-center justify-center gap-1.5 border border-slate-200 cursor-not-allowed"' : 'class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2.5 px-3 rounded-lg transition flex items-center justify-center gap-1.5 shadow-sm"'}>
+                            <i data-lucide="receipt" class="w-3.5 h-3.5"></i> ใบส่งคอนกรีต
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-4 bg-slate-50 flex gap-2 items-center">
+                    <select onchange="window.updateOrderStatus('${order.id}', this.value)" class="flex-1 text-xs font-bold rounded-lg border focus:ring-emerald-500 focus:border-emerald-500 px-3 py-2 outline-none cursor-pointer ${statusColors[order.status]}">
+                        <option value="received" ${order.status === 'received' ? 'selected' : ''}>📝 1. รอตรวจสอบ / อนุมัติจอง</option>
+                        <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>📅 2. ยืนยันคิวส่งมอบแล้ว</option>
+                        <option value="batching" ${order.status === 'batching' ? 'selected' : ''}>⚙️ 3. สั่งผสมปูน (Batching)</option>
+                        <option value="delivering" ${order.status === 'delivering' ? 'selected' : ''}>🚛 4. รถโม่กำลังเดินทาง</option>
+                        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>✅ 5. เทเสร็จสิ้น (ปิดงาน)</option>
+                    </select>
+                    <button onclick="window.deleteOrder('${order.id}')" class="w-9 h-9 flex items-center justify-center rounded-lg text-red-500 hover:bg-red-100 hover:text-red-600 transition shrink-0">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `;
+            return card;
+        }
+
+        // แสดงผลคิวงานตามข้อกำหนดใหม่ (แบ่งเป็น Active และ วันนี้เสร็จสิ้น)
         function renderOrdersGrid() {
-            const grid = document.getElementById('ordersGrid');
+            const activeGrid = document.getElementById('activeOrdersGrid');
+            const completedTodayGrid = document.getElementById('completedTodayGrid');
             const summaryContainer = document.getElementById('productionSummary');
-            grid.innerHTML = '';
+            
+            if(!activeGrid || !completedTodayGrid) return;
+
+            activeGrid.innerHTML = '';
+            completedTodayGrid.innerHTML = '';
 
             if(allOrdersMemory.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200"><i data-lucide="inbox" class="w-10 h-10 text-slate-300 mx-auto mb-3"></i><p class="text-slate-500 font-medium">ยังไม่มีคิวงานเข้าในระบบ</p></div>`;
+                activeGrid.innerHTML = `<div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200"><i data-lucide="inbox" class="w-10 h-10 text-slate-300 mx-auto mb-3"></i><p class="text-slate-500 font-medium">ยังไม่มีคิวงานเข้าในระบบ</p></div>`;
+                completedTodayGrid.innerHTML = `<div class="col-span-full py-10 text-center bg-white rounded-2xl border border-slate-200/60 text-slate-400 text-sm">ยังไม่มีงานเสร็จสิ้นของวันนี้</div>`;
                 summaryContainer.innerHTML = ''; 
                 if(window.lucide) lucide.createIcons();
                 return;
             }
 
-            // Summary calculation
+            // คำนวณยอดสรุปของการผลิต (Active Volume และคิวปูนค้างเท)
             const productionMap = {}; let totalPending = 0;
             allOrdersMemory.forEach(order => {
-                if (['received', 'batching', 'delivering'].includes(order.status)) {
+                // คิวค้างส่งตอนนี้ครอบคลุมตั้งแต่รับคิว ยืนยันคิว สั่งผสมปูน และกำลังเดินทาง
+                if (['received', 'confirmed', 'batching', 'delivering'].includes(order.status)) {
                     const weight = parseFloat(order.volume) || 0;
                     const dateOnly = order.deliveryDateTime.split(' ')[0]; 
                     productionMap[dateOnly] = (productionMap[dateOnly] || 0) + weight;
@@ -830,108 +1206,50 @@
 
             let summaryHtml = '';
             if (totalPending > 0) {
-                summaryHtml += `<div class="bg-gradient-to-br from-emerald-600 to-emerald-800 p-5 rounded-2xl text-white shadow-md"><div class="text-xs text-emerald-100 font-bold mb-1 uppercase tracking-widest">ยอดค้างจ่ายรวม</div><div class="text-3xl font-black">${totalPending.toFixed(1)} <span class="text-sm font-medium">คิว</span></div></div>`;
+                summaryHtml += `<div class="bg-gradient-to-br from-emerald-600 to-emerald-800 p-5 rounded-2xl text-white shadow-md"><div class="text-xs text-emerald-100 font-bold mb-1 uppercase tracking-widest">ยอดค้างเทรวม</div><div class="text-3xl font-black">${totalPending.toFixed(1)} <span class="text-sm font-medium">คิว</span></div></div>`;
                 for (const [date, weight] of Object.entries(productionMap).slice(0,3)) {
                     summaryHtml += `<div class="bg-white border border-slate-200 p-5 rounded-2xl text-slate-800 shadow-sm"><div class="text-xs text-slate-400 font-bold mb-1 tracking-wider">${date}</div><div class="text-2xl font-black">${weight.toFixed(1)} <span class="text-sm font-medium text-slate-500">คิว</span></div></div>`;
                 }
             }
             summaryContainer.innerHTML = summaryHtml;
 
-            // Truck Options HTML
-            const truckOptionsHtml = allTrucksMemory.map(t => `<option value="${t.id}">${t.licensePlate} - ${t.driverName}</option>`).join('');
+            // วันปัจจุบันสำหรับเช็คเพื่อแสดงใน 'เสร็จสิ้นวันนี้'
+            const todayDateStr = new Date().toDateString();
 
-            // Generate Cards
+            let activeCount = 0;
+            let completedTodayCount = 0;
+
             allOrdersMemory.forEach(order => {
-                const statusColors = {
-                    'received': 'bg-amber-100 text-amber-800 border-amber-300',
-                    'batching': 'bg-orange-50 text-orange-700 border-orange-200',
-                    'delivering': 'bg-blue-50 text-blue-700 border-blue-200',
-                    'delivered': 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                };
-
-                const cardBorderColors = {
-                    'received': 'border-amber-300 shadow-amber-50',
-                    'batching': 'border-orange-300 shadow-orange-50',
-                    'delivering': 'border-blue-300 shadow-blue-50',
-                    'delivered': 'border-slate-200 opacity-60'
-                };
-
-                const headerBarColors = {
-                    'received': 'bg-gradient-to-r from-amber-400 to-amber-500',
-                    'batching': 'bg-gradient-to-r from-orange-400 to-orange-500',
-                    'delivering': 'bg-gradient-to-r from-blue-500 to-indigo-500',
-                    'delivered': 'bg-gradient-to-r from-emerald-500 to-teal-500'
-                };
-
-                const assignedTruckId = order.assignedTruck ? order.assignedTruck.truckId : '';
-
-                const card = document.createElement('div');
-                card.className = `bg-white rounded-2xl border-2 ${cardBorderColors[order.status]} shadow-sm hover:shadow-md overflow-hidden transition-all flex flex-col relative`;
+                // เช็คสถานะการเทปูน
+                const isActive = ['received', 'confirmed', 'batching', 'delivering'].includes(order.status);
                 
-                card.innerHTML = `
-                    <div class="h-2 w-full ${headerBarColors[order.status]}"></div>
-                    
-                    <div class="p-5 border-b border-slate-100 flex-1 flex flex-col">
-                        <div class="flex justify-between items-start mb-3">
-                            <div class="flex-1 min-w-0 pr-3">
-                                <h3 class="font-bold text-slate-900 text-lg truncate">${order.name}</h3>
-                                <p class="text-[10px] text-slate-400 font-mono mt-0.5">REF: ${order.orderNumber}</p>
-                            </div>
-                            <div class="text-right shrink-0">
-                                <div class="text-2xl font-black text-emerald-600 leading-none">${order.volume} <span class="text-xs text-slate-500 font-medium">คิว</span></div>
-                                <div class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 mt-1.5 inline-block">${order.strength} KSC</div>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-1.5 text-xs text-slate-600 mb-4">
-                            <div class="flex gap-2 items-center"><i data-lucide="calendar-clock" class="w-3.5 h-3.5 text-slate-400"></i> ${order.deliveryDateTime}</div>
-                            <div class="flex gap-2 items-center"><i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400"></i> ${order.phone}</div>
-                            ${order.reqTaxInvoice ? `<div class="flex gap-2 items-center text-blue-600 font-bold"><i data-lucide="building-2" class="w-3.5 h-3.5"></i> ร้องขอใบกำกับภาษี</div>` : ''}
-                        </div>
+                // ตรวจสอบว่าเป็นบิลที่ส่งเสร็จสิ้นของ 'วันนี้' เท่านั้นหรือไม่
+                let isCompletedToday = false;
+                if (order.status === 'delivered') {
+                    const orderDate = order.deliveredAt ? new Date(order.deliveredAt) : (order.createdAt ? new Date(order.createdAt) : null);
+                    if (orderDate && orderDate.toDateString() === todayDateStr) {
+                        isCompletedToday = true;
+                    }
+                }
 
-                        <!-- ส่วนมอบหมายรถโม่ปูน -->
-                        <div class="mt-auto mb-4 bg-slate-50 border border-slate-200 p-3 rounded-xl">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase mb-1.5 flex items-center gap-1"><i data-lucide="truck" class="w-3 h-3"></i> มอบหมายพนักงานส่งปูน</label>
-                            <select onchange="window.assignTruck('${order.id}', this.value)" class="w-full text-xs font-semibold rounded-lg border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 px-2 py-1.5 outline-none bg-white">
-                                <option value="">-- เลือกรถและคนขับ --</option>
-                                ${allTrucksMemory.map(t => `<option value="${t.id}" ${assignedTruckId === t.id ? 'selected' : ''}>${t.licensePlate} (${t.driverName})</option>`).join('')}
-                            </select>
-                        </div>
-
-                        <div class="flex flex-wrap gap-2 mb-3 mt-auto">
-                            ${(order.slipImage && order.slipImage.length > 0) ? `
-                                <button onclick="window.viewSlip('${order.id}')" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 border border-emerald-200">
-                                    <i data-lucide="image" class="w-3.5 h-3.5"></i> ตรวจสลิปโอนเงิน
-                                </button>
-                            ` : `<div class="flex-1 bg-red-50 text-red-500 text-xs font-bold py-2 px-3 rounded-lg text-center border border-red-100 flex justify-center items-center gap-1.5"><i data-lucide="image-off" class="w-3.5 h-3.5"></i> ไม่มีสลิป</div>`}
-                            
-                            ${order.reqTaxInvoice ? `
-                                <button onclick="window.viewTaxInfo('${order.id}')" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 border border-blue-200">
-                                    <i data-lucide="file-text" class="w-3.5 h-3.5"></i> ข้อมูลภาษี
-                                </button>
-                            ` : ''}
-                        </div>
-
-                        <!-- ปุ่มพิมพ์ใบเสร็จ/ใบกำกับภาษี PDF สำหรับแอดมิน -->
-                        <button onclick="window.printDocument('${order.id}')" class="w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 shadow-sm">
-                            <i data-lucide="printer" class="w-3.5 h-3.5"></i> พิมพ์ ${order.reqTaxInvoice ? 'ใบกำกับภาษี' : 'ใบเสนอราคา / บิล'}
-                        </button>
-                    </div>
-                    
-                    <div class="p-4 bg-slate-50 flex gap-2 items-center">
-                        <select onchange="window.updateOrderStatus('${order.id}', this.value)" class="flex-1 text-xs font-bold rounded-lg border focus:ring-emerald-500 focus:border-emerald-500 px-3 py-2 outline-none cursor-pointer ${statusColors[order.status]}">
-                            <option value="received" ${order.status === 'received' ? 'selected' : ''}>📝 รอตรวจสอบ / รับคิว</option>
-                            <option value="batching" ${order.status === 'batching' ? 'selected' : ''}>⚙️ กำลังผสมปูน (Batching)</option>
-                            <option value="delivering" ${order.status === 'delivering' ? 'selected' : ''}>🚛 รถโม่กำลังเดินทาง</option>
-                            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>✅ เทเสร็จสิ้น (ปิดงาน)</option>
-                        </select>
-                        <button onclick="window.deleteOrder('${order.id}')" class="w-9 h-9 flex items-center justify-center rounded-lg text-red-500 hover:bg-red-100 hover:text-red-600 transition shrink-0">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                `;
-                grid.appendChild(card);
+                if (isActive) {
+                    const card = createOrderCardElement(order, false);
+                    activeGrid.appendChild(card);
+                    activeCount++;
+                } else if (isCompletedToday) {
+                    const card = createOrderCardElement(order, false);
+                    completedTodayGrid.appendChild(card);
+                    completedTodayCount++;
+                }
             });
+
+            // ตรวจสอบความว่างเปล่าของกล่องจัดกลุ่ม
+            if (activeCount === 0) {
+                activeGrid.innerHTML = `<div class="col-span-full py-12 text-center bg-white rounded-2xl border border-slate-200/80 text-slate-400 text-sm font-medium"><i data-lucide="check-square" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i> ไม่มีคิวงานกำลังดำเนินการค้างอยู่</div>`;
+            }
+            if (completedTodayCount === 0) {
+                completedTodayGrid.innerHTML = `<div class="col-span-full py-12 text-center bg-white rounded-2xl border border-slate-200/80 text-slate-400 text-sm font-medium"><i data-lucide="clock-3" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i> วันนี้ยังไม่มีคิวงานที่เทเสร็จสิ้นสมบูรณ์</div>`;
+            }
 
             if(window.lucide) lucide.createIcons();
         }
@@ -939,14 +1257,48 @@
         window.updateOrderStatus = async function(id, status) {
             try { 
                 let dataToUpdate = { status: status };
-                // เริ่มจับเวลาการจัดส่งเมื่อเปลี่ยนเป็น delivering
+                // 1. สั่งผสมปูน (Batching) - บันทึกเวลาแพลนท์เริ่มผสมปูน
+                if (status === 'batching') dataToUpdate.batchingStartTime = Date.now();
+                // 2. เริ่มจัดส่ง (Delivering)
                 if (status === 'delivering') dataToUpdate.deliveryStartTime = Date.now();
-                // สิ้นสุดเวลาและปิดออเดอร์เมื่อเปลี่ยนเป็น delivered
+                // 3. เทเสร็จสิ้น (Delivered)
                 if (status === 'delivered') dataToUpdate.deliveredAt = Date.now();
 
                 await updateDoc(doc(db, ordersCollectionPath, id), dataToUpdate); 
             } catch(e) { 
                 window.showModal('ผิดพลาด', 'ไม่สามารถอัปเดตสถานะได้'); 
+            }
+        };
+
+        // ฟังก์ชันแก้ไขกำหนดเวลาเทคอนกรีตเรียลไทม์
+        window.saveNewDateTime = async function(id) {
+            const dateVal = document.getElementById(`editDate-${id}`).value;
+            const timeVal = document.getElementById(`editTime-${id}`).value;
+            
+            if(!dateVal || !timeVal) {
+                window.showModal('แจ้งเตือน', 'กรุณาระบุวันและเวลาที่ถูกต้อง');
+                return;
+            }
+
+            const [y, m, d] = dateVal.split('-');
+            const formattedDateTime = `${d}/${m}/${y} เวลา ${timeVal} น.`;
+
+            try {
+                await updateDoc(doc(db, ordersCollectionPath, id), {
+                    deliveryDateTime: formattedDateTime
+                });
+                window.showModal('สำเร็จ', 'อัปเดตกำหนดวันเวลาเทคอนกรีตเรียบร้อยแล้วครับ ระบบได้ส่งการแจ้งเตือนพิกัดใหม่ไปที่คนขับและลูกค้าแล้ว');
+                // ซ่อน editor
+                document.getElementById(`dateTimeEditor-${id}`).classList.add('hidden');
+            } catch(e) {
+                window.showModal('ผิดพลาด', 'ไม่สามารถอัปเดตข้อมูลวันเวลาได้');
+            }
+        };
+
+        window.toggleEditDateTime = function(id) {
+            const editor = document.getElementById(`dateTimeEditor-${id}`);
+            if (editor) {
+                editor.classList.toggle('hidden');
             }
         };
 
@@ -1004,7 +1356,7 @@
             }
         };
 
-        // 🚨 ฟังก์ชันแปลงข้อมูลเพื่อพิมพ์ใบแจ้งหนี้ / ใบกำกับภาษี PDF ดิบขนาดกะทัดรัด
+        // 🚨 ฟังก์ชันพิมพ์ใบกำกับภาษี / ใบเสร็จรับเงิน
         window.printDocument = function(orderId) {
             const order = allOrdersMemory.find(o => o.id === orderId);
             if(!order) {
@@ -1055,9 +1407,65 @@
             setVal('printVat', order.vat ? order.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
             setVal('printGrandTotal', order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
 
-            // ใช้คลาสควบคุมบน body สำหรับการพิมพ์เฉพาะ Invoice โดยไม่แตะต้อง UI หน้าบ้าน
             document.body.classList.add('print-invoice');
-            document.body.classList.remove('print-report');
+            document.body.classList.remove('print-report', 'print-delivery-ticket');
+
+            window.print();
+        };
+
+        // 🚨 ฟังก์ชันสำหรับสั่งจัดพิมพ์ "ใบจ่ายสินค้า / ใบส่งคอนกรีต" เพื่อมอบพนักงานขับรถส่งลูกค้าเซ็นต์
+        window.printDeliveryTicket = function(orderId) {
+            const order = allOrdersMemory.find(o => o.id === orderId);
+            if(!order) {
+                window.showModal('ข้อผิดพลาด', 'ไม่พบข้อมูลออเดอร์นี้');
+                return;
+            }
+
+            const setVal = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = val;
+            };
+
+            setVal('ticketOrderNo', order.orderNumber);
+            setVal('ticketPrintDate', new Date().toLocaleDateString('th-TH') + " " + new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}) + " น.");
+            
+            // ข้อมูลฝั่งผู้รับ
+            setVal('ticketCustomerName', order.reqTaxInvoice ? order.companyName : order.name);
+            const ticketTaxInfo = document.getElementById('ticketTaxInfo');
+            if (order.reqTaxInvoice && ticketTaxInfo) {
+                ticketTaxInfo.innerHTML = `เลขประจำตัวผู้เสียภาษีลูกค้า: ${order.taxId}<br>ที่อยู่บริษัท: ${order.companyAddress}`;
+                ticketTaxInfo.classList.remove('hidden');
+            } else if (ticketTaxInfo) {
+                ticketTaxInfo.classList.add('hidden');
+            }
+            setVal('ticketCustomerPhone', order.phone);
+
+            // ข้อมูลการขนส่งและคนขับ
+            setVal('ticketDriverName', order.assignedTruck ? `${order.assignedTruck.driverName} (${order.assignedTruck.licensePlate})` : "ยังไม่ได้ระบุคนส่งปูน");
+            setVal('ticketAddress', order.address || 'จัดส่งตามพิกัดแผนที่สั่งซื้อ');
+
+            // รายละเอียดสินค้า
+            setVal('ticketStrength', order.strength);
+            setVal('ticketVolume', parseFloat(order.volume || 0).toFixed(1));
+            setVal('ticketGrandTotal', parseFloat(order.grandTotal || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 }));
+
+            // รายละเอียดบันทึกเวลา KPI
+            const tBatch = document.getElementById('ticketBatchingTime');
+            if (tBatch) {
+                tBatch.innerText = order.batchingStartTime 
+                    ? new Date(order.batchingStartTime).toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}) + " น."
+                    : "-- : -- น. (ยังไม่ผสมปูน)";
+            }
+            const tDepart = document.getElementById('ticketDepartureTime');
+            if (tDepart) {
+                tDepart.innerText = order.deliveryStartTime 
+                    ? new Date(order.deliveryStartTime).toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}) + " น."
+                    : "-- : -- น. (ยังไม่ปล่อยรถ)";
+            }
+
+            // ควบคุม Class เพื่อสั่งพิมพ์ใบจ่ายปูนเท่านั้น
+            document.body.classList.add('print-delivery-ticket');
+            document.body.classList.remove('print-invoice', 'print-report');
 
             window.print();
         };
@@ -1414,7 +1822,6 @@
                         name: o.name,
                         phone: o.phone,
                         companyName: o.companyName || "",
-                        reqTaxInvoice: o.reqTaxInvoice || false,
                         totalSpent: 0,
                         totalVolume: 0,
                         count: 0
@@ -1498,14 +1905,14 @@
 
             // ใช้คลาสควบคุมบน body สำหรับการพิมพ์เฉพาะสรุปรายงานยอดขาย
             document.body.classList.add('print-report');
-            document.body.classList.remove('print-invoice');
+            document.body.classList.remove('print-invoice', 'print-delivery-ticket');
 
             window.print();
         };
 
         // สลับคลาสควบคุมกลับทันทีหลังสั่งพิมพ์เสร็จสิ้นหรือยกเลิก เพื่อป้องกันการแสดงผลทับซ้อน
         window.addEventListener('afterprint', () => {
-            document.body.classList.remove('print-invoice', 'print-report');
+            document.body.classList.remove('print-invoice', 'print-report', 'print-delivery-ticket');
         });
 
         // ----------------------------------------------------
