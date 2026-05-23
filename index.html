@@ -80,13 +80,12 @@
             @page { margin: 10mm; size: A4 portrait; }
             body { background-color: white !important; background-image: none !important;}
             .print\:hidden { display: none !important; }
-            .print\:block { display: block !important; }
-            #printable-document {
-                position: absolute;
-                left: 0; top: 0;
-                width: 100%;
-                background: white;
-                color: black;
+            #printable-document { display: none !important; }
+            body.print-invoice #printable-document { 
+                display: block !important; 
+                position: absolute; 
+                left: 0; top: 0; 
+                width: 100%; 
             }
         }
     </style>
@@ -737,70 +736,80 @@
     <!-- ========================================== -->
     <!-- 📄 เอกสาร A4 (ซ่อนไว้เสมอ จะแสดงเฉพาะตอนสั่ง Print) -->
     <!-- ========================================== -->
-    <div id="printable-document" class="hidden print:block absolute inset-0 bg-white text-black p-8 text-sm">
-        <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
+    <div id="printable-document" class="hidden absolute bg-white text-black p-8 text-sm">
+        <div class="border-b-4 border-double border-slate-900 pb-4 mb-6 flex justify-between items-start">
             <div>
-                <h1 class="text-2xl font-black text-slate-900 mb-1">PRO CONCRETE ECO</h1>
-                <p class="text-xs text-slate-600">บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)</p>
-                <p class="text-xs text-slate-600">123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110</p>
-                <p class="text-xs text-slate-600">โทร. 02-123-4567 | เลขประจำตัวผู้เสียภาษี: 01055xxxxxxxx</p>
+                <h1 class="text-3xl font-black tracking-tight text-slate-900 mb-1" id="invPrintHeaderBrand">PRO CONCRETE ECO</h1>
+                <p class="text-xs text-slate-700 font-bold" id="invPrintHeaderFullname">บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)</p>
+                <p class="text-xs text-slate-600" id="invPrintHeaderAddress">123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110</p>
+                <p class="text-xs text-slate-600">โทร. <span id="invPrintHeaderPhone">02-123-4567</span> | เลขประจำตัวผู้เสียภาษี: <span id="invPrintHeaderTaxId">01055xxxxxxxx</span></p>
             </div>
             <div class="text-right">
-                <h2 id="printDocTitle" class="text-xl font-bold text-slate-800 uppercase">ใบเสนอราคา / ใบแจ้งหนี้</h2>
-                <p class="text-xs font-bold text-slate-800 mt-2">เลขที่เอกสาร: <span id="printDocNo"></span></p>
-                <p class="text-xs text-slate-600">วันที่: <span id="printCreateDate"></span></p>
+                <h2 id="printDocTitle" class="text-2xl font-black text-slate-900 uppercase">ใบเสนอราคา / ใบแจ้งหนี้</h2>
+                <div class="mt-4 text-xs space-y-1 text-slate-800 text-left bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                    <p class="font-bold">รหัส Order: <span id="printDocNo" class="font-mono text-emerald-700"></span></p>
+                    <p>วันที่พิมพ์ใบแจ้งหนี้: <span id="printCreateDate"></span></p>
+                </div>
             </div>
         </div>
         
-        <div class="flex justify-between mb-6">
-            <div class="w-1/2">
-                <p class="text-[10px] font-bold text-slate-500 mb-1 uppercase bg-slate-100 p-1">ข้อมูลลูกค้า (Customer)</p>
-                <p class="font-bold text-slate-800 text-base mt-1" id="printCustomerName">...</p>
-                <p class="text-xs text-slate-600 mt-1" id="printCustomerCompanyInfo"></p>
-                <p class="text-xs text-slate-600 mt-1">โทร: <span id="printCustomerPhone"></span></p>
+        <div class="grid grid-cols-2 gap-6 mb-6">
+            <div class="border border-slate-300 rounded-xl p-4">
+                <p class="text-[10px] font-black text-slate-500 uppercase bg-slate-100 p-1 mb-2 tracking-wide">ข้อมูลลูกค้า (Customer Details)</p>
+                <p class="font-black text-slate-800 text-base mb-1" id="printCustomerName">...</p>
+                <p class="text-xs text-slate-600" id="printCustomerCompanyInfo"></p>
+                <p class="text-xs text-slate-600 mt-1">เบอร์ติดต่อลูกค้า: <span id="printCustomerPhone" class="font-bold"></span></p>
             </div>
-            <div class="w-1/2 pl-4 text-right">
-                <p class="text-[10px] font-bold text-slate-500 mb-1 uppercase bg-slate-100 p-1">ข้อมูลการจัดส่ง (Delivery)</p>
-                <p class="font-bold text-slate-800 text-base mt-1" id="printDeliveryTime">...</p>
-                <p class="text-xs text-slate-600 mt-1" id="printAddress">...</p>
+            <div class="border border-slate-300 rounded-xl p-4">
+                <p class="text-[10px] font-black text-slate-500 uppercase bg-slate-100 p-1 mb-2 tracking-wide">สถานที่จัดส่ง (Delivery Destination)</p>
+                <p class="font-black text-slate-800 text-base mb-1" id="printDeliveryTime">...</p>
+                <p class="text-xs text-slate-600 mt-2 font-medium">ไซต์งานจัดส่ง: <span id="printAddress" class="text-slate-800 font-semibold"></span></p>
             </div>
         </div>
 
         <table class="w-full text-xs mb-6 border-collapse">
             <thead>
-                <tr class="bg-slate-100 border-y-2 border-slate-300">
-                    <th class="p-2 text-left">ลำดับ</th>
-                    <th class="p-2 text-left">รายการ (Description)</th>
-                    <th class="p-2 text-center">จำนวน (Qty)</th>
-                    <th class="p-2 text-right">ราคาหน่วย (Unit Price)</th>
-                    <th class="p-2 text-right">จำนวนเงิน (Amount)</th>
+                <tr class="bg-slate-100 border-y-2 border-slate-400">
+                    <th class="p-3 text-center w-12">ลำดับ</th>
+                    <th class="p-3 text-left">รายการวัสดุและเกรดคอนกรีตที่จัดส่ง</th>
+                    <th class="p-3 text-center w-24">กำลังอัด (KSC)</th>
+                    <th class="p-3 text-center w-24">ปริมาณ (คิว)</th>
+                    <th class="p-3 text-right w-36">ราคาหน่วย (บาท)</th>
+                    <th class="p-3 text-right w-36">จำนวนเงิน (บาท)</th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="border-b border-slate-200">
-                    <td class="p-2 text-center">1</td>
-                    <td class="p-2">คอนกรีตผสมเสร็จ (Low Carbon) กำลังอัด <span id="printStrength"></span> KSC</td>
-                    <td class="p-2 text-center"><span id="printVolume"></span> คิว</td>
-                    <td class="p-2 text-right"><span id="printUnitPrice"></span></td>
-                    <td class="p-2 text-right"><span id="printSubtotal"></span></td>
+                <tr class="border-b border-slate-300">
+                    <td class="p-3 text-center font-bold">1</td>
+                    <td class="p-3">
+                        <p class="font-black text-slate-900">คอนกรีตผสมเสร็จ ProConcrete Eco (คาร์บอนต่ำรักษ์โลก)</p>
+                        <p class="text-[10px] text-slate-500 mt-1">ผลิตและผสมภายใต้การควบคุมคุณภาพตามมาตรฐานวิศวกรรมทางโยธา</p>
+                    </td>
+                    <td class="p-3 text-center font-black text-slate-800" id="printStrength">...</td>
+                    <td class="p-3 text-center font-black text-slate-800 text-base" id="printVolume">...</td>
+                    <td class="p-3 text-right font-black text-slate-800" id="printUnitPrice">...</td>
+                    <td class="p-3 text-right font-black text-slate-800 text-base" id="printSubtotal">...</td>
                 </tr>
-                <tr id="printExtraFeeRow" class="hidden border-b border-slate-200">
-                    <td class="p-2 text-center">2</td>
-                    <td class="p-2">ค่าบริการจัดส่งรถโม่เล็ก</td>
-                    <td class="p-2 text-center">1 เที่ยว</td>
-                    <td class="p-2 text-right"><span id="printShippingFeeUnit"></span></td>
-                    <td class="p-2 text-right"><span id="printShippingFeeTotal"></span></td>
+                <tr id="printExtraFeeRow" class="hidden border-b border-slate-300">
+                    <td class="p-3 text-center font-bold">2</td>
+                    <td class="p-3">
+                        <p class="font-black text-slate-900">ค่าบริการจัดส่งรถโม่เล็กเพิ่มเติม</p>
+                    </td>
+                    <td class="p-3 text-center text-slate-500">-</td>
+                    <td class="p-3 text-center font-black text-slate-800 text-base">1 เที่ยว</td>
+                    <td class="p-3 text-right font-black text-slate-800" id="printShippingFeeUnit">...</td>
+                    <td class="p-3 text-right font-black text-slate-800 text-base" id="printShippingFeeTotal">...</td>
                 </tr>
             </tbody>
         </table>
 
         <div class="flex justify-end mt-4">
-            <div class="w-64 space-y-1 text-xs">
-                <div class="flex justify-between"><span class="text-slate-600">รวมเป็นเงิน:</span><span id="printTotalBeforeVat"></span></div>
-                <div class="flex justify-between"><span class="text-slate-600">ภาษีมูลค่าเพิ่ม (VAT 7%):</span><span id="printVat"></span></div>
-                <div class="flex justify-between font-bold text-sm pt-2 border-t border-slate-800 mt-1">
-                    <span>จำนวนเงินรวมทั้งสิ้น:</span>
-                    <span>฿ <span id="printGrandTotal"></span></span>
+            <div class="w-64 space-y-2 text-xs">
+                <div class="flex justify-between"><span class="text-slate-600 font-bold">รวมเป็นเงิน:</span><span id="printTotalBeforeVat"></span></div>
+                <div class="flex justify-between"><span class="text-slate-600 font-bold">ภาษีมูลค่าเพิ่ม (VAT 7%):</span><span id="printVat"></span></div>
+                <div class="flex justify-between font-black text-sm pt-2 border-t-2 border-slate-400 mt-2">
+                    <span class="text-slate-900">จำนวนเงินรวมทั้งสิ้น:</span>
+                    <span class="text-lg text-emerald-700">฿ <span id="printGrandTotal"></span></span>
                 </div>
             </div>
         </div>
@@ -812,7 +821,7 @@
             </div>
             <div class="text-right">
                 <p>_____________________________________</p>
-                <p class="mt-1">ผู้มีอำนาจลงนาม / ผู้อนุมัติ</p>
+                <p class="mt-1 font-bold text-slate-800">ผู้มีอำนาจลงนาม / ผู้อนุมัติ</p>
             </div>
         </div>
     </div>
@@ -820,7 +829,7 @@
     <!-- Firebase Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         // Global Modals
@@ -829,7 +838,12 @@
             if (!modal) return;
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalMessage').innerText = message;
-            document.getElementById('modalCancelBtn').classList.add('hidden');
+            
+            const cancelBtn = document.getElementById('modalCancelBtn');
+            const crossBtn = document.getElementById('modalCancelCrossBtn');
+            cancelBtn.classList.add('hidden');
+            if(crossBtn) crossBtn.classList.add('hidden');
+
             const okBtn = document.getElementById('modalOkBtn');
             okBtn.onclick = () => { modal.classList.add('hidden'); if(onOk) onOk(); };
             modal.classList.remove('hidden');
@@ -840,9 +854,16 @@
             if (!modal) return;
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalMessage').innerText = message;
+            
             const cancelBtn = document.getElementById('modalCancelBtn');
+            const crossBtn = document.getElementById('modalCancelCrossBtn');
             cancelBtn.classList.remove('hidden');
+            if(crossBtn) {
+                crossBtn.classList.remove('hidden');
+                crossBtn.onclick = () => modal.classList.add('hidden');
+            }
             cancelBtn.onclick = () => modal.classList.add('hidden');
+            
             const okBtn = document.getElementById('modalOkBtn');
             okBtn.onclick = () => { modal.classList.add('hidden'); onConfirm(); };
             modal.classList.remove('hidden');
@@ -853,7 +874,6 @@
             if(window.lucide) lucide.createIcons();
         });
 
-        // Toggle Tax Fields
         window.toggleTaxFields = function() {
             const checkbox = document.getElementById('requestTaxInvoice');
             const fields = document.getElementById('taxInvoiceFields');
@@ -877,6 +897,7 @@
             return `CPAC${String(d.getFullYear()).slice(-2)}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
         }
 
+        // Haversine Distance
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371; 
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -909,17 +930,26 @@
 
         let map, marker; 
         window.activeTrackingMaps = {}; 
+        window.lastRenderedTrackingOrders = {};
 
+        // ราคาและตั้งค่าบัญชีโอนรับเงินส่วนกลาง (จะถูกอัปเดตแบบ Dynamic จากแอดมิน)
         let priceSettings = {
             price_180: 1650, price_210: 1720, price_240: 1800, price_280: 1900, price_300: 1980,
             price_320: 2050, price_350: 2150, price_380: 2250, price_400: 2350, shipping_fee: 500,
             bank_name: "ธนาคารกสิกรไทย",
             bank_no: "123-4-56789-0",
             bank_account: "บจก. โปร คอนกรีต ประเทศไทย",
-            bank_qr_image: ""
+            bank_qr_image: "",
+            company_name: "PRO CONCRETE ECO",
+            company_fullname: "บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)",
+            company_address: "123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110",
+            company_phone: "02-123-4567",
+            company_tax_id: "0105559001234"
         };
 
-        // Firebase Initialization
+        // =====================================
+        // Auth Providers & Logic
+        // =====================================
         if (typeof __firebase_config !== 'undefined') {
             const canvasConfig = JSON.parse(__firebase_config);
             app = initializeApp(canvasConfig);
@@ -942,19 +972,126 @@
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
-
+            // Default load try to stay anonymous if not logged in
             signInAnonymously(auth).catch((error) => { isOfflineMode = true; });
         }
+
+        const googleProvider = new GoogleAuthProvider();
+        const facebookProvider = new FacebookAuthProvider();
 
         onAuthStateChanged(auth, (user) => {
             if (user) { 
                 currentUser = user; 
                 setupDatabaseListener(); 
                 setupPriceSettingsListener(); 
-            } 
-            else if (!isOfflineMode) currentUser = null;
+                updateUserUI(user);
+            } else {
+                currentUser = null;
+                updateUserUI(null);
+            }
         });
 
+        function updateUserUI(user) {
+            const unauthSection = document.getElementById('unauthSection');
+            const authSection = document.getElementById('authSection');
+            
+            if (user && !user.isAnonymous) {
+                // User is fully logged in
+                unauthSection.classList.add('hidden');
+                authSection.classList.remove('hidden');
+                
+                const nameDisplay = document.getElementById('userName');
+                const avatar = document.getElementById('userAvatar');
+                
+                nameDisplay.innerText = user.displayName || user.email?.split('@')[0] || 'ผู้ใช้งาน';
+                if(user.photoURL) {
+                    avatar.src = user.photoURL;
+                } else {
+                    avatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameDisplay.innerText)}&background=10b981&color=fff`;
+                }
+            } else {
+                // User is anonymous or offline
+                unauthSection.classList.remove('hidden');
+                authSection.classList.add('hidden');
+            }
+        }
+
+        window.openLoginModal = function() {
+            document.getElementById('authModal').classList.remove('hidden');
+        };
+
+        window.closeLoginModal = function() {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('authEmail').value = '';
+            document.getElementById('authPassword').value = '';
+        };
+
+        window.loginWithGoogle = function() {
+            signInWithPopup(auth, googleProvider).then((result) => {
+                window.closeLoginModal();
+                window.showModal('สำเร็จ', 'เข้าสู่ระบบด้วยบัญชี Google สำเร็จแล้วครับ');
+            }).catch((error) => {
+                if (error.code === 'auth/popup-blocked' || typeof __firebase_config !== 'undefined') {
+                    window.showModal('แจ้งเตือนการเข้าสู่ระบบ', 'การล็อกอินด้วย Google อาจไม่รองรับในหน้าต่าง Preview นี้ กรุณาทดสอบบนหน้าเว็บไซต์จริงของคุณ (Vercel) หรือล็อกอินด้วย Email ชั่วคราวครับ');
+                } else {
+                    window.showModal('เกิดข้อผิดพลาด', error.message);
+                }
+            });
+        };
+
+        window.loginWithFacebook = function() {
+            signInWithPopup(auth, facebookProvider).then((result) => {
+                window.closeLoginModal();
+                window.showModal('สำเร็จ', 'เข้าสู่ระบบด้วยบัญชี Facebook สำเร็จแล้วครับ');
+            }).catch((error) => {
+                if (error.code === 'auth/popup-blocked' || typeof __firebase_config !== 'undefined') {
+                    window.showModal('แจ้งเตือนการเข้าสู่ระบบ', 'การล็อกอินด้วย Facebook อาจไม่รองรับในหน้าต่าง Preview นี้ กรุณาทดสอบบนหน้าเว็บไซต์จริงของคุณ (Vercel)');
+                } else {
+                    window.showModal('เกิดข้อผิดพลาด', error.message);
+                }
+            });
+        };
+
+        window.registerWithEmail = function() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            if (!email || !password) return window.showModal('แจ้งเตือน', 'กรุณากรอกอีเมลและรหัสผ่านเพื่อสมัครสมาชิก');
+            
+            createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+                window.closeLoginModal();
+                window.showModal('สมัครสมาชิกสำเร็จ', 'ยินดีต้อนรับเข้าสู่ระบบ ProConcrete Eco ครับ!');
+            }).catch((error) => {
+                window.showModal('สมัครไม่สำเร็จ', error.message);
+            });
+        };
+
+        window.loginWithEmail = function() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            if (!email || !password) return window.showModal('แจ้งเตือน', 'กรุณากรอกอีเมลและรหัสผ่านเพื่อเข้าสู่ระบบ');
+            
+            signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+                window.closeLoginModal();
+                window.showModal('เข้าสู่ระบบสำเร็จ', 'ยินดีต้อนรับกลับมาครับ!');
+            }).catch((error) => {
+                window.showModal('เข้าสู่ระบบไม่สำเร็จ', 'อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+            });
+        };
+
+        window.logoutUser = function() {
+            window.showConfirm('ออกจากระบบ', 'คุณต้องการออกจากระบบใช่หรือไม่?', () => {
+                signOut(auth).then(() => {
+                    // กลับไปเป็น Anonymous
+                    signInAnonymously(auth);
+                }).catch((error) => {
+                    console.error(error);
+                });
+            });
+        };
+
+        // =====================================
+        // Pricing & Database listeners
+        // =====================================
         function setupPriceSettingsListener() {
             if (isOfflineMode) return;
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -976,17 +1113,27 @@
                     priceSettings.price_400 = parseFloat(data.price_400) || 2350;
                     priceSettings.shipping_fee = parseFloat(data.shipping_fee) || 500;
                     
+                    // ดึงข้อมูลการตั้งค่าบัญชีธนาคาร Real-time
                     priceSettings.bank_name = data.bank_name || "ธนาคารกสิกรไทย";
                     priceSettings.bank_no = data.bank_no || "123-4-56789-0";
                     priceSettings.bank_account = data.bank_account || "บจก. โปร คอนกรีต ประเทศไทย";
                     priceSettings.bank_qr_image = data.bank_qr_image || "";
+
+                    // ดึงข้อมูลบริษัทเพื่อพิมพ์เอกสาร
+                    priceSettings.company_name = data.company_name || 'ProConcrete Eco';
+                    priceSettings.company_fullname = data.company_fullname || 'บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)';
+                    priceSettings.company_address = data.company_address || '123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110';
+                    priceSettings.company_phone = data.company_phone || '02-123-4567';
+                    priceSettings.company_mobile = data.company_mobile || '081-234-5678';
+                    priceSettings.company_tax_id = data.company_tax_id || '0105559001234';
                     
                     window.calculatePrices(); 
-                    updateBankModalDetails();
+                    updateBankModalDetails(); // อัปเดตข้อมูลบัญชีลงบน Modal ของลูกค้า
                 }
             });
         }
 
+        // ฟังก์ชันช่วยอัปเดตข้อมูลบัญชีโอนรับเงินของลูกค้า
         function updateBankModalDetails() {
             const lblName = document.getElementById('lblBankName');
             const lblNo = document.getElementById('lblBankNo');
@@ -1018,8 +1165,8 @@
                 snapshot.forEach(doc => { allOrdersMemory.push({ id: doc.id, ...doc.data() }); });
                 allOrdersMemory.sort((a, b) => b.createdAt - a.createdAt);
 
-                if (document.getElementById('track-page').classList.contains('active')) window.searchTracking();
-                if (document.getElementById('payment-page').classList.contains('active')) window.searchPayment();
+                if (document.getElementById('track-page').classList.contains('active')) window.searchTracking(true);
+                if (document.getElementById('payment-page').classList.contains('active')) window.searchPayment(true);
             });
         }
 
@@ -1201,6 +1348,12 @@
 
         window.handleCalculateOrder = function(event) {
             event.preventDefault();
+
+            // เช็คว่าล็อกอินแบบมีตัวตนหรือยัง (ถ้าบังคับให้ล็อกอิน)
+            // if(currentUser && currentUser.isAnonymous) {
+            //     window.openLoginModal();
+            //     return;
+            // }
             
             const form = event.target;
             const formData = new FormData(form);
@@ -1249,6 +1402,7 @@
                 deliveryDateTime: dateTimeText,
                 status: 'received',
                 userId: currentUser ? currentUser.uid : 'offline-user',
+                userEmail: currentUser && !currentUser.isAnonymous ? currentUser.email : null,
                 unitPrice: priceInfo.unitPrice,
                 concreteCost: priceInfo.concreteCost,
                 shippingFee: priceInfo.shippingFee,
@@ -1260,7 +1414,7 @@
                 companyName: reqTax ? compName : "",
                 taxId: reqTax ? taxId : "",
                 companyAddress: reqTax ? compAddr : "",
-                paymentMethod: "transfer" // ค่าเริ่มต้นคือโอนจ่าย
+                assignedTruck: null // เตรียมพื้นที่ว่างสำหรับแอดมินมอบหมายรถโม่
             };
 
             // อัปเดต UI หน้า Modal
@@ -1303,13 +1457,8 @@
                 else taxNotice.classList.add('hidden');
             }
 
-            // บังคับสลับกลับเป็นปุ่มโอนจ่ายค่าเริ่มต้น
-            const radTransfer = document.querySelector('input[name="paymentMethod"][value="transfer"]');
-            if(radTransfer) radTransfer.checked = true;
-            window.switchPaymentUI('transfer');
-
+            updateBankModalDetails(); 
             document.getElementById('quotationModal').classList.remove('hidden');
-            if(window.lucide) lucide.createIcons();
         };
 
         window.closeQuotation = function() {
@@ -1405,22 +1554,27 @@
         // ==========================================
         // 💳 ระบบค้นหาใบเสนอราคา ด้วยเบอร์โทรศัพท์เท่านั้นเพื่อความปลอดภัย
         // ==========================================
-        window.searchPayment = function() {
+        window.searchPayment = function(isUpdate = false) {
             const nameInput = document.getElementById('searchPaymentInput');
             if(!nameInput) return;
             const phone = nameInput.value.trim();
             const resultDiv = document.getElementById('paymentResult');
             if(!resultDiv) return;
 
-            // ตรวจสอบโครงสร้างความถูกต้องเบอร์โทรศัพท์ 10 หลัก
-            if (!validatePhoneNumber(phone, nameInput)) {
+            if (!isUpdate && !validatePhoneNumber(phone, nameInput)) {
                 window.showModal('เบอร์โทรศัพท์ไม่ถูกต้อง', 'กรุณากรอกเบอร์โทรศัพท์มือถือ 10 หลักเท่านั้น เพื่อค้นหาเอกสารของคุณได้อย่างปลอดภัย');
                 return;
             }
+            if (isUpdate && phone.length !== 10) return; // Ignore background updates if input is invalid
 
-            const found = allOrdersMemory.filter(o => o.phone && o.phone.replace(/\s+/g, '') === phone.replace(/\s+/g, ''));
+            // ค้นหาจากเบอร์โทร หรืออีเมลของผู้ที่ล็อกอิน
+            const found = allOrdersMemory.filter(o => 
+                (o.phone && o.phone.replace(/\s+/g, '') === phone.replace(/\s+/g, '')) || 
+                (currentUser && !currentUser.isAnonymous && o.userId === currentUser.uid)
+            );
+
             if(found.length === 0) {
-                resultDiv.innerHTML = `<div class="rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center text-sm text-slate-500 font-medium">ไม่พบเอกสารจองคิวที่ผูกไว้กับเบอร์โทรศัพท์ "${phone}"</div>`;
+                resultDiv.innerHTML = `<div class="rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center text-sm text-slate-500 font-medium">ไม่พบเอกสารใบเสนอราคาที่ผูกไว้กับบัญชีนี้</div>`;
                 resultDiv.classList.remove('hidden');
             } else {
                 let html = `<div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4 px-2">รายการที่พบ (${found.length})</div>`;
@@ -1436,12 +1590,11 @@
                             </div>
                             <div class="flex-1 text-center md:text-left">
                                 <h3 class="font-bold text-slate-900 text-lg">${order.name}</h3>
-                                <p class="text-[11px] text-slate-500 font-mono mt-0.5">REF: ${order.orderNumber} | จ่าย: <span class="font-bold text-emerald-600">${payMethod}</span></p>
-                                <p class="text-xs font-semibold text-slate-400 mt-1">กำหนดส่ง: ${order.deliveryDateTime}</p>
+                                <p class="text-[11px] text-slate-500 font-mono mt-0.5">REF: ${order.orderNumber} | ส่ง: ${order.deliveryDateTime}</p>
                                 ${order.reqTaxInvoice ? '<span class="inline-block mt-2 bg-blue-50 text-blue-600 border border-blue-200 px-2 py-0.5 rounded text-[10px] font-bold">ออกใบกำกับภาษี</span>' : ''}
                             </div>
                             <div class="text-center md:text-right w-full md:w-auto">
-                                <p class="text-[10px] font-bold text-slate-400 mb-0.5 uppercase tracking-wider">ยอดเงินรวมสุทธิ</p>
+                                <p class="text-[10px] font-bold text-slate-400 mb-0.5 uppercase tracking-wider">ยอดชำระสุทธิ</p>
                                 <div class="font-black text-emerald-600 text-2xl mb-3">฿${order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '0.00'}</div>
                                 <button onclick="window.printDocument('${order.id}')" class="w-full md:w-auto inline-flex items-center justify-center rounded-lg text-sm font-semibold transition-colors focus-visible:outline-none bg-slate-900 text-white hover:bg-slate-800 h-10 px-5 gap-2 shadow-sm active:scale-95">
                                     <i data-lucide="printer" class="w-4 h-4"></i> พิมพ์ / บันทึก PDF
@@ -1457,10 +1610,76 @@
             }
         };
 
+        window.printDocument = function(orderId) {
+            const order = allOrdersMemory.find(o => o.id === orderId);
+            if(!order) {
+                window.showModal('ข้อผิดพลาด', 'ไม่พบข้อมูลออเดอร์นี้');
+                return;
+            }
+
+            const setVal = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = val;
+            };
+
+            setVal('printDocNo', order.orderNumber);
+            const d = new Date(order.createdAt);
+            setVal('printCreateDate', d.toLocaleDateString('th-TH'));
+            
+            setVal('printCustomerName', order.reqTaxInvoice ? order.companyName : order.name);
+            
+            const printDocTitle = document.getElementById('printDocTitle');
+            const printCustomerCompanyInfo = document.getElementById('printCustomerCompanyInfo');
+            
+            if(order.reqTaxInvoice) {
+                if(printDocTitle) printDocTitle.innerText = "ใบเสนอราคา / ใบกำกับภาษี";
+                if(printCustomerCompanyInfo) printCustomerCompanyInfo.innerHTML = `เลขประจำตัวผู้เสียภาษี: ${order.taxId}<br>ที่อยู่: ${order.companyAddress}`;
+            } else {
+                if(printDocTitle) printDocTitle.innerText = "ใบเสนอราคา";
+                if(printCustomerCompanyInfo) printCustomerCompanyInfo.innerHTML = `ผู้ติดต่อ: ${order.name}`;
+            }
+            
+            setVal('printCustomerPhone', order.phone);
+            setVal('printDeliveryTime', order.deliveryDateTime);
+            setVal('printAddress', order.address || '-');
+            setVal('printStrength', order.strength);
+            setVal('printVolume', order.volume);
+            setVal('printUnitPrice', order.unitPrice ? order.unitPrice.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
+            setVal('printSubtotal', order.concreteCost ? order.concreteCost.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
+            
+            const extraFeeRow = document.getElementById('printExtraFeeRow');
+            if(order.shippingFee > 0) {
+                if(extraFeeRow) extraFeeRow.classList.remove('hidden');
+                setVal('printShippingFeeUnit', order.shippingFee.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
+                setVal('printShippingFeeTotal', order.shippingFee.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
+            } else {
+                if(extraFeeRow) extraFeeRow.classList.add('hidden');
+            }
+
+            setVal('printTotalBeforeVat', order.totalBeforeVat ? order.totalBeforeVat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
+            setVal('printVat', order.vat ? order.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
+            setVal('printGrandTotal', order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
+
+            // ใช้ค่าจาก Settings ของระบบ (ดึงมาจาก Firebase Realtime)
+            setVal('invPrintHeaderBrand', priceSettings.company_name || "PRO CONCRETE ECO");
+            setVal('invPrintHeaderFullname', priceSettings.company_fullname || "บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)");
+            setVal('invPrintHeaderAddress', priceSettings.company_address || "123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110");
+            setVal('invPrintHeaderPhone', `${priceSettings.company_phone || "02-123-4567"} / ${priceSettings.company_mobile || ""}`);
+            setVal('invPrintHeaderTaxId', priceSettings.company_tax_id || "0105559001234");
+
+            document.body.classList.add('print-invoice');
+            window.print();
+        };
+
+        // ล้างคลาสปรินต์ออกเมื่อปิดหน้าต่างพิมพ์
+        window.addEventListener('afterprint', () => {
+            document.body.classList.remove('print-invoice');
+        });
+
         // ==========================================
         // 🔍 ระบบติดตามคิวงานด้วยเบอร์โทรศัพท์เท่านั้นเพื่อความปลอดภัย
         // ==========================================
-        window.searchTracking = function() {
+        window.searchTracking = function(isUpdate = false) {
             const nameInput = document.getElementById('searchNameInput');
             if(!nameInput) return;
             const phone = nameInput.value.trim();
@@ -1468,198 +1687,234 @@
             if(!resultDiv) return;
 
             // ตรวจสอบความถูกต้องเบอร์โทรศัพท์ 10 หลัก
-            if (!validatePhoneNumber(phone, nameInput)) {
+            if (!isUpdate && !validatePhoneNumber(phone, nameInput)) {
                 window.showModal('เบอร์โทรศัพท์ไม่ถูกต้อง', 'กรุณากรอกเบอร์โทรศัพท์มือถือ 10 หลักเท่านั้น เพื่อความปลอดภัยในการตรวจสอบสถานะจัดส่ง');
                 return;
             }
+            if (isUpdate && phone.length !== 10) return; // ไม่แสดงผลถ้าระบบอัปเดตอัตโนมัติแล้วเบอร์ยังผิด
 
-            const found = allOrdersMemory.filter(o => o.phone && o.phone.replace(/\s+/g, '') === phone.replace(/\s+/g, ''));
-            if(found.length === 0) {
-                resultDiv.innerHTML = `<div class="rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center text-sm text-slate-500 font-medium">ไม่พบประวัติคิวงานจัดส่งผูกกับเบอร์โทรศัพท์ "${phone}"</div>`;
-                resultDiv.classList.remove('hidden');
-                window.activeTrackingMaps = {};
-            } else {
-                const statusMap = { 
-                    'received': { text: 'รับออเดอร์แล้ว / รอตรวจสอบสลิป', class: 'text-slate-600 bg-slate-100 border-slate-200', icon: 'clipboard-check' },
-                    'confirmed': { text: 'ยืนยันคิวงานจัดส่งเรียบร้อยแล้ว', class: 'text-teal-700 bg-teal-50 border-teal-200', icon: 'calendar-check' },
-                    'batching': { text: 'กำลังผสมคอนกรีตที่แพลนท์', class: 'text-orange-700 bg-orange-50 border-orange-200', icon: 'loader' },
-                    'delivering': { text: 'รถโม่กำลังเดินทางไปส่งปูน', class: 'text-blue-700 bg-blue-50 border-blue-200', icon: 'truck' },
-                    'delivered': { text: 'จัดส่งและเทคอนกรีตสำเร็จ', class: 'text-emerald-700 bg-emerald-50 border-emerald-200', icon: 'check-circle' }
-                };
-                let html = `<div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4 px-2">ประวัติการจอง (${found.length})</div>`;
-                
-                found.forEach(order => {
-                    const statusInfo = statusMap[order.status];
-                    const isDelivering = order.status === 'delivering';
-                    const isDelivered = order.status === 'delivered';
-                    const hasGps = !!(order.currentLat && order.currentLng);
-                    
-                    // คำนวณ KPI สรุปผลเวลาเมื่อเทเสร็จสิ้น
-                    let kpiSummaryHtml = "";
-                    if (isDelivered) {
-                        const startTime = order.deliveryStartTime || order.createdAt;
-                        const endTime = order.deliveredAt || order.lastGpsUpdate || (order.createdAt + 1800000); 
-                        const elapsedSec = Math.floor((endTime - startTime) / 1000);
-                        const mins = Math.floor(elapsedSec / 60);
-                        const secs = elapsedSec % 60;
-                        const kpiPass = mins <= 120;
-                        
-                        kpiSummaryHtml = `
-                            <div class="mt-3 p-3.5 rounded-xl border text-xs font-bold flex flex-col gap-1 ${kpiPass ? 'text-emerald-800 bg-emerald-50/50 border-emerald-200' : 'text-red-800 bg-red-50/50 border-red-200'}">
-                                <div class="flex items-center gap-1.5"><i data-lucide="award" class="w-4 h-4"></i> สรุปประสิทธิภาพการขนส่ง (KPI)</div>
-                                <p class="text-[11px] font-medium text-slate-600 mt-1">ใช้เวลาจัดส่งสุทธิ: <span class="font-bold text-slate-800">${mins} นาที ${secs} วินาที</span></p>
-                                <p class="text-[10px] mt-0.5">${kpiPass ? '🏆 คอนกรีตคงความสดใหม่และได้มาตรฐานความแข็งแกร่งสูงสุด!' : '⚠️ การจัดส่งเกินเกณฑ์มาตรฐาน 120 นาที กรุณาตรวจสอบรอยแตกร้าวร่วมกับช่างหน้างาน'}</p>
-                            </div>
-                        `;
+            const found = allOrdersMemory.filter(o => 
+                (o.phone && o.phone.replace(/\s+/g, '') === phone.replace(/\s+/g, '')) || 
+                (currentUser && !currentUser.isAnonymous && o.userId === currentUser.uid)
+            );
+
+            // 💡 Smart DOM Updating: เช็คสถานะเพื่อป้องกันการรีเฟรชกล่องแผนที่กระตุก (DOM Wiping)
+            let needsFullRender = !isUpdate;
+            if (isUpdate) {
+                if (found.length !== Object.keys(window.lastRenderedTrackingOrders).length) {
+                    needsFullRender = true;
+                } else {
+                    for (const o of found) {
+                        if (window.lastRenderedTrackingOrders[o.id] !== o.status) {
+                            needsFullRender = true;
+                            break;
+                        }
                     }
+                }
+            }
 
-                    html += `
-                        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden transition-all mb-4">
-                            <div class="p-5 md:p-6">
-                                <div class="flex justify-between items-start mb-4">
-                                    <div>
-                                        <h3 class="font-bold text-slate-900 text-lg">${order.name}</h3>
-                                        <p class="text-[11px] text-slate-400 mt-0.5 font-mono">REF: ${order.orderNumber || ''}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <div class="font-bold text-slate-900 text-2xl leading-none">${order.volume} <span class="text-xs font-medium text-slate-500">คิว</span></div>
-                                        <div class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 mt-2 inline-block">${order.strength} KSC</div>
-                                    </div>
+            if (needsFullRender) {
+                // ล้างแคชแผนที่เดิมเพื่อป้องกัน Error "Map already initialized"
+                if (window.activeTrackingMaps) {
+                    for (let id in window.activeTrackingMaps) {
+                        if (window.activeTrackingMaps[id] && window.activeTrackingMaps[id].map) {
+                            window.activeTrackingMaps[id].map.remove();
+                        }
+                    }
+                }
+                window.activeTrackingMaps = {};
+                window.lastRenderedTrackingOrders = {};
+
+                if(found.length === 0) {
+                    resultDiv.innerHTML = `<div class="rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center text-sm text-slate-500 font-medium">ไม่พบประวัติคิวงานจัดส่งผูกกับบัญชีนี้</div>`;
+                    resultDiv.classList.remove('hidden');
+                } else {
+                    const statusMap = { 
+                        'received': { text: 'รับออเดอร์แล้ว / รอตรวจสอบสลิป', class: 'text-slate-600 bg-slate-100 border-slate-200', icon: 'clipboard-check' },
+                        'confirmed': { text: 'ยืนยันคิวงานจัดส่งเรียบร้อยแล้ว', class: 'text-teal-700 bg-teal-50 border-teal-200', icon: 'calendar-check' },
+                        'batching': { text: 'กำลังผสมคอนกรีตที่แพลนท์', class: 'text-orange-700 bg-orange-50 border-orange-200', icon: 'loader' },
+                        'delivering': { text: 'รถโม่กำลังเดินทางไปส่งปูน', class: 'text-blue-700 bg-blue-50 border-blue-200', icon: 'truck' },
+                        'delivered': { text: 'จัดส่งและเทคอนกรีตสำเร็จ', class: 'text-emerald-700 bg-emerald-50 border-emerald-200', icon: 'check-circle' }
+                    };
+                    let html = `<div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4 px-2">ประวัติการจอง (${found.length})</div>`;
+                    
+                    found.forEach(order => {
+                        window.lastRenderedTrackingOrders[order.id] = order.status;
+                        const statusInfo = statusMap[order.status];
+                        const isDelivering = order.status === 'delivering';
+                        const isDelivered = order.status === 'delivered';
+                        const hasGps = !!(order.currentLat && order.currentLng);
+                        
+                        let kpiSummaryHtml = "";
+                        if (isDelivered) {
+                            const startTime = order.deliveryStartTime || order.createdAt;
+                            const endTime = order.deliveredAt || order.lastGpsUpdate || (order.createdAt + 1800000); 
+                            const elapsedSec = Math.floor((endTime - startTime) / 1000);
+                            const mins = Math.floor(elapsedSec / 60);
+                            const secs = elapsedSec % 60;
+                            const kpiPass = mins <= 120;
+                            
+                            kpiSummaryHtml = `
+                                <div class="mt-3 p-3.5 rounded-xl border text-xs font-bold flex flex-col gap-1 ${kpiPass ? 'text-emerald-800 bg-emerald-50/50 border-emerald-200' : 'text-red-800 bg-red-50/50 border-red-200'}">
+                                    <div class="flex items-center gap-1.5"><i data-lucide="award" class="w-4 h-4"></i> สรุปประสิทธิภาพการขนส่ง (KPI)</div>
+                                    <p class="text-[11px] font-medium text-slate-600 mt-1">ใช้เวลาจัดส่งสุทธิ: <span class="font-bold text-slate-800">${mins} นาที ${secs} วินาที</span></p>
+                                    <p class="text-[10px] mt-0.5">${kpiPass ? '🏆 คอนกรีตคงความสดใหม่และได้มาตรฐานความแข็งแกร่งสูงสุด!' : '⚠️ การจัดส่งเกินเกณฑ์มาตรฐาน 120 นาที กรุณาตรวจสอบรอยแตกร้าวร่วมกับช่างหน้างาน'}</p>
                                 </div>
-                                <div class="inline-flex w-full items-center justify-center gap-2 py-3 rounded-xl border text-sm font-medium ${statusInfo.class}">
-                                    <i data-lucide="${statusInfo.icon}" class="w-4 h-4 animate-pulse"></i> ${statusInfo.text}
+                            `;
+                        }
+
+                        html += `
+                            <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden transition-all mb-4">
+                                <div class="p-5 md:p-6">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div>
+                                            <h3 class="font-bold text-slate-900 text-lg">${order.name}</h3>
+                                            <p class="text-[11px] text-slate-400 mt-0.5 font-mono">REF: ${order.orderNumber || ''}</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="font-bold text-slate-900 text-2xl leading-none">${order.volume} <span class="text-xs font-medium text-slate-500">คิว</span></div>
+                                            <div class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 mt-2 inline-block">${order.strength} KSC</div>
+                                        </div>
+                                    </div>
+                                    <div class="inline-flex w-full items-center justify-center gap-2 py-3 rounded-xl border text-sm font-medium ${statusInfo.class}">
+                                        <i data-lucide="${statusInfo.icon}" class="w-4 h-4 animate-pulse"></i> ${statusInfo.text}
+                                    </div>
+                                    
+                                    ${kpiSummaryHtml}
                                 </div>
                                 
-                                ${kpiSummaryHtml}
-                            </div>
-                            
-                            <!-- 🚨 โซนแสดงแผนที่วิ่งของรถปูนเมื่อสถานะเป็น Delivering และได้รับสัญญาณ GPS เรียลไทม์จากคนขับ -->
-                            ${isDelivering ? `
-                                <div class="bg-slate-50 border-t border-slate-100 p-4 md:p-5 space-y-4">
-                                    <!-- ข้อมูลคนขับและรถโม่ปูน -->
-                                    ${order.assignedTruck ? `
-                                        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-                                            <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0 border border-emerald-200">
-                                                <i data-lucide="user-check" class="w-6 h-6"></i>
-                                            </div>
-                                            <div class="flex-1 min-w-0">
-                                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">พนักงานขับรถโม่</p>
-                                                <p class="text-sm font-black text-slate-900 truncate">${order.assignedTruck.driverName} <span class="text-emerald-600 ml-1 font-bold">(${order.assignedTruck.licensePlate || ''})</span></p>
-                                                <p class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 mt-1">
-                                                    <i data-lucide="phone" class="w-3 h-3 text-slate-400"></i> ${order.assignedTruck.phone}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ` : `
-                                        <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-center flex flex-col items-center justify-center">
-                                            <i data-lucide="timer" class="w-5 h-5 text-amber-500 mb-1"></i>
-                                            <p class="text-xs font-bold text-amber-700">ระบบกำลังจัดสรรพนักงานขับรถโม่ปูน...</p>
-                                        </div>
-                                    `}
-
-                                    <!-- แผงจับเวลาส่งมอบและควบคุมคุณภาพ (KPI & Concrete Freshness Timer) -->
-                                    <div class="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-4 space-y-3 shadow-inner">
-                                        <div class="flex justify-between items-center text-xs">
-                                            <span class="font-semibold text-emerald-800 flex items-center gap-1.5">
-                                                <i data-lucide="timer" class="w-4 h-4 text-emerald-600 animate-spin" style="animation-duration: 4s;"></i> เวลาจัดส่งสะสม (KPI):
-                                            </span>
-                                            <span id="live-timer-${order.id}" class="font-mono font-bold text-sm text-emerald-700 bg-white px-2.5 py-0.5 rounded border border-emerald-100">00:00:00</span>
-                                        </div>
-                                        
-                                        <!-- แถบวัดความสดของคอนกรีต (Concrete Freshness Bar) -->
-                                        <div class="space-y-1">
-                                            <div class="flex justify-between items-center text-[10px] font-bold">
-                                                <span class="text-slate-500">ระดับความสดใหม่ของคอนกรีต</span>
-                                                <span id="freshness-text-${order.id}" class="text-emerald-600">100% (สดใหม่มาก)</span>
-                                            </div>
-                                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                                                <div id="freshness-bar-${order.id}" class="bg-emerald-500 h-full transition-all duration-1000" style="width: 100%"></div>
-                                            </div>
-                                        </div>
-                                        <p class="text-[9px] text-slate-400 font-medium leading-normal">* คอนกรีต Low Carbon ต้องเทให้เสร็จสิ้นภายใน 120 นาที (2 ชม.) หลังผสมเสร็จ เพื่อรักษาความแข็งแรงสูงสุดตามมาตรฐาน KPI บริษัท</p>
-                                    </div>
-
-                                    <div class="flex justify-between items-center text-xs">
-                                        <span class="font-semibold text-slate-700 flex items-center gap-2">
-                                            <span class="relative flex h-2 w-2">
-                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                                <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                                            </span>
-                                            ติดตามตำแหน่งรถเรียลไทม์:
-                                        </span>
-                                        <span id="eta-display-${order.id}" class="font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">${hasGps ? 'กำลังคำนวณ...' : 'รออัปเดต...'}</span>
-                                    </div>
-
-                                    <div class="relative w-full h-48 md:h-56 rounded-2xl border border-slate-200 shadow-inner z-0 overflow-hidden bg-slate-100">
-                                        ${!hasGps ? `
-                                            <div class="absolute inset-0 z-50 bg-slate-900/10 backdrop-blur-[2px] flex items-center justify-center">
-                                                <div class="bg-white/95 px-5 py-3 rounded-full shadow-lg font-bold text-slate-700 text-xs flex items-center gap-2">
-                                                    <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-emerald-600"></i> กำลังรอสัญญาณ GPS จากคนขับ...
+                                <!-- 🚨 โซนแสดงแผนที่วิ่งของรถปูนเมื่อสถานะเป็น Delivering และได้รับสัญญาณ GPS เรียลไทม์จากคนขับ -->
+                                ${isDelivering ? `
+                                    <div class="bg-slate-50 border-t border-slate-100 p-4 md:p-5 space-y-4">
+                                        <!-- ข้อมูลคนขับและรถโม่ปูน -->
+                                        ${order.assignedTruck ? `
+                                            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                                                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0 border border-emerald-200">
+                                                    <i data-lucide="user-check" class="w-6 h-6"></i>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">พนักงานขับรถโม่</p>
+                                                    <p class="text-sm font-black text-slate-900 truncate">${order.assignedTruck.driverName}</p>
                                                 </div>
                                             </div>
-                                        ` : ''}
-                                        <div id="tracking-map-${order.id}" class="w-full h-full"></div>
-                                    </div>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                });
-                
-                resultDiv.innerHTML = html;
-                resultDiv.classList.remove('hidden');
-                lucide.createIcons();
+                                        ` : `
+                                            <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-center flex flex-col items-center justify-center">
+                                                <i data-lucide="timer" class="w-5 h-5 text-amber-500 mb-1"></i>
+                                                <p class="text-xs font-bold text-amber-700">ระบบกำลังจัดสรรพนักงานขับรถโม่ปูน...</p>
+                                            </div>
+                                        `}
 
-                // สตาร์ตลูปรันการจับเวลาสะสม Real-time ทุก 1 วินาที สำหรับคำสั่งซื้อที่กำลังนำส่ง
-                if (window.liveTimerInterval) clearInterval(window.liveTimerInterval);
-                window.liveTimerInterval = setInterval(() => {
+                                        <!-- แผงจับเวลาส่งมอบและควบคุมคุณภาพ (KPI & Concrete Freshness Timer) -->
+                                        <div class="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-4 space-y-3 shadow-inner">
+                                            <div class="flex justify-between items-center text-xs">
+                                                <span class="font-semibold text-emerald-800 flex items-center gap-1.5">
+                                                    <i data-lucide="timer" class="w-4 h-4 text-emerald-600 animate-spin" style="animation-duration: 4s;"></i> เวลาจัดส่งสะสม (KPI):
+                                                </span>
+                                                <span id="live-timer-${order.id}" class="font-mono font-bold text-sm text-emerald-700 bg-white px-2.5 py-0.5 rounded border border-emerald-100">00:00:00</span>
+                                            </div>
+                                            
+                                            <!-- แถบวัดความสดของคอนกรีต (Concrete Freshness Bar) -->
+                                            <div class="space-y-1">
+                                                <div class="flex justify-between items-center text-[10px] font-bold">
+                                                    <span class="text-slate-500">ระดับความสดใหม่ของคอนกรีต</span>
+                                                    <span id="freshness-text-${order.id}" class="text-emerald-600">100% (สดใหม่มาก)</span>
+                                                </div>
+                                                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                                    <div id="freshness-bar-${order.id}" class="bg-emerald-500 h-full transition-all duration-1000" style="width: 100%"></div>
+                                                </div>
+                                            </div>
+                                            <p class="text-[9px] text-slate-400 font-medium leading-normal">* คอนกรีต Low Carbon ต้องเทให้เสร็จสิ้นภายใน 120 นาที (2 ชม.) หลังผสมเสร็จ เพื่อรักษาความแข็งแรงสูงสุดตามมาตรฐาน KPI บริษัท</p>
+                                        </div>
+
+                                        <div class="flex justify-between items-center text-xs">
+                                            <span class="font-semibold text-slate-700 flex items-center gap-2">
+                                                <span class="relative flex h-2 w-2">
+                                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                                                </span>
+                                                ติดตามตำแหน่งรถเรียลไทม์:
+                                            </span>
+                                            <span id="eta-display-${order.id}" class="font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">${hasGps ? 'กำลังคำนวณ...' : 'รออัปเดต...'}</span>
+                                        </div>
+
+                                        <div class="relative w-full h-48 md:h-56 rounded-2xl border border-slate-200 shadow-inner z-0 overflow-hidden bg-slate-100">
+                                            ${!hasGps ? `
+                                                <div class="absolute inset-0 z-50 bg-slate-900/10 backdrop-blur-[2px] flex items-center justify-center">
+                                                    <div class="bg-white/95 px-5 py-3 rounded-full shadow-lg font-bold text-slate-700 text-xs flex items-center gap-2">
+                                                        <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-emerald-600"></i> กำลังรอสัญญาณ GPS จากคนขับ...
+                                                    </div>
+                                                </div>
+                                            ` : ''}
+                                            <div id="tracking-map-${order.id}" class="w-full h-full"></div>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    });
+                    
+                    resultDiv.innerHTML = html;
+                    resultDiv.classList.remove('hidden');
+                    lucide.createIcons();
+
+                    // เริ่มการสร้างแผนที่และการนับเวลาครั้งแรก
                     found.forEach(order => {
                         if (order.status === 'delivering') {
-                            const startTime = order.deliveryStartTime || order.createdAt;
-                            const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
-                            
-                            const hrs = Math.floor(elapsedSec / 3600);
-                            const mins = Math.floor((elapsedSec % 3600) / 60);
-                            const secs = elapsedSec % 60;
-                            const timeStr = `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-                            
-                            const timerEl = document.getElementById(`live-timer-${order.id}`);
-                            if (timerEl) timerEl.innerText = timeStr;
-                            
-                            const totalLimitMins = 120;
-                            const elapsedMins = elapsedSec / 60;
-                            let freshness = Math.max(0, 100 - (elapsedMins / totalLimitMins * 100));
-                            
-                            const barEl = document.getElementById(`freshness-bar-${order.id}`);
-                            const textEl = document.getElementById(`freshness-text-${order.id}`);
-                            
-                            if (barEl && textEl) {
-                                barEl.style.width = `${freshness}%`;
-                                if (freshness > 60) {
-                                    barEl.className = "bg-emerald-500 h-full transition-all duration-1000";
-                                    textEl.innerText = `${Math.round(freshness)}% (สดใหม่ยอดเยี่ยม)`;
-                                    textEl.className = "text-emerald-600 font-bold";
-                                } else if (freshness > 30) {
-                                    barEl.className = "bg-amber-500 h-full transition-all duration-1000";
-                                    textEl.innerText = `${Math.round(freshness)}% (ควรเร่งทำการเท)`;
-                                    textEl.className = "text-amber-600 font-bold";
-                                } else {
-                                    barEl.className = "bg-red-500 h-full transition-all duration-1000";
-                                    textEl.innerText = `${Math.round(freshness)}% (วิกฤต คอนกรีตเริ่มเซ็ตตัว!)`;
-                                    textEl.className = "text-red-600 font-bold animate-pulse";
-                                }
-                            }
+                            setTimeout(() => { initOrUpdateLiveTrackingMap(order); }, 100);
                         }
                     });
-                }, 1000);
-
-                // สตาร์ตวาดแผนที่สำหรับรถปูนที่กำลังจัดส่งอยู่
+                }
+            } else {
+                // 💡 Partial Update (ไม่อัปเดต DOM แต่ขยับแค่หมุดแผนที่และเวลา) ทำให้แผนที่ไม่กระตุก
                 found.forEach(order => {
                     if (order.status === 'delivering') {
-                        setTimeout(() => { initOrUpdateLiveTrackingMap(order); }, 100);
+                        initOrUpdateLiveTrackingMap(order);
                     }
                 });
             }
+
+            // ระบบลูปอัปเดตตัวเลขเวลาอิสระ (ไม่เกี่ยวกับแผนที่)
+            if (window.liveTimerInterval) clearInterval(window.liveTimerInterval);
+            window.liveTimerInterval = setInterval(() => {
+                found.forEach(order => {
+                    if (order.status === 'delivering') {
+                        const startTime = order.deliveryStartTime || order.createdAt;
+                        const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
+                        
+                        const hrs = Math.floor(elapsedSec / 3600);
+                        const mins = Math.floor((elapsedSec % 3600) / 60);
+                        const secs = elapsedSec % 60;
+                        const timeStr = `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                        
+                        const timerEl = document.getElementById(`live-timer-${order.id}`);
+                        if (timerEl) timerEl.innerText = timeStr;
+                        
+                        const totalLimitMins = 120;
+                        const elapsedMins = elapsedSec / 60;
+                        let freshness = Math.max(0, 100 - (elapsedMins / totalLimitMins * 100));
+                        
+                        const barEl = document.getElementById(`freshness-bar-${order.id}`);
+                        const textEl = document.getElementById(`freshness-text-${order.id}`);
+                        
+                        if (barEl && textEl) {
+                            barEl.style.width = `${freshness}%`;
+                            if (freshness > 60) {
+                                barEl.className = "bg-emerald-500 h-full transition-all duration-1000";
+                                textEl.innerText = `${Math.round(freshness)}% (สดใหม่ยอดเยี่ยม)`;
+                                textEl.className = "text-emerald-600 font-bold";
+                            } else if (freshness > 30) {
+                                barEl.className = "bg-amber-500 h-full transition-all duration-1000";
+                                textEl.innerText = `${Math.round(freshness)}% (ควรเร่งทำการเท)`;
+                                textEl.className = "text-amber-600 font-bold";
+                            } else {
+                                barEl.className = "bg-red-500 h-full transition-all duration-1000";
+                                textEl.innerText = `${Math.round(freshness)}% (วิกฤต คอนกรีตเริ่มเซ็ตตัว!)`;
+                                textEl.className = "text-red-600 font-bold animate-pulse";
+                            }
+                        }
+                    }
+                });
+            }, 1000);
         };
 
         function initOrUpdateLiveTrackingMap(order) {
@@ -1696,19 +1951,17 @@
             const destIconHtml = '<div style="background-color:white;padding:4px;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>';
             const destIcon = L.divIcon({ html: destIconHtml, iconSize: [28, 28], iconAnchor: [14, 14], className: '' });
 
-            // 🚨 ตรวจสอบความสมบูรณ์ของ Map Container เพื่อป้องกันบั๊ก
+            // อัปเดตพิกัดอย่างเดียว ไม่ทำลายแผนที่ทิ้ง
             if (window.activeTrackingMaps[order.id]) {
                 const liveMapObj = window.activeTrackingMaps[order.id];
                 try {
                     liveMapObj.truckMarker.setLatLng(truckLatLng);
                     liveMapObj.destMarker.setLatLng(destLatLng);
-                    liveMapObj.map.invalidateSize();
                     if(order.currentLat && order.currentLng) {
                         liveMapObj.map.fitBounds(L.latLngBounds([truckLatLng, destLatLng]), { padding: [30, 30], maxZoom: 15 });
                     }
                 } catch (e) {
-                    console.warn("Retrying initializing map container after map instance mismatch:", e);
-                    delete window.activeTrackingMaps[order.id];
+                    console.warn("Retrying initializing map container:", e);
                 }
             } else {
                 const container = L.DomUtil.get(mapContainerId);
