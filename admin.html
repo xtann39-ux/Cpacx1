@@ -310,7 +310,7 @@
     <!-- ========================================== -->
     <!-- 📄 เอกสาร A4 (ซ่อนไว้เสมอ จะแสดงเฉพาะตอนสั่ง Print) -->
     <!-- ========================================== -->
-    <div id="printable-document" class="hidden absolute bg-white text-black p-8 text-sm">
+    <div id="printable-document" class="hidden print:block absolute bg-white text-black p-8 text-sm">
         <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
             <div>
                 <h1 class="text-2xl font-black text-slate-900 mb-1">PRO CONCRETE ECO</h1>
@@ -788,7 +788,7 @@
             summaryContainer.innerHTML = summaryHtml;
 
             // Truck Options HTML
-            const truckOptionsHtml = window.allTrucksMemory.map(t => `<option value="${t.id}">${t.licensePlate} - ${t.driverName}</option>`).join('');
+            const truckOptionsHtml = allTrucksMemory.map(t => `<option value="${t.id}">${t.licensePlate} - ${t.driverName}</option>`).join('');
 
             // Generate Cards
             allOrdersMemory.forEach(order => {
@@ -844,7 +844,7 @@
                             <label class="text-[10px] font-bold text-slate-500 uppercase mb-1.5 flex items-center gap-1"><i data-lucide="truck" class="w-3 h-3"></i> มอบหมายพนักงานส่งปูน</label>
                             <select onchange="window.assignTruck('${order.id}', this.value)" class="w-full text-xs font-semibold rounded-lg border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 px-2 py-1.5 outline-none bg-white">
                                 <option value="">-- เลือกรถและคนขับ --</option>
-                                ${window.allTrucksMemory.map(t => `<option value="${t.id}" ${assignedTruckId === t.id ? 'selected' : ''}>${t.licensePlate} (${t.driverName})</option>`).join('')}
+                                ${allTrucksMemory.map(t => `<option value="${t.id}" ${assignedTruckId === t.id ? 'selected' : ''}>${t.licensePlate} (${t.driverName})</option>`).join('')}
                             </select>
                         </div>
 
@@ -946,7 +946,7 @@
             }
         };
 
-        // 🚨 ฟังก์ชันแปลงข้อมูลเพื่อพิมพ์ใบแจ้งหนี้ / ใบกำกับภาษี PDF
+        // 🚨 ฟังก์ชันแปลงข้อมูลเพื่อพิมพ์ใบแจ้งหนี้ / ใบกำกับภาษี PDF ดิบขนาดกะทัดรัด
         window.printDocument = function(orderId) {
             const order = allOrdersMemory.find(o => o.id === orderId);
             if(!order) {
@@ -997,6 +997,7 @@
             setVal('printVat', order.vat ? order.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
             setVal('printGrandTotal', order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
 
+            // ใช้คลาสควบคุมบน body สำหรับการพิมพ์เฉพาะ Invoice โดยไม่แตะต้อง UI หน้าบ้าน
             document.body.classList.add('print-invoice');
             document.body.classList.remove('print-report');
 
@@ -1006,6 +1007,8 @@
         // ----------------------------------------------------
         // 📊 ระบบวิเคราะห์รายงานสถิติยอดขาย (Reports & Analytics)
         // ----------------------------------------------------
+        
+        // ช่วยตั้งค่าวันที่รายงานแบบช่วงเวลาสำเร็จรูป
         window.setReportPresetRange = function(range) {
             const today = new Date();
             let start = new Date();
@@ -1025,6 +1028,7 @@
             window.generateAnalyticsReport();
         };
 
+        // ฟังก์ชันประมวลผลสรุปยอดขายจากข้อมูลในหน่วยความจำ
         window.generateAnalyticsReport = function() {
             const startVal = document.getElementById('analyticsStartDate').value;
             const endVal = document.getElementById('analyticsEndDate').value;
@@ -1033,20 +1037,28 @@
             const start = new Date(startVal).setHours(0,0,0,0);
             const end = new Date(endVal).setHours(23,59,59,999);
 
+            // คัดกรองออเดอร์เฉพาะที่อยู่ในช่วงเวลาที่กำหนด
             const filteredOrders = allOrdersMemory.filter(o => o.createdAt >= start && o.createdAt <= end);
 
-            let totalRevenue = 0; let totalVolume = 0; let orderCount = filteredOrders.length;
+            // เริ่มคำนวณ KPIs หลัก
+            let totalRevenue = 0;
+            let totalVolume = 0;
+            let orderCount = filteredOrders.length;
+
             filteredOrders.forEach(o => {
                 totalRevenue += parseFloat(o.grandTotal || 0);
                 totalVolume += parseFloat(o.volume || 0);
             });
+
             let avgOrderValue = orderCount > 0 ? (totalRevenue / orderCount) : 0;
 
+            // อัปเดตข้อมูลขึ้นการ์ด KPIs หน้าแผงควบคุม
             document.getElementById('kpi_total_revenue').innerText = totalRevenue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
             document.getElementById('kpi_total_volume').innerText = totalVolume.toFixed(1);
             document.getElementById('kpi_order_count').innerText = orderCount;
             document.getElementById('kpi_avg_order_value').innerText = avgOrderValue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
 
+            // 🏷️ เตรียมรวบรวมข้อมูลแจกแจงแบบรายวันเพื่อป้อนให้ชาร์ตและตารางสรุป
             const dailyData = {};
             let current = new Date(start);
             while(current <= end) {
@@ -1055,6 +1067,7 @@
                 current.setDate(current.getDate() + 1);
             }
 
+            // จัดกลุ่มยอดขายลงในแต่ละวัน
             filteredOrders.forEach(o => {
                 const dateKey = new Date(o.createdAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
                 if (dailyData[dateKey]) {
@@ -1068,10 +1081,13 @@
             const revenues = labels.map(l => dailyData[l].revenue);
             const volumes = labels.map(l => dailyData[l].volume);
 
+            // วาดกราฟเปรียบเทียบยอดขายและคิว (Chart.js)
             renderChart(labels, revenues, volumes);
 
+            // เขียนรายการลงในตารางรายงานสรุปรายวัน
             const tableBody = document.getElementById('reportTableBody');
             tableBody.innerHTML = '';
+
             labels.forEach(dateStr => {
                 const data = dailyData[dateStr];
                 const row = document.createElement('tr');
@@ -1085,14 +1101,20 @@
                 tableBody.appendChild(row);
             });
 
-            // Top Customers
+            // 🏆 จัดอันดับลูกค้าที่มียอดสั่งซื้อสูงสุด 10 อันดับแรก
             const customerGroups = {};
             filteredOrders.forEach(o => {
+                // จัดกลุ่มด้วยชื่อลูกค้าและเบอร์โทรเป็นหลัก
                 const key = o.name + "_" + (o.phone || "");
                 if (!customerGroups[key]) {
                     customerGroups[key] = {
-                        name: o.name, phone: o.phone, companyName: o.companyName || "",
-                        reqTaxInvoice: o.reqTaxInvoice || false, totalSpent: 0, totalVolume: 0, count: 0
+                        name: o.name,
+                        phone: o.phone,
+                        companyName: o.companyName || "",
+                        reqTaxInvoice: o.reqTaxInvoice || false,
+                        totalSpent: 0,
+                        totalVolume: 0,
+                        count: 0
                     };
                 }
                 customerGroups[key].totalSpent += parseFloat(o.grandTotal || 0);
@@ -1100,9 +1122,14 @@
                 customerGroups[key].count += 1;
             });
 
-            const topCustomers = Object.values(customerGroups).sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 10);
+            const topCustomers = Object.values(customerGroups)
+                .sort((a, b) => b.totalSpent - a.totalSpent)
+                .slice(0, 10);
+
+            // แสดงผลตารางลูกค้าสูงสุด 10 อันดับแรกในหน้า Dashboard
             const topCustBody = document.getElementById('topCustomersTableBody');
             topCustBody.innerHTML = '';
+
             if (topCustomers.length === 0) {
                 topCustBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีข้อมูลยอดซื้อสะสมของลูกค้าในช่วงเวลานี้</td></tr>`;
             } else {
@@ -1124,32 +1151,73 @@
             }
         };
 
+        // ฟังก์ชันวาดกราฟสถิติ
         function renderChart(labels, revenues, volumes) {
             const ctx = document.getElementById('salesChart');
             if (!ctx) return;
-            if (salesChartInstance) salesChartInstance.destroy();
+
+            // ตรวจสอบและทำลายชาร์ตตัวเก่าทิ้งเพื่อป้องกันไม่ให้บั๊กแสดงซ้อนทับกันเวลาลากเมาส์ผ่าน
+            if (salesChartInstance) {
+                salesChartInstance.destroy();
+            }
 
             salesChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'ยอดขายรวม (บาท)', data: revenues, backgroundColor: 'rgba(16, 185, 129, 0.2)', borderColor: '#10b981', borderWidth: 2, borderRadius: 6, yAxisID: 'y_rev', type: 'bar' },
-                        { label: 'ปริมาณปูนรวม (คิว)', data: volumes, borderColor: '#0f172a', backgroundColor: '#0f172a', borderWidth: 3, pointRadius: 4, tension: 0.3, yAxisID: 'y_vol', type: 'line' }
+                        {
+                            label: 'ยอดขายรวม (บาท)',
+                            data: revenues,
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)', // Emerald bg
+                            borderColor: '#10b981', // Emerald border
+                            borderWidth: 2,
+                            borderRadius: 6,
+                            yAxisID: 'y_rev',
+                            type: 'bar'
+                        },
+                        {
+                            label: 'ปริมาณปูนรวม (คิว)',
+                            data: volumes,
+                            borderColor: '#0f172a', // Dark Slate
+                            backgroundColor: '#0f172a',
+                            borderWidth: 3,
+                            pointRadius: 4,
+                            tension: 0.3,
+                            yAxisID: 'y_vol',
+                            type: 'line'
+                        }
                     ]
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false,
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
-                        y_rev: { type: 'linear', position: 'left', title: { display: true, text: 'ยอดขายรวม (บาท)', font: { family: 'Prompt', weight: 'bold' } }, ticks: { font: { family: 'Prompt' } } },
-                        y_vol: { type: 'linear', position: 'right', title: { display: true, text: 'สถิติน้ำปูนรวม (คิว)', font: { family: 'Prompt', weight: 'bold' } }, grid: { drawOnChartArea: false }, ticks: { font: { family: 'Prompt' } } },
-                        x: { ticks: { font: { family: 'Prompt' } } }
+                        y_rev: {
+                            type: 'linear',
+                            position: 'left',
+                            title: { display: true, text: 'ยอดขายรวม (บาท)', font: { family: 'Prompt', weight: 'bold' } },
+                            ticks: { font: { family: 'Prompt' } }
+                        },
+                        y_vol: {
+                            type: 'linear',
+                            position: 'right',
+                            title: { display: true, text: 'สถิติน้ำปูนรวม (คิว)', font: { family: 'Prompt', weight: 'bold' } },
+                            grid: { drawOnChartArea: false },
+                            ticks: { font: { family: 'Prompt' } }
+                        },
+                        x: {
+                            ticks: { font: { family: 'Prompt' } }
+                        }
                     },
-                    plugins: { legend: { labels: { font: { family: 'Prompt', weight: 'semibold' } } } }
+                    plugins: {
+                        legend: { labels: { font: { family: 'Prompt', weight: 'semibold' } } }
+                    }
                 }
             });
         }
 
+        // 🖨️ ฟังก์ชันจัดเรียงฟอร์แมตเพื่อพิมพ์รายงานสรุปยอดขาย (Print Sales Report to PDF)
         window.printSalesReport = function() {
             const startVal = document.getElementById('analyticsStartDate').value;
             const endVal = document.getElementById('analyticsEndDate').value;
@@ -1160,13 +1228,18 @@
 
             const filteredOrders = allOrdersMemory.filter(o => o.createdAt >= start && o.createdAt <= end);
 
-            let totalRevenue = 0; let totalVolume = 0; let orderCount = filteredOrders.length;
+            let totalRevenue = 0;
+            let totalVolume = 0;
+            let orderCount = filteredOrders.length;
+
             filteredOrders.forEach(o => {
                 totalRevenue += parseFloat(o.grandTotal || 0);
                 totalVolume += parseFloat(o.volume || 0);
             });
+
             let avgOrderValue = orderCount > 0 ? (totalRevenue / orderCount) : 0;
 
+            // นำข้อมูลไปใส่ในหน้าเอกสารเปลือยรายงาน
             const fmtTh = (d) => new Date(d).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
             document.getElementById('printReportRange').innerText = `${fmtTh(start)} - ${fmtTh(end)}`;
             document.getElementById('printReportDate').innerText = new Date().toLocaleDateString('th-TH');
@@ -1176,6 +1249,7 @@
             document.getElementById('print_kpi_count').innerText = orderCount;
             document.getElementById('print_kpi_avg').innerText = avgOrderValue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
 
+            // คัดลอกตารางมาแสดง (รายละเอียดแจกแจงรายวัน)
             const printTableBody = document.getElementById('printReportTableBody');
             printTableBody.innerHTML = '';
 
@@ -1209,13 +1283,19 @@
                 printTableBody.appendChild(row);
             });
 
+            // คัดลอกตาราง 10 อันดับลูกค้าสูงสุดมาพิมพ์เอกสาร
             const customerGroups = {};
             filteredOrders.forEach(o => {
                 const key = o.name + "_" + (o.phone || "");
                 if (!customerGroups[key]) {
                     customerGroups[key] = {
-                        name: o.name, phone: o.phone, companyName: o.companyName || "",
-                        totalSpent: 0, totalVolume: 0, count: 0
+                        name: o.name,
+                        phone: o.phone,
+                        companyName: o.companyName || "",
+                        reqTaxInvoice: o.reqTaxInvoice || false,
+                        totalSpent: 0,
+                        totalVolume: 0,
+                        count: 0
                     };
                 }
                 customerGroups[key].totalSpent += parseFloat(o.grandTotal || 0);
@@ -1223,7 +1303,10 @@
                 customerGroups[key].count += 1;
             });
 
-            const topCustomers = Object.values(customerGroups).sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 10);
+            const topCustomers = Object.values(customerGroups)
+                .sort((a, b) => b.totalSpent - a.totalSpent)
+                .slice(0, 10);
+
             const printTopCustBody = document.getElementById('printTopCustomersTableBody');
             printTopCustBody.innerHTML = '';
 
@@ -1244,11 +1327,14 @@
                 });
             }
 
+            // ใช้คลาสควบคุมบน body สำหรับการพิมพ์เฉพาะสรุปรายงานยอดขาย
             document.body.classList.add('print-report');
             document.body.classList.remove('print-invoice');
+
             window.print();
         };
 
+        // สลับคลาสควบคุมกลับทันทีหลังสั่งพิมพ์เสร็จสิ้นหรือยกเลิก เพื่อป้องกันการแสดงผลทับซ้อน
         window.addEventListener('afterprint', () => {
             document.body.classList.remove('print-invoice', 'print-report');
         });
@@ -1259,7 +1345,7 @@
         window.generateCustomerReport = function() {
             const name = document.getElementById('reportSearchName').value.trim().toLowerCase();
             const res = document.getElementById('customerReportResult');
-            if (!name) return window.showModal("แจ้งเตือน", "กรุณาพิมพ์ชื่อผู้รับเหมา/เบอร์โทร...");
+            if (!name) return window.showModal("แจ้งเตือน", "กรุณาพิมพ์ชื่อผู้รับเหมา/เบอร์ติดต่อ");
 
             const orders = allOrdersMemory.filter(o => o.name.toLowerCase().includes(name) || o.phone.includes(name) || (o.companyName && o.companyName.toLowerCase().includes(name)));
             if (orders.length === 0) { 
