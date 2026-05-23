@@ -12,7 +12,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- แผนที่ Leaflet.js -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -22,9 +22,11 @@
         body { 
             font-family: 'Prompt', sans-serif; 
             background-color: #f8fafc; 
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 24px 24px;
         }
         /* Smooth Tab Transition */
-        .tab-content { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
+        .tab-content { display: none; opacity: 0; transform: translateY(15px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .tab-content.active { display: block; opacity: 1; transform: translateY(0); }
         
         /* Hide Scrollbar */
@@ -42,21 +44,29 @@
         .leaflet-container { font-family: 'Prompt', sans-serif; z-index: 10; }
         
         .modern-input {
-            background-color: #f1f5f9;
-            border: 1px solid transparent;
-            transition: all 0.2s ease;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
         }
         .modern-input:focus {
             background-color: #ffffff;
             border-color: #10b981;
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
             outline: none;
+        }
+
+        /* Glass effect */
+        .glass-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
         }
 
         /* Styles สำหรับเวลาสั่งพิมพ์ PDF เท่านั้น */
         @media print {
             @page { margin: 10mm; size: A4 portrait; }
-            body { background-color: white !important; }
+            body { background-color: white !important; background-image: none !important;}
             .print\:hidden { display: none !important; }
             .print\:block { display: block !important; }
             #printable-document {
@@ -71,27 +81,46 @@
 </head>
 <body class="text-slate-800 antialiased pb-28 md:pb-12 selection:bg-emerald-100 selection:text-emerald-900 flex flex-col min-h-screen">
 
-    <!-- === ส่วนห่อหุ้มแอปทั้งหมด (จะถูกซ่อนเวลาสั่งพิมพ์ PDF) === -->
+    <!-- === ส่วนห่อหุ้มแอปทั้งหมด === -->
     <div id="app-container" class="print:hidden flex flex-col min-h-screen">
         
-        <!-- App Header -->
-        <header class="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-xl border-b border-slate-200/60 shadow-sm">
-            <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shadow-md p-1">
+        <!-- App Header (Glassmorphism) -->
+        <header class="sticky top-0 z-50 w-full glass-header shadow-sm">
+            <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
                         <i data-lucide="truck" class="w-5 h-5"></i>
                     </div>
-                    <div class="flex flex-col">
-                        <h1 class="text-lg font-bold tracking-tight text-slate-900 leading-none mt-1">ProConcrete <span class="text-emerald-600">Eco</span></h1>
-                        <span class="text-[10px] font-medium text-slate-500">Low Carbon Ready-Mixed</span>
+                    <div class="flex flex-col hidden sm:flex">
+                        <h1 class="text-lg font-extrabold tracking-tight text-slate-900 leading-none mt-1">ProConcrete <span class="text-emerald-600">Eco</span></h1>
+                        <span class="text-[10px] font-semibold text-slate-500">Low Carbon Ready-Mixed</span>
                     </div>
                 </div>
-                <div class="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 border border-emerald-100">
-                    <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    เปิดรับคิว
+
+                <!-- User Profile / Login Area -->
+                <div class="flex items-center gap-3">
+                    <div class="hidden md:flex bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-bold items-center gap-1.5 border border-emerald-100">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        เปิดรับคิวปกติ
+                    </div>
+
+                    <!-- Auth Section -->
+                    <div id="unauthSection" class="block">
+                        <button onclick="window.openLoginModal()" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-md active:scale-95 flex items-center gap-2">
+                            <i data-lucide="user" class="w-4 h-4"></i> เข้าสู่ระบบ
+                        </button>
+                    </div>
+
+                    <div id="authSection" class="hidden flex items-center gap-3 bg-slate-50 border border-slate-200 px-2 py-1.5 rounded-full shadow-sm hover:shadow transition-all">
+                        <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff" alt="Avatar" class="w-8 h-8 rounded-full border border-slate-200 object-cover">
+                        <span id="userName" class="text-xs font-bold text-slate-700 hidden sm:block truncate max-w-[100px]">ผู้ใช้งาน</span>
+                        <button onclick="window.logoutUser()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-500 hover:text-red-500 transition-colors" title="ออกจากระบบ">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
@@ -100,22 +129,23 @@
         <main class="max-w-3xl mx-auto w-full flex-1 px-4 pt-6 pb-10">
 
             <!-- 🎨 กราฟิกแบรนด์ด้านบน (Hero Banner) -->
-            <div class="mb-6 md:mb-8 flex justify-center">
+            <div class="mb-6 md:mb-8 flex justify-center group relative">
+                <div class="absolute inset-0 bg-emerald-500/10 rounded-[2rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <img src="ProCongrete_banner.jpg" 
                      onerror="this.src='https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&q=80&w=1200'"
                      alt="ProConcrete Eco Banner" 
-                     class="w-full h-auto object-contain rounded-2xl md:rounded-[2rem] shadow-sm border border-slate-200/60 transition-all hover:shadow-md bg-white">
+                     class="w-full h-auto object-contain rounded-2xl md:rounded-[2rem] shadow-sm border border-slate-200/60 transition-all hover:shadow-lg bg-white relative z-10">
             </div>
             
             <!-- App-like Tabs -->
-            <div class="flex bg-slate-200/60 p-1.5 rounded-2xl mb-8 border border-slate-200/50 overflow-x-auto hide-scrollbar">
-                <button onclick="window.openTab(event, 'order-page')" class="tab-btn active flex-1 min-w-[110px] py-2.5 px-3 text-center font-bold rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 bg-white text-emerald-700 shadow-sm" data-state="active">
+            <div class="flex bg-slate-200/60 p-1.5 rounded-2xl mb-8 border border-slate-200/50 overflow-x-auto hide-scrollbar relative z-10">
+                <button onclick="window.openTab(event, 'order-page')" class="tab-btn active flex-1 min-w-[110px] py-3 px-3 text-center font-bold rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 bg-white text-emerald-700 shadow-sm" data-state="active">
                     <i data-lucide="edit-3" class="w-4 h-4"></i> จองคิว
                 </button>
-                <button onclick="window.openTab(event, 'payment-page')" class="tab-btn flex-1 min-w-[110px] py-2.5 px-3 text-center font-semibold rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-200/50" data-state="inactive">
+                <button onclick="window.openTab(event, 'payment-page')" class="tab-btn flex-1 min-w-[110px] py-3 px-3 text-center font-semibold rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-200/50" data-state="inactive">
                     <i data-lucide="receipt" class="w-4 h-4"></i> ชำระเงิน / PDF
                 </button>
-                <button onclick="window.openTab(event, 'track-page')" class="tab-btn flex-1 min-w-[110px] py-2.5 px-3 text-center font-semibold rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-200/50" data-state="inactive">
+                <button onclick="window.openTab(event, 'track-page')" class="tab-btn flex-1 min-w-[110px] py-3 px-3 text-center font-semibold rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-200/50" data-state="inactive">
                     <i data-lucide="map-pinned" class="w-4 h-4"></i> ติดตามรถ
                 </button>
             </div>
@@ -127,110 +157,110 @@
                 <form id="orderForm" onsubmit="window.handleCalculateOrder(event)" class="space-y-6">
                     
                     <!-- Section 1: สเปคคอนกรีต -->
-                    <div class="bg-white rounded-3xl p-5 md:p-7 border border-slate-200 shadow-sm relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+                    <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-40 h-40 bg-emerald-50 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
                         
-                        <div class="flex items-center gap-3 mb-5 relative z-10">
-                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">1</div>
-                            <h2 class="text-lg font-bold text-slate-900">เลือกกำลังอัด (KSC)</h2>
+                        <div class="flex items-center gap-3 mb-6 relative z-10">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-sm shadow-inner">1</div>
+                            <h2 class="text-xl font-black text-slate-900 tracking-tight">เลือกกำลังอัด (KSC)</h2>
                         </div>
 
                         <div class="mb-6 relative z-10">
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                <button type="button" onclick="window.selectPresetStrength('240')" class="group text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-emerald-500 hover:shadow-md transition-all">
+                                <button type="button" onclick="window.selectPresetStrength('240')" class="group text-left p-5 rounded-2xl border border-slate-200 bg-white hover:border-emerald-500 hover:shadow-md transition-all">
                                     <div class="flex items-center justify-between mb-2">
-                                        <span class="text-xs font-semibold text-slate-500 group-hover:text-emerald-600 flex items-center gap-1.5"><i data-lucide="home" class="w-3.5 h-3.5"></i> งานบ้านทั่วไป</span>
+                                        <span class="text-xs font-bold text-slate-500 group-hover:text-emerald-600 flex items-center gap-1.5"><i data-lucide="home" class="w-4 h-4"></i> งานบ้านทั่วไป</span>
                                     </div>
-                                    <div class="text-xl font-black text-slate-900 group-hover:text-emerald-700">240 KSC</div>
+                                    <div class="text-2xl font-black text-slate-900 group-hover:text-emerald-700">240 KSC</div>
                                 </button>
-                                <button type="button" onclick="window.selectPresetStrength('280')" class="group text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 hover:shadow-md transition-all relative overflow-hidden">
-                                    <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-lg">ฮิตสุด</div>
+                                <button type="button" onclick="window.selectPresetStrength('280')" class="group text-left p-5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/50 hover:shadow-md transition-all relative overflow-hidden">
+                                    <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[9px] font-black px-3 py-1 rounded-bl-xl shadow-sm tracking-wide">ฮิตสุด</div>
                                     <div class="flex items-center justify-between mb-2">
-                                        <span class="text-xs font-semibold text-emerald-700 flex items-center gap-1.5"><i data-lucide="building-2" class="w-3.5 h-3.5"></i> โครงสร้างหลัก</span>
+                                        <span class="text-xs font-bold text-emerald-700 flex items-center gap-1.5"><i data-lucide="building-2" class="w-4 h-4"></i> โครงสร้างหลัก</span>
                                     </div>
-                                    <div class="text-xl font-black text-emerald-900">280 KSC</div>
+                                    <div class="text-2xl font-black text-emerald-900">280 KSC</div>
                                 </button>
-                                <button type="button" onclick="window.selectPresetStrength('320')" class="group text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-emerald-500 hover:shadow-md transition-all">
+                                <button type="button" onclick="window.selectPresetStrength('320')" class="group text-left p-5 rounded-2xl border border-slate-200 bg-white hover:border-emerald-500 hover:shadow-md transition-all">
                                     <div class="flex items-center justify-between mb-2">
-                                        <span class="text-xs font-semibold text-slate-500 group-hover:text-emerald-600 flex items-center gap-1.5"><i data-lucide="factory" class="w-3.5 h-3.5"></i> รับน้ำหนักสูง</span>
+                                        <span class="text-xs font-bold text-slate-500 group-hover:text-emerald-600 flex items-center gap-1.5"><i data-lucide="factory" class="w-4 h-4"></i> รับน้ำหนักสูง</span>
                                     </div>
-                                    <div class="text-xl font-black text-slate-900 group-hover:text-emerald-700">320 KSC</div>
+                                    <div class="text-2xl font-black text-slate-900 group-hover:text-emerald-700">320 KSC</div>
                                 </button>
                             </div>
                         </div>
 
                         <div class="relative z-10">
-                            <p class="text-xs font-medium text-slate-500 mb-3">หรือเลือกกำลังอัดแบบละเอียด:</p>
-                            <div class="flex flex-wrap gap-2">
+                            <p class="text-xs font-semibold text-slate-500 mb-3 uppercase tracking-wider">หรือเลือกกำลังอัดแบบละเอียด:</p>
+                            <div class="flex flex-wrap gap-2.5">
                                 <label class="cursor-pointer">
                                     <input type="radio" name="strength" value="180" class="peer sr-only" onchange="window.calculatePrices()">
-                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">180</div>
+                                    <div class="px-5 py-2.5 rounded-full border border-slate-200 text-sm font-bold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm hover:shadow peer-checked:shadow-md">180</div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="strength" value="210" class="peer sr-only" onchange="window.calculatePrices()">
-                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">210</div>
+                                    <div class="px-5 py-2.5 rounded-full border border-slate-200 text-sm font-bold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm hover:shadow peer-checked:shadow-md">210</div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="strength" value="240" class="peer sr-only" onchange="window.calculatePrices()">
-                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">240</div>
+                                    <div class="px-5 py-2.5 rounded-full border border-slate-200 text-sm font-bold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm hover:shadow peer-checked:shadow-md">240</div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="strength" value="280" class="peer sr-only" checked onchange="window.calculatePrices()">
-                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">280</div>
+                                    <div class="px-5 py-2.5 rounded-full border border-slate-200 text-sm font-bold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm hover:shadow peer-checked:shadow-md">280</div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="strength" value="300" class="peer sr-only" onchange="window.calculatePrices()">
-                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">300</div>
+                                    <div class="px-5 py-2.5 rounded-full border border-slate-200 text-sm font-bold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm hover:shadow peer-checked:shadow-md">300</div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="strength" value="320" class="peer sr-only" onchange="window.calculatePrices()">
-                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">320</div>
+                                    <div class="px-5 py-2.5 rounded-full border border-slate-200 text-sm font-bold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm hover:shadow peer-checked:shadow-md">320</div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="strength" value="350" class="peer sr-only" onchange="window.calculatePrices()">
-                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">350</div>
+                                    <div class="px-5 py-2.5 rounded-full border border-slate-200 text-sm font-bold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm hover:shadow peer-checked:shadow-md">350</div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="strength" value="380" class="peer sr-only" onchange="window.calculatePrices()">
-                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">380</div>
+                                    <div class="px-5 py-2.5 rounded-full border border-slate-200 text-sm font-bold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm hover:shadow peer-checked:shadow-md">380</div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="strength" value="400" class="peer sr-only" onchange="window.calculatePrices()">
-                                    <div class="px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm">400</div>
+                                    <div class="px-5 py-2.5 rounded-full border border-slate-200 text-sm font-bold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white shadow-sm hover:shadow peer-checked:shadow-md">400</div>
                                 </label>
                             </div>
                         </div>
 
-                        <div class="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-100 flex justify-between items-center relative z-10">
-                            <span class="text-sm font-semibold text-slate-600">ราคาคอนกรีตวันนี้</span>
+                        <div class="mt-8 p-5 rounded-2xl bg-emerald-50/50 border border-emerald-100 flex justify-between items-center relative z-10">
+                            <span class="text-sm font-bold text-emerald-800 flex items-center gap-2"><i data-lucide="tag" class="w-4 h-4"></i> ราคาคอนกรีตวันนี้</span>
                             <div class="text-right">
-                                <span id="selectedPriceDisplay" class="text-xl font-black text-emerald-600">1,900</span> 
-                                <span class="text-sm font-medium text-slate-500">บ./คิว</span>
+                                <span id="selectedPriceDisplay" class="text-2xl font-black text-emerald-600">1,900</span> 
+                                <span class="text-sm font-bold text-emerald-700">บ./คิว</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Section 2: ข้อมูลการจัดส่ง & ปริมาณ -->
-                    <div class="bg-white rounded-3xl p-5 md:p-7 border border-slate-200 shadow-sm relative overflow-hidden">
-                        <div class="flex items-center gap-3 mb-5">
-                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">2</div>
-                            <h2 class="text-lg font-bold text-slate-900">การจัดส่งและปริมาณ</h2>
+                    <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-sm shadow-inner">2</div>
+                            <h2 class="text-xl font-black text-slate-900 tracking-tight">การจัดส่งและปริมาณ</h2>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- ชนิดรถ -->
-                            <div class="space-y-2.5">
-                                <label class="text-xs font-semibold text-slate-500 mb-1 block">ประเภทรถโม่ที่รองรับ</label>
+                            <div class="space-y-3">
+                                <label class="text-xs font-semibold text-slate-500 mb-1 block uppercase tracking-wider">ประเภทรถโม่ที่รองรับ</label>
                                 <label class="relative flex cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-50 focus:outline-none transition-all has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/50 has-[:checked]:ring-1 has-[:checked]:ring-emerald-500 shadow-sm">
                                     <input type="radio" name="truckType" value="รถโม่ใหญ่ (6-7 คิว)" class="peer sr-only" checked onchange="window.calculatePrices()">
                                     <div class="flex w-full items-center justify-between">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 peer-checked:bg-emerald-100 peer-checked:text-emerald-600 transition-colors">
-                                                <i data-lucide="truck" class="w-5 h-5"></i>
+                                            <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 peer-checked:bg-emerald-100 peer-checked:text-emerald-600 transition-colors">
+                                                <i data-lucide="truck" class="w-6 h-6"></i>
                                             </div>
                                             <div>
                                                 <p class="text-sm font-bold text-slate-900">รถโม่ใหญ่ (6-7 คิว)</p>
-                                                <p class="text-xs text-slate-500 mt-0.5">จัดส่งฟรีไม่มีบวกเพิ่ม</p>
+                                                <p class="text-xs font-semibold text-emerald-600 mt-0.5">จัดส่งฟรีไม่มีบวกเพิ่ม</p>
                                             </div>
                                         </div>
                                         <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 opacity-0 transition-opacity peer-checked:opacity-100"></i>
@@ -240,12 +270,12 @@
                                     <input type="radio" name="truckType" value="รถโม่เล็ก (2-3 คิว)" class="peer sr-only" onchange="window.calculatePrices()">
                                     <div class="flex w-full items-center justify-between">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 peer-checked:bg-emerald-100 peer-checked:text-emerald-600 transition-colors">
-                                                <i data-lucide="caravan" class="w-5 h-5"></i>
+                                            <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 peer-checked:bg-emerald-100 peer-checked:text-emerald-600 transition-colors">
+                                                <i data-lucide="caravan" class="w-6 h-6"></i>
                                             </div>
                                             <div>
                                                 <p class="text-sm font-bold text-slate-900">รถโม่เล็ก (2-3 คิว)</p>
-                                                <p class="text-xs text-slate-500 mt-0.5">บวกเพิ่ม <span id="display_shipping_fee">500</span> บ./เที่ยว</p>
+                                                <p class="text-xs font-semibold text-slate-500 mt-0.5">บวกเพิ่ม <span id="display_shipping_fee">500</span> บ./เที่ยว</p>
                                             </div>
                                         </div>
                                         <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 opacity-0 transition-opacity peer-checked:opacity-100"></i>
@@ -254,14 +284,14 @@
                             </div>
 
                             <!-- ปริมาณ -->
-                            <div class="space-y-2.5">
-                                <label class="text-xs font-semibold text-slate-500 mb-1 block">ปริมาณที่ต้องการ (คิว/M³)</label>
-                                <div class="flex items-center justify-between rounded-2xl border border-slate-200 p-2 bg-slate-50 shadow-inner h-[88px]">
+                            <div class="space-y-3">
+                                <label class="text-xs font-semibold text-slate-500 mb-1 block uppercase tracking-wider">ปริมาณที่ต้องการ (คิว/M³)</label>
+                                <div class="flex items-center justify-between rounded-2xl border border-slate-200 p-2 bg-slate-50 shadow-inner h-[92px]">
                                     <button type="button" onclick="window.adjustVolume(-0.5)" class="flex h-full w-16 items-center justify-center rounded-xl bg-white text-slate-600 shadow-sm border border-slate-200 hover:bg-slate-100 transition active:scale-95">
                                         <i data-lucide="minus" class="w-6 h-6"></i>
                                     </button>
                                     <div class="flex flex-col items-center">
-                                        <input type="number" id="volumeInput" name="volume" value="5.0" step="0.5" min="1" max="1000" onchange="window.calculatePrices()" class="w-24 text-center font-black text-4xl text-emerald-600 bg-transparent border-none p-0 focus:ring-0">
+                                        <input type="number" id="volumeInput" name="volume" value="5.0" step="0.5" min="1" max="1000" onchange="window.calculatePrices()" class="w-24 text-center font-black text-5xl text-emerald-600 bg-transparent border-none p-0 focus:ring-0">
                                     </div>
                                     <button type="button" onclick="window.adjustVolume(0.5)" class="flex h-full w-16 items-center justify-center rounded-xl bg-white text-slate-600 shadow-sm border border-slate-200 hover:bg-slate-100 transition active:scale-95">
                                         <i data-lucide="plus" class="w-6 h-6"></i>
@@ -272,27 +302,27 @@
                     </div>
 
                     <!-- Section 3: ข้อมูลหน้างาน, นิติบุคคล, และแผนที่ -->
-                    <div class="bg-white rounded-3xl p-5 md:p-7 border border-slate-200 shadow-sm">
-                        <div class="flex items-center gap-3 mb-5">
-                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">3</div>
-                            <h2 class="text-lg font-bold text-slate-900">สถานที่ และ ใบกำกับภาษี</h2>
+                    <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-sm shadow-inner">3</div>
+                            <h2 class="text-xl font-black text-slate-900 tracking-tight">สถานที่ และ ใบกำกับภาษี</h2>
                         </div>
 
-                        <div class="space-y-4">
+                        <div class="space-y-5">
                             <!-- วันเวลา -->
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">วันจัดส่ง</label>
+                                    <label class="text-xs font-semibold text-slate-500 mb-1.5 block pl-1 uppercase tracking-wider">วันจัดส่ง</label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="calendar" class="w-4 h-4"></i></div>
-                                        <input type="date" id="deliveryDate" name="deliveryDate" required class="modern-input w-full pl-10 pr-3 py-3 rounded-xl text-sm font-semibold text-slate-800">
+                                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-600"><i data-lucide="calendar" class="w-5 h-5"></i></div>
+                                        <input type="date" id="deliveryDate" name="deliveryDate" required class="modern-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-bold text-slate-800">
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">เวลาเริ่มเท</label>
+                                    <label class="text-xs font-semibold text-slate-500 mb-1.5 block pl-1 uppercase tracking-wider">เวลาเริ่มเท</label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="clock" class="w-4 h-4"></i></div>
-                                        <input type="time" name="deliveryTime" required class="modern-input w-full pl-10 pr-3 py-3 rounded-xl text-sm font-semibold text-slate-800">
+                                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-600"><i data-lucide="clock" class="w-5 h-5"></i></div>
+                                        <input type="time" name="deliveryTime" required class="modern-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-bold text-slate-800">
                                     </div>
                                 </div>
                             </div>
@@ -302,63 +332,63 @@
                             <!-- ผู้ติดต่อ -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">ชื่อผู้ติดต่อ / ไซต์งาน</label>
+                                    <label class="text-xs font-semibold text-slate-500 mb-1.5 block pl-1 uppercase tracking-wider">ชื่อผู้ติดต่อ / ไซต์งาน</label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="user" class="w-4 h-4"></i></div>
-                                        <input type="text" id="customerName" name="customerName" placeholder="นายช่าง / หมู่บ้าน..." required class="modern-input w-full pl-10 pr-3 py-3 rounded-xl text-sm font-semibold text-slate-800">
+                                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><i data-lucide="user" class="w-5 h-5"></i></div>
+                                        <input type="text" id="customerName" name="customerName" placeholder="นายช่าง / หมู่บ้าน..." required class="modern-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-bold text-slate-800">
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">เบอร์โทรศัพท์</label>
+                                    <label class="text-xs font-semibold text-slate-500 mb-1.5 block pl-1 uppercase tracking-wider">เบอร์โทรศัพท์</label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="phone" class="w-4 h-4"></i></div>
-                                        <input type="tel" id="customerPhone" name="customerPhone" placeholder="08xxxxxxxx" pattern="[0-9]{10}" required class="modern-input w-full pl-10 pr-3 py-3 rounded-xl text-sm font-semibold text-slate-800">
+                                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><i data-lucide="phone" class="w-5 h-5"></i></div>
+                                        <input type="tel" id="customerPhone" name="customerPhone" placeholder="08xxxxxxxx" pattern="[0-9]{10}" required class="modern-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-bold text-slate-800">
                                     </div>
                                 </div>
                             </div>
 
                             <!-- ใบกำกับภาษี (Tax Invoice Toggle) -->
-                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 mt-2">
+                            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 mt-2 hover:border-emerald-300 transition-colors">
                                 <label class="flex items-center gap-3 cursor-pointer">
                                     <input type="checkbox" id="requestTaxInvoice" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" onchange="window.toggleTaxFields()">
-                                    <span class="text-sm font-bold text-slate-700">ขอใบกำกับภาษี (สำหรับนิติบุคคล)</span>
+                                    <span class="text-sm font-bold text-slate-800 select-none">ขอใบกำกับภาษี (สำหรับนิติบุคคล)</span>
                                 </label>
-                                <div id="taxInvoiceFields" class="hidden mt-4 space-y-3 pt-3 border-t border-slate-200">
+                                <div id="taxInvoiceFields" class="hidden mt-5 space-y-4 pt-4 border-t border-slate-200">
                                     <div>
-                                        <label class="text-xs font-semibold text-slate-500 mb-1 block">ชื่อบริษัท / นิติบุคคล</label>
-                                        <input type="text" id="companyName" placeholder="บริษัท เอบีซี จำกัด" class="modern-input w-full p-3 rounded-xl text-sm font-semibold text-slate-800">
+                                        <label class="text-xs font-semibold text-slate-500 mb-1.5 block uppercase">ชื่อบริษัท / นิติบุคคล</label>
+                                        <input type="text" id="companyName" placeholder="บริษัท เอบีซี จำกัด" class="modern-input w-full p-3.5 rounded-xl text-sm font-bold text-slate-800">
                                     </div>
                                     <div>
-                                        <label class="text-xs font-semibold text-slate-500 mb-1 block">เลขประจำตัวผู้เสียภาษี (13 หลัก)</label>
-                                        <input type="text" id="taxId" maxlength="13" placeholder="01055xxxxxxxx" class="modern-input w-full p-3 rounded-xl text-sm font-semibold text-slate-800">
+                                        <label class="text-xs font-semibold text-slate-500 mb-1.5 block uppercase">เลขประจำตัวผู้เสียภาษี (13 หลัก)</label>
+                                        <input type="text" id="taxId" maxlength="13" placeholder="01055xxxxxxxx" class="modern-input w-full p-3.5 rounded-xl text-sm font-bold text-slate-800 font-mono tracking-widest">
                                     </div>
                                     <div>
-                                        <label class="text-xs font-semibold text-slate-500 mb-1 block">ที่อยู่จดทะเบียนบริษัท</label>
-                                        <textarea id="companyAddress" rows="2" placeholder="เลขที่ตั้ง หมู่ ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="modern-input w-full p-3 rounded-xl text-sm font-semibold text-slate-800 resize-none"></textarea>
+                                        <label class="text-xs font-semibold text-slate-500 mb-1.5 block uppercase">ที่อยู่จดทะเบียนบริษัท</label>
+                                        <textarea id="companyAddress" rows="2" placeholder="เลขที่ตั้ง หมู่ ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="modern-input w-full p-3.5 rounded-xl text-sm font-bold text-slate-800 resize-none"></textarea>
                                     </div>
                                 </div>
                             </div>
 
                             <div>
-                                <label class="text-xs font-semibold text-slate-500 mb-1 block pl-1">รายละเอียดสถานที่จัดส่ง</label>
-                                <textarea id="deliveryAddress" name="deliveryAddress" placeholder="ซอย, เลขที่, จุดสังเกตชัดเจน..." rows="2" required class="modern-input w-full p-3 rounded-xl text-sm font-semibold text-slate-800 resize-none"></textarea>
+                                <label class="text-xs font-semibold text-slate-500 mb-1.5 block pl-1 uppercase tracking-wider">รายละเอียดสถานที่จัดส่ง</label>
+                                <textarea id="deliveryAddress" name="deliveryAddress" placeholder="ซอย, เลขที่, จุดสังเกตชัดเจน..." rows="2" required class="modern-input w-full p-4 rounded-xl text-sm font-bold text-slate-800 resize-none"></textarea>
                             </div>
                             
                             <!-- แผนที่แบบแอป -->
                             <div class="pt-2">
-                                <label class="text-xs font-semibold text-slate-500 mb-2 block pl-1">ปักหมุดพิกัดจัดส่ง</label>
-                                <div class="relative rounded-2xl overflow-hidden border-2 border-slate-200 h-[220px] shadow-inner bg-slate-100">
+                                <label class="text-xs font-semibold text-slate-500 mb-2 block pl-1 uppercase tracking-wider">ปักหมุดพิกัดจัดส่ง</label>
+                                <div class="relative rounded-[1.5rem] overflow-hidden border-2 border-slate-200 h-[260px] shadow-inner bg-slate-100 group">
                                     <div id="map" class="absolute inset-0 z-10"></div>
                                     
                                     <!-- Floating Location Button -->
-                                    <button type="button" onclick="window.getCurrentLocation()" class="absolute bottom-4 right-4 z-[400] bg-white text-slate-700 hover:text-emerald-600 px-3 py-2.5 rounded-xl shadow-lg border border-slate-200/50 flex items-center gap-2 text-xs font-bold transition-all active:scale-95">
-                                        <i data-lucide="navigation" class="w-4 h-4 text-blue-500 fill-blue-500/20"></i> ตำแหน่งฉัน
+                                    <button type="button" onclick="window.getCurrentLocation()" class="absolute bottom-5 right-5 z-[400] bg-white text-slate-800 hover:text-emerald-600 hover:bg-slate-50 px-4 py-3 rounded-xl shadow-xl border border-slate-200/50 flex items-center gap-2 text-xs font-bold transition-all active:scale-95 group-hover:scale-105">
+                                        <i data-lucide="navigation" class="w-4 h-4 text-blue-600 fill-blue-500/20"></i> ตำแหน่งฉัน
                                     </button>
 
                                     <!-- Distance Badge -->
-                                    <div class="absolute top-4 left-4 z-[400] bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm border border-slate-200/50 flex items-center gap-1.5 pointer-events-none">
-                                        <i data-lucide="route" class="w-3 h-3 text-slate-400"></i>
-                                        <span class="text-[10px] font-bold text-slate-600">ระยะทาง: <span id="display_distance" class="text-emerald-600">0.0</span> กม.</span>
+                                    <div class="absolute top-5 left-5 z-[400] bg-white/95 backdrop-blur px-3.5 py-2 rounded-xl shadow-lg border border-slate-200/50 flex items-center gap-2 pointer-events-none">
+                                        <i data-lucide="route" class="w-4 h-4 text-emerald-600"></i>
+                                        <span class="text-xs font-bold text-slate-700">ระยะทาง: <span id="display_distance" class="text-emerald-600 text-sm">0.0</span> กม.</span>
                                     </div>
                                 </div>
                                 <input type="hidden" id="gpsLinkInput" name="gpsLink" value="">
@@ -368,20 +398,20 @@
                     </div>
 
                     <!-- Spacer for floating bar -->
-                    <div class="h-10 md:h-0"></div>
+                    <div class="h-16 md:h-0"></div>
 
                     <!-- Floating Bottom Bar (App Style) -->
                     <div class="fixed bottom-0 inset-x-0 md:sticky md:bottom-6 z-40 p-4 md:p-0 pointer-events-none">
-                        <div class="max-w-3xl mx-auto bg-slate-900 border border-slate-700 shadow-2xl rounded-2xl md:rounded-3xl p-3 md:p-4 flex items-center justify-between pointer-events-auto">
-                            <div class="pl-2">
-                                <p class="text-[10px] font-medium text-slate-400">ยอดประเมินเบื้องต้น</p>
-                                <div class="flex items-baseline gap-1">
-                                    <span class="text-2xl md:text-3xl font-black text-white" id="quickTotalText">0.00</span>
-                                    <span class="text-xs font-medium text-slate-400">฿</span>
+                        <div class="max-w-3xl mx-auto bg-slate-900 border border-slate-700 shadow-2xl rounded-2xl md:rounded-[2rem] p-3.5 md:p-4 flex items-center justify-between pointer-events-auto">
+                            <div class="pl-3">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ยอดประเมินเบื้องต้น</p>
+                                <div class="flex items-baseline gap-1.5">
+                                    <span class="text-3xl md:text-4xl font-black text-white" id="quickTotalText">0.00</span>
+                                    <span class="text-xs font-bold text-slate-400">฿</span>
                                 </div>
                             </div>
-                            <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3 px-5 md:px-8 rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2 text-sm md:text-base">
-                                ดูใบเสนอราคา <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            <button type="submit" class="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-black py-3.5 px-6 md:px-8 rounded-xl md:rounded-2xl shadow-lg transition-all active:scale-95 flex items-center gap-2 text-sm md:text-base border border-emerald-400/50">
+                                ขอใบเสนอราคา <i data-lucide="arrow-right" class="w-5 h-5"></i>
                             </button>
                         </div>
                     </div>
@@ -392,27 +422,27 @@
             <!-- 💳 หน้าการชำระเงินและเอกสาร (Payment Page) -->
             <!-- ========================================== -->
             <div class="tab-content" id="payment-page">
-                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm text-center mb-6">
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 mb-4 shadow-sm ring-1 ring-emerald-100">
-                        <i data-lucide="file-text" class="w-8 h-8"></i>
+                <div class="bg-white rounded-[2rem] p-8 border border-slate-200/80 shadow-sm text-center mb-6 hover:shadow-md transition">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-600 mb-5 shadow-sm border border-emerald-200">
+                        <i data-lucide="receipt" class="w-10 h-10"></i>
                     </div>
-                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 mb-2">เอกสารและใบแจ้งหนี้</h2>
-                    <p class="text-sm text-slate-500 mb-6">ค้นหาเพื่อดูยอดชำระเงิน พิมพ์ใบเสนอราคา หรือใบกำกับภาษี</p>
+                    <h2 class="text-2xl font-black tracking-tight text-slate-900 mb-2">เอกสารและใบแจ้งหนี้</h2>
+                    <p class="text-sm font-medium text-slate-500 mb-8">ค้นหาเพื่อดูยอดชำระเงิน พิมพ์ใบเสนอราคา หรือใบกำกับภาษี</p>
                     
-                    <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                    <div class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
                         <div class="relative flex-1">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                                 <i data-lucide="search" class="w-5 h-5"></i>
                             </div>
-                            <input type="text" id="searchPaymentInput" placeholder="เบอร์โทร หรือ ชื่อลูกค้า..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-emerald-500 focus:bg-white transition-all shadow-sm">
+                            <input type="text" id="searchPaymentInput" placeholder="เบอร์โทรศัพท์ หรือ ชื่อลูกค้า..." class="modern-input w-full pl-12 pr-4 py-4 rounded-2xl text-sm font-bold text-slate-800">
                         </div>
-                        <button onclick="window.searchPayment()" class="bg-emerald-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-emerald-700 transition shadow-md w-full sm:w-auto flex items-center justify-center gap-2">
+                        <button onclick="window.searchPayment()" class="bg-slate-900 text-white font-black py-4 px-8 rounded-2xl hover:bg-slate-800 transition shadow-md w-full sm:w-auto flex items-center justify-center gap-2 active:scale-95">
                             ค้นหา
                         </button>
                     </div>
                 </div>
 
-                <div id="paymentResult" class="hidden space-y-4 pb-8">
+                <div id="paymentResult" class="hidden space-y-5 pb-8">
                     <!-- ผลลัพธ์การชำระเงิน -->
                 </div>
             </div>
@@ -421,33 +451,85 @@
             <!-- 🔍 หน้าติดตาม (Tracking Page) -->
             <!-- ========================================== -->
             <div class="tab-content" id="track-page">
-                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm text-center mb-6">
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 text-blue-600 mb-4 shadow-sm ring-1 ring-blue-100">
-                        <i data-lucide="map-pinned" class="w-8 h-8"></i>
+                <div class="bg-white rounded-[2rem] p-8 border border-slate-200/80 shadow-sm text-center mb-6 hover:shadow-md transition">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 text-blue-600 mb-5 shadow-sm border border-blue-200">
+                        <i data-lucide="map-pinned" class="w-10 h-10"></i>
                     </div>
-                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 mb-2">ติดตามสถานะรถปูน</h2>
-                    <p class="text-sm text-slate-500 mb-6">ตรวจสอบตำแหน่งรถโม่ปูนของคุณแบบ Real-time</p>
+                    <h2 class="text-2xl font-black tracking-tight text-slate-900 mb-2">ติดตามสถานะรถปูน</h2>
+                    <p class="text-sm font-medium text-slate-500 mb-8">ตรวจสอบตำแหน่งรถโม่ปูนของคุณแบบ Real-time</p>
                     
-                    <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                    <div class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
                         <div class="relative flex-1">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                                 <i data-lucide="search" class="w-5 h-5"></i>
                             </div>
-                            <input type="text" id="searchNameInput" placeholder="เบอร์โทร หรือ ชื่อลูกค้า..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-blue-500 focus:bg-white transition-all shadow-sm">
+                            <input type="text" id="searchNameInput" placeholder="เบอร์โทรศัพท์ หรือ ชื่อลูกค้า..." class="modern-input w-full pl-12 pr-4 py-4 rounded-2xl text-sm font-bold text-slate-800">
                         </div>
-                        <button onclick="window.searchTracking()" class="bg-slate-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-slate-800 transition shadow-md w-full sm:w-auto">
+                        <button onclick="window.searchTracking()" class="bg-slate-900 text-white font-black py-4 px-8 rounded-2xl hover:bg-slate-800 transition shadow-md w-full sm:w-auto flex items-center justify-center gap-2 active:scale-95">
                             ค้นหา
                         </button>
                     </div>
                 </div>
 
-                <div id="trackingResult" class="hidden space-y-4 pb-8">
+                <div id="trackingResult" class="hidden space-y-5 pb-8">
                     <!-- ผลลัพธ์ -->
                 </div>
             </div>
 
         </main>
     </div> <!-- End App Container -->
+
+    <!-- ========================================== -->
+    <!-- 👤 Modal เข้าสู่ระบบ (Auth Modal) -->
+    <!-- ========================================== -->
+    <div id="authModal" class="fixed inset-0 z-[100] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-[fadeIn_0.2s_ease-out] relative">
+            <button onclick="window.closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-colors z-10">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <div class="p-8 pb-6 text-center border-b border-slate-100 relative">
+                <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-100">
+                    <i data-lucide="user" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900 mb-1">เข้าสู่ระบบ</h3>
+                <p class="text-sm font-medium text-slate-500">จองคิวง่ายขึ้น และติดตามออเดอร์ได้ทันที</p>
+            </div>
+            
+            <div class="p-6 space-y-5 bg-slate-50/50">
+                <!-- Social Logins -->
+                <div class="space-y-3">
+                    <button onclick="window.loginWithGoogle()" class="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-3 px-4 rounded-xl shadow-sm transition-all flex items-center justify-center gap-3">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                        ดำเนินการต่อด้วย Google
+                    </button>
+                    <button onclick="window.loginWithFacebook()" class="w-full bg-[#1877F2] hover:bg-[#166FE5] text-white font-bold py-3 px-4 rounded-xl shadow-sm transition-all flex items-center justify-center gap-3">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        ดำเนินการต่อด้วย Facebook
+                    </button>
+                </div>
+
+                <div class="relative flex items-center justify-center my-2">
+                    <div class="border-t border-slate-200 w-full"></div>
+                    <span class="bg-slate-50 px-3 text-xs font-bold text-slate-400 absolute">หรือใช้ Email</span>
+                </div>
+
+                <!-- Email Login -->
+                <div class="space-y-3">
+                    <input type="email" id="authEmail" placeholder="อีเมล (Email)" class="modern-input w-full p-3.5 rounded-xl text-sm font-medium text-slate-800">
+                    <input type="password" id="authPassword" placeholder="รหัสผ่าน (Password)" class="modern-input w-full p-3.5 rounded-xl text-sm font-medium text-slate-800">
+                    
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="window.registerWithEmail()" class="flex-1 bg-white border border-emerald-200 text-emerald-700 font-bold py-3 rounded-xl hover:bg-emerald-50 transition shadow-sm text-sm">
+                            สมัครสมาชิก
+                        </button>
+                        <button onclick="window.loginWithEmail()" class="flex-1 bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition shadow-sm text-sm">
+                            เข้าสู่ระบบ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- ========================================== -->
     <!-- 📄 Modal ใบเสนอราคาสำหรับดูและอัปโหลดสลิป -->
@@ -585,7 +667,10 @@
 
     <!-- Alert Modal -->
     <div id="globalModal" class="fixed inset-0 z-[110] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-[fadeIn_0.2s_ease-out] relative">
+            <button id="modalCancelCrossBtn" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 p-1.5 rounded-full transition-colors z-10 hidden">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
             <div class="p-6 text-center">
                 <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center mx-auto mb-4">
                     <i data-lucide="bell" class="w-6 h-6"></i>
@@ -595,7 +680,7 @@
             </div>
             <div class="p-4 bg-slate-50 border-t border-slate-100 flex gap-2 justify-center">
                 <button id="modalCancelBtn" class="hidden flex-1 py-2.5 rounded-xl font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition text-sm">ยกเลิก</button>
-                <button id="modalOkBtn" class="flex-1 py-2.5 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition text-sm shadow-sm">ตกลงเข้าใจ</button>
+                <button id="modalOkBtn" class="flex-1 py-2.5 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition text-sm shadow-sm">ตกลง</button>
             </div>
         </div>
     </div>
@@ -683,10 +768,14 @@
         </div>
     </div>
 
-    <!-- Firebase Scripts -->
+    <!-- Firebase Scripts & Auth Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { 
+            getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken, 
+            GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, 
+            createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut 
+        } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         // Global Modals
@@ -695,7 +784,12 @@
             if (!modal) return;
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalMessage').innerText = message;
-            document.getElementById('modalCancelBtn').classList.add('hidden');
+            
+            const cancelBtn = document.getElementById('modalCancelBtn');
+            const crossBtn = document.getElementById('modalCancelCrossBtn');
+            cancelBtn.classList.add('hidden');
+            if(crossBtn) crossBtn.classList.add('hidden');
+
             const okBtn = document.getElementById('modalOkBtn');
             okBtn.onclick = () => { modal.classList.add('hidden'); if(onOk) onOk(); };
             modal.classList.remove('hidden');
@@ -706,9 +800,16 @@
             if (!modal) return;
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalMessage').innerText = message;
+            
             const cancelBtn = document.getElementById('modalCancelBtn');
+            const crossBtn = document.getElementById('modalCancelCrossBtn');
             cancelBtn.classList.remove('hidden');
+            if(crossBtn) {
+                crossBtn.classList.remove('hidden');
+                crossBtn.onclick = () => modal.classList.add('hidden');
+            }
             cancelBtn.onclick = () => modal.classList.add('hidden');
+            
             const okBtn = document.getElementById('modalOkBtn');
             okBtn.onclick = () => { modal.classList.add('hidden'); onConfirm(); };
             modal.classList.remove('hidden');
@@ -719,7 +820,6 @@
             if(window.lucide) lucide.createIcons();
         });
 
-        // Toggle Tax Fields
         window.toggleTaxFields = function() {
             const checkbox = document.getElementById('requestTaxInvoice');
             const fields = document.getElementById('taxInvoiceFields');
@@ -777,7 +877,7 @@
         let map, marker; 
         window.activeTrackingMaps = {}; 
 
-        // ราคาและตั้งค่าบัญชีโอนรับเงินส่วนกลาง (จะถูกอัปเดตแบบ Dynamic จากแอดมิน)
+        // ราคาและตั้งค่าบัญชีโอนรับเงินส่วนกลาง
         let priceSettings = {
             price_180: 1650, price_210: 1720, price_240: 1800, price_280: 1900, price_300: 1980,
             price_320: 2050, price_350: 2150, price_380: 2250, price_400: 2350, shipping_fee: 500,
@@ -787,7 +887,9 @@
             bank_qr_image: ""
         };
 
-        // Firebase Initialization
+        // =====================================
+        // Auth Providers & Logic
+        // =====================================
         if (typeof __firebase_config !== 'undefined') {
             const canvasConfig = JSON.parse(__firebase_config);
             app = initializeApp(canvasConfig);
@@ -810,19 +912,126 @@
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
-
+            // Default load try to stay anonymous if not logged in
             signInAnonymously(auth).catch((error) => { isOfflineMode = true; });
         }
+
+        const googleProvider = new GoogleAuthProvider();
+        const facebookProvider = new FacebookAuthProvider();
 
         onAuthStateChanged(auth, (user) => {
             if (user) { 
                 currentUser = user; 
                 setupDatabaseListener(); 
                 setupPriceSettingsListener(); 
-            } 
-            else if (!isOfflineMode) currentUser = null;
+                updateUserUI(user);
+            } else {
+                currentUser = null;
+                updateUserUI(null);
+            }
         });
 
+        function updateUserUI(user) {
+            const unauthSection = document.getElementById('unauthSection');
+            const authSection = document.getElementById('authSection');
+            
+            if (user && !user.isAnonymous) {
+                // User is fully logged in
+                unauthSection.classList.add('hidden');
+                authSection.classList.remove('hidden');
+                
+                const nameDisplay = document.getElementById('userName');
+                const avatar = document.getElementById('userAvatar');
+                
+                nameDisplay.innerText = user.displayName || user.email?.split('@')[0] || 'ผู้ใช้งาน';
+                if(user.photoURL) {
+                    avatar.src = user.photoURL;
+                } else {
+                    avatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameDisplay.innerText)}&background=10b981&color=fff`;
+                }
+            } else {
+                // User is anonymous or offline
+                unauthSection.classList.remove('hidden');
+                authSection.classList.add('hidden');
+            }
+        }
+
+        window.openLoginModal = function() {
+            document.getElementById('authModal').classList.remove('hidden');
+        };
+
+        window.closeLoginModal = function() {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('authEmail').value = '';
+            document.getElementById('authPassword').value = '';
+        };
+
+        window.loginWithGoogle = function() {
+            signInWithPopup(auth, googleProvider).then((result) => {
+                window.closeLoginModal();
+                window.showModal('สำเร็จ', 'เข้าสู่ระบบด้วยบัญชี Google สำเร็จแล้วครับ');
+            }).catch((error) => {
+                if (error.code === 'auth/popup-blocked' || typeof __firebase_config !== 'undefined') {
+                    window.showModal('แจ้งเตือนการเข้าสู่ระบบ', 'การล็อกอินด้วย Google อาจไม่รองรับในหน้าต่าง Preview นี้ กรุณาทดสอบบนหน้าเว็บไซต์จริงของคุณ (Vercel) หรือล็อกอินด้วย Email ชั่วคราวครับ');
+                } else {
+                    window.showModal('เกิดข้อผิดพลาด', error.message);
+                }
+            });
+        };
+
+        window.loginWithFacebook = function() {
+            signInWithPopup(auth, facebookProvider).then((result) => {
+                window.closeLoginModal();
+                window.showModal('สำเร็จ', 'เข้าสู่ระบบด้วยบัญชี Facebook สำเร็จแล้วครับ');
+            }).catch((error) => {
+                if (error.code === 'auth/popup-blocked' || typeof __firebase_config !== 'undefined') {
+                    window.showModal('แจ้งเตือนการเข้าสู่ระบบ', 'การล็อกอินด้วย Facebook อาจไม่รองรับในหน้าต่าง Preview นี้ กรุณาทดสอบบนหน้าเว็บไซต์จริงของคุณ (Vercel)');
+                } else {
+                    window.showModal('เกิดข้อผิดพลาด', error.message);
+                }
+            });
+        };
+
+        window.registerWithEmail = function() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            if (!email || !password) return window.showModal('แจ้งเตือน', 'กรุณากรอกอีเมลและรหัสผ่านเพื่อสมัครสมาชิก');
+            
+            createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+                window.closeLoginModal();
+                window.showModal('สมัครสมาชิกสำเร็จ', 'ยินดีต้อนรับเข้าสู่ระบบ ProConcrete Eco ครับ!');
+            }).catch((error) => {
+                window.showModal('สมัครไม่สำเร็จ', error.message);
+            });
+        };
+
+        window.loginWithEmail = function() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            if (!email || !password) return window.showModal('แจ้งเตือน', 'กรุณากรอกอีเมลและรหัสผ่านเพื่อเข้าสู่ระบบ');
+            
+            signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+                window.closeLoginModal();
+                window.showModal('เข้าสู่ระบบสำเร็จ', 'ยินดีต้อนรับกลับมาครับ!');
+            }).catch((error) => {
+                window.showModal('เข้าสู่ระบบไม่สำเร็จ', 'อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+            });
+        };
+
+        window.logoutUser = function() {
+            window.showConfirm('ออกจากระบบ', 'คุณต้องการออกจากระบบใช่หรือไม่?', () => {
+                signOut(auth).then(() => {
+                    // กลับไปเป็น Anonymous
+                    signInAnonymously(auth);
+                }).catch((error) => {
+                    console.error(error);
+                });
+            });
+        };
+
+        // =====================================
+        // Pricing & Database listeners
+        // =====================================
         function setupPriceSettingsListener() {
             if (isOfflineMode) return;
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -844,19 +1053,17 @@
                     priceSettings.price_400 = parseFloat(data.price_400) || 2350;
                     priceSettings.shipping_fee = parseFloat(data.shipping_fee) || 500;
                     
-                    // ดึงข้อมูลการตั้งค่าบัญชีธนาคาร Real-time
                     priceSettings.bank_name = data.bank_name || "ธนาคารกสิกรไทย";
                     priceSettings.bank_no = data.bank_no || "123-4-56789-0";
                     priceSettings.bank_account = data.bank_account || "บจก. โปร คอนกรีต ประเทศไทย";
                     priceSettings.bank_qr_image = data.bank_qr_image || "";
                     
                     window.calculatePrices(); 
-                    updateBankModalDetails(); // อัปเดตข้อมูลบัญชีลงบน Modal ของลูกค้า
+                    updateBankModalDetails();
                 }
             });
         }
 
-        // ฟังก์ชันช่วยอัปเดตข้อมูลบัญชีโอนรับเงินของลูกค้า
         function updateBankModalDetails() {
             const lblName = document.getElementById('lblBankName');
             const lblNo = document.getElementById('lblBankNo');
@@ -1036,6 +1243,12 @@
 
         window.handleCalculateOrder = function(event) {
             event.preventDefault();
+
+            // เช็คว่าล็อกอินแบบมีตัวตนหรือยัง (ถ้าบังคับให้ล็อกอิน)
+            // if(currentUser && currentUser.isAnonymous) {
+            //     window.openLoginModal();
+            //     return;
+            // }
             
             const form = event.target;
             const formData = new FormData(form);
@@ -1077,6 +1290,7 @@
                 deliveryDateTime: dateTimeText,
                 status: 'received',
                 userId: currentUser ? currentUser.uid : 'offline-user',
+                userEmail: currentUser && !currentUser.isAnonymous ? currentUser.email : null,
                 unitPrice: priceInfo.unitPrice,
                 concreteCost: priceInfo.concreteCost,
                 shippingFee: priceInfo.shippingFee,
@@ -1087,10 +1301,11 @@
                 reqTaxInvoice: reqTax,
                 companyName: reqTax ? compName : "",
                 taxId: reqTax ? taxId : "",
-                companyAddress: reqTax ? compAddr : ""
+                companyAddress: reqTax ? compAddr : "",
+                assignedTruck: null // เตรียมพื้นที่ว่างสำหรับแอดมินมอบหมายรถโม่
             };
 
-            // อัปเดต UI หน้า Modal ด้วยฟังก์ชันลัดเพื่อหลีกเลี่ยง Error Null
+            // อัปเดต UI หน้า Modal
             const setVal = (id, val) => {
                 const el = document.getElementById(id);
                 if (el) el.innerText = val;
@@ -1130,7 +1345,7 @@
                 else taxNotice.classList.add('hidden');
             }
 
-            updateBankModalDetails(); // รีเฟรชแสดงผลข้อมูลธนาคารล่าสุด
+            updateBankModalDetails(); 
             document.getElementById('quotationModal').classList.remove('hidden');
         };
 
@@ -1211,7 +1426,13 @@
             const resultDiv = document.getElementById('paymentResult');
             if(!name || !resultDiv) return;
 
-            const found = allOrdersMemory.filter(o => o.name.toLowerCase().includes(name) || o.phone.includes(name));
+            // ค้นหาจากชื่อ เบอร์โทร หรืออีเมลของผู้ที่ล็อกอิน
+            const found = allOrdersMemory.filter(o => 
+                o.name.toLowerCase().includes(name) || 
+                o.phone.includes(name) || 
+                (currentUser && !currentUser.isAnonymous && o.userId === currentUser.uid)
+            );
+
             if(found.length === 0) {
                 resultDiv.innerHTML = `<div class="rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center text-sm text-slate-500 font-medium">ไม่พบเอกสารใบเสนอราคาของ "${name}"</div>`;
                 resultDiv.classList.remove('hidden');
@@ -1309,7 +1530,12 @@
             const resultDiv = document.getElementById('trackingResult');
             if(!name || !resultDiv) return;
 
-            const found = allOrdersMemory.filter(o => o.name.toLowerCase().includes(name) || o.phone.includes(name));
+            const found = allOrdersMemory.filter(o => 
+                o.name.toLowerCase().includes(name) || 
+                o.phone.includes(name) ||
+                (currentUser && !currentUser.isAnonymous && o.userId === currentUser.uid)
+            );
+
             if(found.length === 0) {
                 resultDiv.innerHTML = `<div class="rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center text-sm text-slate-500 font-medium">ไม่พบประวัติการสั่งซื้อของ "${name}"</div>`;
                 resultDiv.classList.remove('hidden');
@@ -1327,6 +1553,7 @@
                     const statusInfo = statusMap[order.status];
                     const isDelivering = order.status === 'delivering';
                     const isDelivered = order.status === 'delivered';
+                    const hasGps = !!(order.currentLat && order.currentLng);
                     
                     // คำนวณ KPI สรุปผลเวลาเมื่อเทเสร็จสิ้น
                     let kpiSummaryHtml = "";
@@ -1367,11 +1594,33 @@
                                 ${kpiSummaryHtml}
                             </div>
                             
-                            <!-- 🚨 โซนแสดงแผนที่วิ่งของรถปูนเมื่อสถานะเป็น Delivering และได้รับสัญญาณ GPS เรียลไทม์จากคนขับ -->
-                            ${isDelivering && order.currentLat && order.currentLng ? `
+                            <!-- 🚨 โซนแสดงแผนที่วิ่งของรถปูนเมื่อสถานะเป็น Delivering -->
+                            ${isDelivering ? `
                                 <div class="bg-slate-50 border-t border-slate-100 p-4 md:p-5 space-y-4">
+                                    
+                                    <!-- 👨‍✈️ ข้อมูลคนขับและรถโม่ปูน -->
+                                    ${order.assignedTruck ? `
+                                        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                                            <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0 border border-emerald-200">
+                                                <i data-lucide="user-check" class="w-6 h-6"></i>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">พนักงานขับรถโม่</p>
+                                                <p class="text-sm font-black text-slate-900 truncate">${order.assignedTruck.driverName} <span class="text-emerald-600 ml-1 font-bold">(${order.assignedTruck.licensePlate})</span></p>
+                                                <p class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 mt-1">
+                                                    <i data-lucide="phone" class="w-3 h-3 text-slate-400"></i> ${order.assignedTruck.phone}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ` : `
+                                        <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-center flex flex-col items-center justify-center">
+                                            <i data-lucide="timer" class="w-5 h-5 text-amber-500 mb-1"></i>
+                                            <p class="text-xs font-bold text-amber-700">ระบบกำลังจัดสรรพนักงานขับรถโม่ปูน...</p>
+                                        </div>
+                                    `}
+
                                     <!-- แผงจับเวลาส่งมอบและควบคุมคุณภาพ (KPI & Concrete Freshness Timer) -->
-                                    <div class="bg-emerald-50/50 border border-emerald-100 rounded-xl p-4 space-y-3 shadow-inner">
+                                    <div class="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-4 space-y-3 shadow-inner">
                                         <div class="flex justify-between items-center text-xs">
                                             <span class="font-semibold text-emerald-800 flex items-center gap-1.5">
                                                 <i data-lucide="timer" class="w-4 h-4 text-emerald-600 animate-spin" style="animation-duration: 4s;"></i> เวลาจัดส่งสะสม (KPI):
@@ -1398,11 +1647,21 @@
                                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                                             </span>
-                                            สัญญาณ GPS จากคนขับสดเรียลไทม์:
+                                            ติดตามตำแหน่งรถเรียลไทม์:
                                         </span>
-                                        <span id="eta-display-${order.id}" class="font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">กำลังคำนวณ...</span>
+                                        <span id="eta-display-${order.id}" class="font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">${hasGps ? 'กำลังคำนวณ...' : 'รออัปเดต...'}</span>
                                     </div>
-                                    <div id="tracking-map-${order.id}" class="w-full h-48 md:h-56 rounded-xl border border-slate-200 shadow-inner z-0"></div>
+
+                                    <div class="relative w-full h-48 md:h-56 rounded-2xl border border-slate-200 shadow-inner z-0 overflow-hidden bg-slate-100">
+                                        ${!hasGps ? `
+                                            <div class="absolute inset-0 z-50 bg-slate-900/10 backdrop-blur-[2px] flex items-center justify-center">
+                                                <div class="bg-white/95 px-5 py-3 rounded-full shadow-lg font-bold text-slate-700 text-xs flex items-center gap-2">
+                                                    <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-emerald-600"></i> กำลังรอสัญญาณ GPS จากคนขับ...
+                                                </div>
+                                            </div>
+                                        ` : ''}
+                                        <div id="tracking-map-${order.id}" class="w-full h-full"></div>
+                                    </div>
                                 </div>
                             ` : ''}
                         </div>
@@ -1418,11 +1677,9 @@
                 window.liveTimerInterval = setInterval(() => {
                     found.forEach(order => {
                         if (order.status === 'delivering') {
-                            // ดึงเวลาเริ่มออกเดินทาง (ใช้เวลาเริ่มจริง หรือตกค้างจาก GPS ตัวแรก)
                             const startTime = order.deliveryStartTime || order.lastGpsUpdate || order.createdAt;
                             const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
                             
-                            // ฟอร์แมตเวลาแสดงผล HH:MM:SS
                             const hrs = Math.floor(elapsedSec / 3600);
                             const mins = Math.floor((elapsedSec % 3600) / 60);
                             const secs = elapsedSec % 60;
@@ -1431,7 +1688,6 @@
                             const timerEl = document.getElementById(`live-timer-${order.id}`);
                             if (timerEl) timerEl.innerText = timeStr;
                             
-                            // คำนวณความสดคอนกรีต (Freshness Rating) ถดถอยภายใน 120 นาที
                             const totalLimitMins = 120;
                             const elapsedMins = elapsedSec / 60;
                             let freshness = Math.max(0, 100 - (elapsedMins / totalLimitMins * 100));
@@ -1459,9 +1715,9 @@
                     });
                 }, 1000);
 
-                // สตาร์ตวาดแผนที่สำหรับรถปูนที่กำลังจัดส่งอยู่
+                // สตาร์ตวาดแผนที่สำหรับรถปูนที่กำลังจัดส่งอยู่ (วาดทุกเคสที่เป็น delivering เพื่อสร้างกรอบแผนที่)
                 found.forEach(order => {
-                    if (order.status === 'delivering' && order.currentLat && order.currentLng) {
+                    if (order.status === 'delivering') {
                         setTimeout(() => { initOrUpdateLiveTrackingMap(order); }, 100);
                     }
                 });
@@ -1473,17 +1729,21 @@
             const mapElement = document.getElementById(mapContainerId);
             if (!mapElement) return;
 
-            const truckLatLng = [order.currentLat, order.currentLng];
+            // หากยังไม่มี GPS ให้ดึงพิกัดจากแพลนท์หลักเป็นตำแหน่งเริ่มต้นแทน
+            const truckLat = order.currentLat || PLANT_LAT;
+            const truckLng = order.currentLng || PLANT_LNG;
+            const truckLatLng = [truckLat, truckLng];
+            
             const destLat = order.customerLat || (PLANT_LAT + 0.015);
             const destLng = order.customerLng || (PLANT_LNG + 0.015);
             const destLatLng = [destLat, destLng];
 
-            const distance = calculateDistance(order.currentLat, order.currentLng, destLat, destLng);
+            const distance = calculateDistance(truckLat, truckLng, destLat, destLng);
             const speedKmh = 45; 
             const etaMinutes = Math.round((distance / speedKmh) * 60);
 
             const etaEl = document.getElementById(`eta-display-${order.id}`);
-            if (etaEl) {
+            if (etaEl && order.currentLat && order.currentLng) {
                 if (distance < 0.15) {
                     etaEl.innerHTML = "<span class='text-emerald-600 font-bold flex items-center gap-1'><i data-lucide='check-circle' class='w-4 h-4'></i> รถโม่มาถึงหน้างานเรียบร้อยแล้ว</span>";
                 } else {
@@ -1498,34 +1758,42 @@
             const destIconHtml = '<div style="background-color:white;padding:4px;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>';
             const destIcon = L.divIcon({ html: destIconHtml, iconSize: [28, 28], iconAnchor: [14, 14], className: '' });
 
-            // 🚨 แก้ไขปัญหาระบบแผนที่ขัดข้อง/กระพริบ และแก้ไขปัญหา Map Container is already initialized
-            // ตรวจสอบความสมบูรณ์ของ Map Object
+            // 🚨 ตรวจสอบความสมบูรณ์ของ Map Container เพื่อป้องกันบั๊ก
             if (window.activeTrackingMaps[order.id]) {
                 const liveMapObj = window.activeTrackingMaps[order.id];
                 try {
                     liveMapObj.truckMarker.setLatLng(truckLatLng);
                     liveMapObj.destMarker.setLatLng(destLatLng);
                     liveMapObj.map.invalidateSize();
-                    liveMapObj.map.fitBounds(L.latLngBounds([truckLatLng, destLatLng]), { padding: [30, 30], maxZoom: 15 });
+                    // ถ้ายังไม่มี GPS จากคนขับ ไม่ต้องดันกล้องไปหาให้วุ่นวาย
+                    if(order.currentLat && order.currentLng) {
+                        liveMapObj.map.fitBounds(L.latLngBounds([truckLatLng, destLatLng]), { padding: [30, 30], maxZoom: 15 });
+                    }
                 } catch (e) {
                     console.warn("Retrying initializing map container after map instance mismatch:", e);
                     delete window.activeTrackingMaps[order.id];
                 }
             } else {
-                // ก่อนเริ่มสร้างออบเจ็กต์ Leaflet แผนที่ใหม่ บังคับให้ลบ Map Container เก่าที่อาจจะค้างอยู่ใน DOM ออกก่อนชั่วคราว
                 const container = L.DomUtil.get(mapContainerId);
                 if (container !== null && container._leaflet_id) {
-                    container._leaflet_id = null; // ถอนการเชื่อมโยง Leaflet เดิมออกเพื่อล้างบั๊กเรียบร้อย
+                    container._leaflet_id = null;
                 }
                 
                 try {
-                    const trackingMap = L.map(mapContainerId, { zoomControl: false, attributionControl: false }).setView(truckLatLng, 13);
+                    const trackingMap = L.map(mapContainerId, { zoomControl: false, attributionControl: false }).setView(destLatLng, 13);
                     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(trackingMap);
 
                     const destMarker = L.marker(destLatLng, { icon: destIcon }).addTo(trackingMap);
+                    
+                    // แสดงไอคอนรถเฉพาะเมื่อมี GPS แล้ว หรือให้จอดที่แพลนท์หลักชั่วคราว
                     const truckMarker = L.marker(truckLatLng, { icon: truckIcon }).addTo(trackingMap);
 
-                    trackingMap.fitBounds(L.latLngBounds([truckLatLng, destLatLng]), { padding: [30, 30], maxZoom: 15 });
+                    if(order.currentLat && order.currentLng) {
+                        trackingMap.fitBounds(L.latLngBounds([truckLatLng, destLatLng]), { padding: [30, 30], maxZoom: 15 });
+                    } else {
+                        // ถ้ายังไม่มี GPS โฟกัสไปที่บ้านลูกค้าอย่างเดียว
+                        trackingMap.setView(destLatLng, 14);
+                    }
 
                     window.activeTrackingMaps[order.id] = { map: trackingMap, truckMarker, destMarker };
                 } catch (error) {
