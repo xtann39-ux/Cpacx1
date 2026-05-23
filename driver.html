@@ -25,14 +25,6 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        .modern-select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 0.5rem center;
-            background-repeat: no-repeat;
-            background-size: 1.5em 1.5em;
-        }
-        
         /* Pulse Animation for active tracking */
         .gps-pulse {
             box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
@@ -48,7 +40,7 @@
 <body class="text-slate-800 antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
 
     <!-- ========================================== -->
-    <!-- 🔐 หน้าเลือกรถ (Login / Select Truck) -->
+    <!-- 🔐 หน้าเข้าสู่ระบบ (Login) ด้วยเบอร์โทรศัพท์ -->
     <!-- ========================================== -->
     <div id="loginView" class="flex flex-col min-h-screen p-4 bg-slate-900">
         <div class="flex-1 flex flex-col items-center justify-center max-w-sm mx-auto w-full">
@@ -60,16 +52,20 @@
             <h1 class="text-3xl font-black text-white mb-2 tracking-tight">Driver <span class="text-emerald-400">App</span></h1>
             <p class="text-slate-400 mb-10 text-center text-sm">ระบบนำทางและส่งพิกัด GPS สำหรับพนักงานขับรถโม่ปูน</p>
             
-            <div class="w-full bg-white p-6 rounded-[2rem] shadow-xl">
-                <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">เลือกรถที่คุณขับวันนี้</label>
-                <select id="truckSelect" class="modern-select w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 text-lg font-bold text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all mb-6">
-                    <option value="">-- กำลังโหลดข้อมูลรถ... --</option>
-                </select>
+            <div class="w-full bg-white p-6 rounded-[2rem] shadow-xl space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">เบอร์โทรศัพท์มือถือ</label>
+                    <input type="tel" id="driverPhoneInput" placeholder="08xxxxxxxx" pattern="[0-9]{10}" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 text-lg font-bold text-center tracking-widest text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all">
+                </div>
                 
-                <button onclick="window.startDriving()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 rounded-2xl shadow-lg shadow-emerald-600/30 transition-all active:scale-95 flex items-center justify-center gap-2 text-lg">
-                    เริ่มงานจัดส่ง <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                <button onclick="window.loginDriver()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 rounded-2xl shadow-lg shadow-emerald-600/30 transition-all active:scale-95 flex items-center justify-center gap-2 text-lg">
+                    เข้าสู่ระบบ <i data-lucide="arrow-right" class="w-5 h-5"></i>
                 </button>
             </div>
+
+            <p id="loginErrorText" class="text-red-400 text-sm mt-6 hidden font-bold flex items-center justify-center gap-2">
+                <i data-lucide="alert-circle" class="w-4 h-4"></i> เบอร์โทรนี้ยังไม่ได้ลงทะเบียนในระบบ
+            </p>
         </div>
     </div>
 
@@ -234,11 +230,10 @@
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // ดึงรายชื่อรถทั้งหมดมาลง Dropdown
+                // ดึงรายชื่อพนักงานทั้งหมดที่ตั้งค่าจากหลังบ้านเพื่อใช้ยืนยันเบอร์
                 onSnapshot(collection(db, trucksCollectionPath), (snapshot) => {
                     allTrucks = [];
                     snapshot.forEach(doc => allTrucks.push({id: doc.id, ...doc.data()}));
-                    populateTruckSelect();
                     
                     if (myTruckId) {
                         checkAndEnterDashboard();
@@ -247,34 +242,36 @@
             }
         });
 
-        function populateTruckSelect() {
-            const select = document.getElementById('truckSelect');
-            select.innerHTML = '<option value="">-- เลือกรถของคุณ --</option>';
-            allTrucks.forEach(t => {
-                const opt = document.createElement('option');
-                opt.value = t.id;
-                opt.text = `${t.licensePlate} (${t.driverName})`;
-                if (t.id === myTruckId) opt.selected = true;
-                select.appendChild(opt);
-            });
-        }
-
-        window.startDriving = function() {
-            const select = document.getElementById('truckSelect');
-            const selectedId = select.value;
+        // ฟังก์ชันเข้าสู่ระบบด้วยเบอร์โทรศัพท์ (แทนที่การใช้ Dropdown)
+        window.loginDriver = function() {
+            const phoneInput = document.getElementById('driverPhoneInput');
+            const phone = phoneInput ? phoneInput.value.trim() : '';
             
-            if (!selectedId) {
-                window.showModal('แจ้งเตือน', 'กรุณาเลือกรถที่คุณขับเพื่อเริ่มงาน', 'error');
+            if (!phone) {
+                window.showModal('แจ้งเตือน', 'กรุณากรอกเบอร์โทรศัพท์เพื่อเข้าสู่ระบบ', 'error');
                 return;
             }
+
+            // ตรวจสอบว่าเบอร์ตรงกับพนักงานในฐานข้อมูลหรือไม่
+            const foundDriver = allTrucks.find(t => t.phone && t.phone.replace(/\s+/g, '') === phone.replace(/\s+/g, ''));
             
-            myTruckId = selectedId;
-            localStorage.setItem('driver_truck_id', myTruckId);
-            checkAndEnterDashboard();
+            if (foundDriver) {
+                myTruckId = foundDriver.id;
+                localStorage.setItem('driver_truck_id', myTruckId);
+                const errText = document.getElementById('loginErrorText');
+                if(errText) errText.classList.add('hidden');
+                checkAndEnterDashboard();
+            } else {
+                const errText = document.getElementById('loginErrorText');
+                if(errText) errText.classList.remove('hidden');
+                // เขย่ากรอบแจ้งเตือนสีแดงหากไม่พบเบอร์
+                phoneInput.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+                setTimeout(() => phoneInput.classList.remove('border-red-500', 'ring-2', 'ring-red-200'), 2000);
+            }
         };
 
         window.logoutDriver = function() {
-            window.showConfirm('ออกเวร', 'ต้องการออกจากระบบและเลือกรถใหม่ใช่หรือไม่? (พิกัด GPS จะหยุดส่งทันที)', () => {
+            window.showConfirm('ออกเวร', 'ต้องการออกจากระบบใช่หรือไม่? (พิกัด GPS จะหยุดส่งทันที)', () => {
                 window.stopGPS();
                 myTruckId = null;
                 localStorage.removeItem('driver_truck_id');
@@ -282,14 +279,22 @@
                 document.getElementById('dashboardView').classList.remove('flex');
                 document.getElementById('loginView').classList.remove('hidden');
                 document.getElementById('loginView').classList.add('flex');
+                
+                const phoneInput = document.getElementById('driverPhoneInput');
+                if(phoneInput) phoneInput.value = '';
             });
         };
 
         function checkAndEnterDashboard() {
             const truck = allTrucks.find(t => t.id === myTruckId);
             if (!truck) {
+                // หากแอดมินลบรถคันนี้ออกไปแล้ว ให้บังคับ Logout
                 myTruckId = null;
                 localStorage.removeItem('driver_truck_id');
+                document.getElementById('dashboardView').classList.add('hidden');
+                document.getElementById('dashboardView').classList.remove('flex');
+                document.getElementById('loginView').classList.remove('hidden');
+                document.getElementById('loginView').classList.add('flex');
                 return;
             }
 
@@ -312,7 +317,7 @@
                 
                 snapshot.forEach(docSnap => {
                     const data = docSnap.data();
-                    // เงื่อนไข: สถานะเป็น delivering และมอบหมายให้รถคันนี้
+                    // เงื่อนไข: สถานะเป็น delivering และมอบหมายให้รถของคนขับคนนี้พอดี
                     if (data.status === 'delivering' && data.assignedTruck && data.assignedTruck.truckId === myTruckId) {
                         if (!foundOrder || data.createdAt < foundOrder.createdAt) {
                             foundOrder = { id: docSnap.id, ...data };
@@ -326,7 +331,6 @@
                         renderActiveJob();
                         window.startGPS(); // สตาร์ตการส่ง GPS
                     } else {
-                        // อัปเดตข้อมูลเฉยๆ แต่ไม่ต้องวาด UI ใหม่ทั้งหมดเพื่อไม่ให้แผนที่กระตุก
                         activeOrder = foundOrder;
                     }
                 } else {
