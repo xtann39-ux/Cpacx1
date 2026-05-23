@@ -1498,21 +1498,39 @@
             const destIconHtml = '<div style="background-color:white;padding:4px;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>';
             const destIcon = L.divIcon({ html: destIconHtml, iconSize: [28, 28], iconAnchor: [14, 14], className: '' });
 
+            // 🚨 แก้ไขปัญหาระบบแผนที่ขัดข้อง/กระพริบ และแก้ไขปัญหา Map Container is already initialized
+            // ตรวจสอบความสมบูรณ์ของ Map Object
             if (window.activeTrackingMaps[order.id]) {
                 const liveMapObj = window.activeTrackingMaps[order.id];
-                liveMapObj.truckMarker.setLatLng(truckLatLng);
-                liveMapObj.destMarker.setLatLng(destLatLng);
-                liveMapObj.map.fitBounds(L.latLngBounds([truckLatLng, destLatLng]), { padding: [30, 30], maxZoom: 15 });
+                try {
+                    liveMapObj.truckMarker.setLatLng(truckLatLng);
+                    liveMapObj.destMarker.setLatLng(destLatLng);
+                    liveMapObj.map.invalidateSize();
+                    liveMapObj.map.fitBounds(L.latLngBounds([truckLatLng, destLatLng]), { padding: [30, 30], maxZoom: 15 });
+                } catch (e) {
+                    console.warn("Retrying initializing map container after map instance mismatch:", e);
+                    delete window.activeTrackingMaps[order.id];
+                }
             } else {
-                const trackingMap = L.map(mapContainerId, { zoomControl: false, attributionControl: false }).setView(truckLatLng, 13);
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(trackingMap);
+                // ก่อนเริ่มสร้างออบเจ็กต์ Leaflet แผนที่ใหม่ บังคับให้ลบ Map Container เก่าที่อาจจะค้างอยู่ใน DOM ออกก่อนชั่วคราว
+                const container = L.DomUtil.get(mapContainerId);
+                if (container !== null && container._leaflet_id) {
+                    container._leaflet_id = null; // ถอนการเชื่อมโยง Leaflet เดิมออกเพื่อล้างบั๊กเรียบร้อย
+                }
+                
+                try {
+                    const trackingMap = L.map(mapContainerId, { zoomControl: false, attributionControl: false }).setView(truckLatLng, 13);
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(trackingMap);
 
-                const destMarker = L.marker(destLatLng, { icon: destIcon }).addTo(trackingMap);
-                const truckMarker = L.marker(truckLatLng, { icon: truckIcon }).addTo(trackingMap);
+                    const destMarker = L.marker(destLatLng, { icon: destIcon }).addTo(trackingMap);
+                    const truckMarker = L.marker(truckLatLng, { icon: truckIcon }).addTo(trackingMap);
 
-                trackingMap.fitBounds(L.latLngBounds([truckLatLng, destLatLng]), { padding: [30, 30], maxZoom: 15 });
+                    trackingMap.fitBounds(L.latLngBounds([truckLatLng, destLatLng]), { padding: [30, 30], maxZoom: 15 });
 
-                window.activeTrackingMaps[order.id] = { map: trackingMap, truckMarker, destMarker };
+                    window.activeTrackingMaps[order.id] = { map: trackingMap, truckMarker, destMarker };
+                } catch (error) {
+                    console.error("Map creation aborted due to duplicate wrapper:", error);
+                }
             }
         }
     </script>
