@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Driver App - ProConcrete Eco</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- แผนที่ Leaflet.js -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        body { 
+            font-family: 'Prompt', sans-serif; 
+            background-color: #f1f5f9; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .modern-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+        }
+        
+        /* Pulse Animation for active tracking */
+        .gps-pulse {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
+
+    <!-- ========================================== -->
+    <!-- 🔐 หน้าเลือกรถ (Login / Select Truck) -->
+    <!-- ========================================== -->
+    <div id="loginView" class="flex flex-col min-h-screen p-4 bg-slate-900">
+        <div class="flex-1 flex flex-col items-center justify-center max-w-sm mx-auto w-full">
+            
+            <div class="w-24 h-24 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-3xl flex items-center justify-center text-white shadow-2xl shadow-emerald-500/30 mb-8 border-2 border-emerald-300">
+                <i data-lucide="truck" class="w-12 h-12"></i>
+            </div>
+            
+            <h1 class="text-3xl font-black text-white mb-2 tracking-tight">Driver <span class="text-emerald-400">App</span></h1>
+            <p class="text-slate-400 mb-10 text-center text-sm">ระบบนำทางและส่งพิกัด GPS สำหรับพนักงานขับรถโม่ปูน</p>
+            
+            <div class="w-full bg-white p-6 rounded-[2rem] shadow-xl">
+                <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">เลือกรถที่คุณขับวันนี้</label>
+                <select id="truckSelect" class="modern-select w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 text-lg font-bold text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all mb-6">
+                    <option value="">-- กำลังโหลดข้อมูลรถ... --</option>
+                </select>
+                
+                <button onclick="window.startDriving()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 rounded-2xl shadow-lg shadow-emerald-600/30 transition-all active:scale-95 flex items-center justify-center gap-2 text-lg">
+                    เริ่มงานจัดส่ง <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 🚚 หน้าจอหลัก (Active Delivery Dashboard) -->
+    <!-- ========================================== -->
+    <div id="dashboardView" class="hidden flex-col min-h-screen bg-slate-100">
+        
+        <!-- Header -->
+        <header class="bg-white px-4 py-3 flex items-center justify-between shadow-sm sticky top-0 z-40 border-b border-slate-200">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center text-white">
+                    <i data-lucide="truck" class="w-5 h-5"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span id="activeTruckPlate" class="font-black text-slate-900 text-sm">ทะเบียนรถ</span>
+                    <span id="activeDriverName" class="text-[10px] font-bold text-emerald-600">พนักงานขับรถ</span>
+                </div>
+            </div>
+            <button onclick="window.logoutDriver()" class="w-10 h-10 flex items-center justify-center bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors">
+                <i data-lucide="power" class="w-5 h-5"></i>
+            </button>
+        </header>
+
+        <!-- Content Area -->
+        <main class="flex-1 w-full max-w-lg mx-auto p-4 flex flex-col gap-4">
+            
+            <!-- สถานะ GPS -->
+            <div id="gpsStatusCard" class="bg-white rounded-2xl p-3 flex items-center gap-3 shadow-sm border border-slate-200">
+                <div id="gpsIndicator" class="w-4 h-4 rounded-full bg-slate-300 ml-2"></div>
+                <div class="flex-1">
+                    <p id="gpsStatusTitle" class="text-xs font-bold text-slate-700">ระบบ GPS ปิดอยู่</p>
+                    <p id="gpsStatusDesc" class="text-[10px] text-slate-500">จะเปิดอัตโนมัติเมื่อมีงานจัดส่ง</p>
+                </div>
+            </div>
+
+            <!-- กล่องแสดงงานที่ต้องไปส่ง -->
+            <div id="activeJobContainer" class="flex-1 flex flex-col">
+                <!-- Data will be populated here -->
+                <div class="flex-1 flex flex-col items-center justify-center text-center py-10 opacity-60">
+                    <i data-lucide="coffee" class="w-16 h-16 text-slate-400 mb-4"></i>
+                    <h2 class="text-xl font-bold text-slate-700 mb-1">ยังไม่มีงานจัดส่ง</h2>
+                    <p class="text-sm text-slate-500">พักผ่อนให้เต็มที่ รอแอดมินมอบหมายงานครับ</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Alert Modal (Z-Index Adjusted to Avoid Leaflet Conflict) -->
+    <div id="globalModal" class="fixed inset-0 z-[9999] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden text-center p-6">
+            <div class="w-16 h-16 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4">
+                <i id="modalIcon" data-lucide="info" class="w-8 h-8"></i>
+            </div>
+            <h3 id="modalTitle" class="text-xl font-black text-slate-900 mb-2">Title</h3>
+            <p id="modalMessage" class="text-sm font-medium text-slate-500 mb-6">Message</p>
+            <div class="flex gap-3">
+                <button id="modalCancelBtn" class="hidden flex-1 py-3.5 bg-slate-100 text-slate-600 rounded-xl font-bold active:scale-95 transition">ยกเลิก</button>
+                <button id="modalOkBtn" class="flex-1 py-3.5 bg-slate-900 text-white rounded-xl font-bold active:scale-95 transition shadow-md">ตกลง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase & Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // UI Helpers
+        window.showModal = function(title, message, type = 'info', onOk = null) {
+            const modal = document.getElementById('globalModal');
+            if (!modal) return;
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMessage').innerText = message;
+            document.getElementById('modalCancelBtn').classList.add('hidden');
+            
+            const icon = document.getElementById('modalIcon');
+            if (type === 'success') { icon.setAttribute('data-lucide', 'check-circle-2'); icon.parentElement.className = "w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4"; }
+            else if (type === 'error') { icon.setAttribute('data-lucide', 'alert-triangle'); icon.parentElement.className = "w-16 h-16 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-4"; }
+            else { icon.setAttribute('data-lucide', 'info'); icon.parentElement.className = "w-16 h-16 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4"; }
+            lucide.createIcons();
+
+            const okBtn = document.getElementById('modalOkBtn');
+            okBtn.className = "flex-1 py-3.5 bg-slate-900 text-white rounded-xl font-bold active:scale-95 transition shadow-md w-full";
+            okBtn.onclick = () => { modal.classList.add('hidden'); if(onOk) onOk(); };
+            modal.classList.remove('hidden');
+        };
+
+        window.showConfirm = function(title, message, onConfirm) {
+            const modal = document.getElementById('globalModal');
+            if (!modal) return;
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMessage').innerText = message;
+            
+            const icon = document.getElementById('modalIcon');
+            icon.setAttribute('data-lucide', 'help-circle');
+            icon.parentElement.className = "w-16 h-16 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4";
+            lucide.createIcons();
+
+            const cancelBtn = document.getElementById('modalCancelBtn');
+            cancelBtn.classList.remove('hidden');
+            cancelBtn.onclick = () => modal.classList.add('hidden');
+            
+            const okBtn = document.getElementById('modalOkBtn');
+            okBtn.className = "flex-1 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold active:scale-95 transition shadow-md";
+            okBtn.innerText = "ยืนยัน";
+            okBtn.onclick = () => { modal.classList.add('hidden'); onConfirm(); };
+            modal.classList.remove('hidden');
+        };
+
+        window.addEventListener('DOMContentLoaded', () => { if(window.lucide) lucide.createIcons(); });
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBID-uSTCksR8AlgWMEzgJWlcRWn0UD7Ks",
+            authDomain: "cpacx1.firebaseapp.com",
+            projectId: "cpacx1",
+            storageBucket: "cpacx1.firebasestorage.app",
+            messagingSenderId: "296556251057",
+            appId: "1:296556251057:web:eebbda30582c34f5865f90"
+        };
+
+        let app, auth, db;
+        let ordersCollectionPath = 'concrete_orders'; 
+        let trucksCollectionPath = 'trucks'; 
+        
+        let allTrucks = [];
+        let activeOrder = null;
+        let myTruckId = localStorage.getItem('driver_truck_id') || null;
+        
+        let map = null;
+        let markerTruck = null;
+        let markerDest = null;
+        let gpsWatchId = null;
+        let kpiTimerInterval = null;
+
+        // Firebase Initialization
+        if (typeof __firebase_config !== 'undefined') {
+            const canvasConfig = JSON.parse(__firebase_config);
+            app = initializeApp(canvasConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            ordersCollectionPath = `artifacts/${appId}/public/data/concrete_orders`;
+            trucksCollectionPath = `artifacts/${appId}/public/data/trucks`;
+            
+            const initCanvasAuth = async () => {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            };
+            initCanvasAuth();
+        } else {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            signInAnonymously(auth);
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // ดึงรายชื่อรถทั้งหมดมาลง Dropdown
+                onSnapshot(collection(db, trucksCollectionPath), (snapshot) => {
+                    allTrucks = [];
+                    snapshot.forEach(doc => allTrucks.push({id: doc.id, ...doc.data()}));
+                    populateTruckSelect();
+                    
+                    if (myTruckId) {
+                        checkAndEnterDashboard();
+                    }
+                });
+            }
+        });
+
+        function populateTruckSelect() {
+            const select = document.getElementById('truckSelect');
+            select.innerHTML = '<option value="">-- เลือกรถของคุณ --</option>';
+            allTrucks.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.id;
+                opt.text = `${t.licensePlate} (${t.driverName})`;
+                if (t.id === myTruckId) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        window.startDriving = function() {
+            const select = document.getElementById('truckSelect');
+            const selectedId = select.value;
+            
+            if (!selectedId) {
+                window.showModal('แจ้งเตือน', 'กรุณาเลือกรถที่คุณขับเพื่อเริ่มงาน', 'error');
+                return;
+            }
+            
+            myTruckId = selectedId;
+            localStorage.setItem('driver_truck_id', myTruckId);
+            checkAndEnterDashboard();
+        };
+
+        window.logoutDriver = function() {
+            window.showConfirm('ออกเวร', 'ต้องการออกจากระบบและเลือกรถใหม่ใช่หรือไม่? (พิกัด GPS จะหยุดส่งทันที)', () => {
+                window.stopGPS();
+                myTruckId = null;
+                localStorage.removeItem('driver_truck_id');
+                document.getElementById('dashboardView').classList.add('hidden');
+                document.getElementById('dashboardView').classList.remove('flex');
+                document.getElementById('loginView').classList.remove('hidden');
+                document.getElementById('loginView').classList.add('flex');
+            });
+        };
+
+        function checkAndEnterDashboard() {
+            const truck = allTrucks.find(t => t.id === myTruckId);
+            if (!truck) {
+                myTruckId = null;
+                localStorage.removeItem('driver_truck_id');
+                return;
+            }
+
+            document.getElementById('loginView').classList.add('hidden');
+            document.getElementById('loginView').classList.remove('flex');
+            document.getElementById('dashboardView').classList.remove('hidden');
+            document.getElementById('dashboardView').classList.add('flex');
+
+            document.getElementById('activeTruckPlate').innerText = truck.licensePlate;
+            document.getElementById('activeDriverName').innerText = "คนขับ: " + truck.driverName;
+
+            // ฟังคำสั่ง Order ที่เกี่ยวข้องกับรถคันนี้และสถานะกำลังเดินทาง
+            listenToAssignedOrders();
+        }
+
+        function listenToAssignedOrders() {
+            const ordersRef = collection(db, ordersCollectionPath);
+            onSnapshot(ordersRef, (snapshot) => {
+                let foundOrder = null;
+                
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    // เงื่อนไข: สถานะเป็น delivering และมอบหมายให้รถคันนี้
+                    if (data.status === 'delivering' && data.assignedTruck && data.assignedTruck.truckId === myTruckId) {
+                        if (!foundOrder || data.createdAt < foundOrder.createdAt) {
+                            foundOrder = { id: docSnap.id, ...data };
+                        }
+                    }
+                });
+
+                if (foundOrder) {
+                    if (!activeOrder || activeOrder.id !== foundOrder.id) {
+                        activeOrder = foundOrder;
+                        renderActiveJob();
+                        window.startGPS(); // สตาร์ตการส่ง GPS
+                    } else {
+                        // อัปเดตข้อมูลเฉยๆ แต่ไม่ต้องวาด UI ใหม่ทั้งหมดเพื่อไม่ให้แผนที่กระตุก
+                        activeOrder = foundOrder;
+                    }
+                } else {
+                    activeOrder = null;
+                    window.stopGPS(); // หยุดส่ง GPS
+                    renderNoJob();
+                }
+            });
+        }
+
+        function renderNoJob() {
+            if (kpiTimerInterval) clearInterval(kpiTimerInterval);
+            document.getElementById('activeJobContainer').innerHTML = `
+                <div class="flex-1 flex flex-col items-center justify-center text-center py-10 opacity-60">
+                    <i data-lucide="coffee" class="w-16 h-16 text-slate-400 mb-4"></i>
+                    <h2 class="text-xl font-bold text-slate-700 mb-1">ยังไม่มีงานจัดส่ง</h2>
+                    <p class="text-sm text-slate-500">พักผ่อนให้เต็มที่ รอแอดมินมอบหมายงานครับ</p>
+                </div>
+            `;
+            lucide.createIcons();
+            
+            document.getElementById('gpsIndicator').className = "w-4 h-4 rounded-full bg-slate-300 ml-2";
+            document.getElementById('gpsStatusTitle').innerText = "ระบบ GPS สแตนด์บาย";
+            document.getElementById('gpsStatusDesc').innerText = "จะเริ่มส่งพิกัดเมื่อมีงานเข้า";
+        }
+
+        function renderActiveJob() {
+            const container = document.getElementById('activeJobContainer');
+            
+            const destLat = activeOrder.customerLat || 0;
+            const destLng = activeOrder.customerLng || 0;
+            const navLink = `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}`;
+
+            container.innerHTML = `
+                <div class="bg-white rounded-[2rem] border border-emerald-200 shadow-lg shadow-emerald-100/50 overflow-hidden flex flex-col h-full animate-[fadeIn_0.3s_ease-out]">
+                    
+                    <!-- ส่วนหัวการ์ดงาน -->
+                    <div class="bg-gradient-to-r from-emerald-600 to-emerald-800 text-white p-5">
+                        <div class="flex justify-between items-start mb-1">
+                            <div>
+                                <p class="text-[10px] text-emerald-200 font-bold uppercase tracking-widest mb-1">กำลังจัดส่งปูนไปที่</p>
+                                <h2 class="text-2xl font-black leading-none">${activeOrder.name}</h2>
+                            </div>
+                        </div>
+                        <p class="text-sm text-emerald-100 font-medium mt-3 flex items-start gap-1.5 line-clamp-2">
+                            <i data-lucide="map-pin" class="w-4 h-4 shrink-0 mt-0.5"></i> ${activeOrder.address}
+                        </p>
+                    </div>
+
+                    <!-- รายละเอียดปูน & KPI -->
+                    <div class="p-5 flex-1 flex flex-col gap-4">
+                        
+                        <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                            <div class="text-center w-1/2 border-r border-slate-200">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">ปริมาณโม่นี้</p>
+                                <p class="text-2xl font-black text-slate-800">${activeOrder.volume} <span class="text-sm text-slate-500 font-medium">คิว</span></p>
+                            </div>
+                            <div class="text-center w-1/2">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">สเปค</p>
+                                <p class="text-xl font-black text-emerald-600">${activeOrder.strength} <span class="text-sm text-emerald-700/70 font-medium">KSC</span></p>
+                            </div>
+                        </div>
+
+                        <!-- KPI Timer -->
+                        <div class="bg-amber-50/50 border border-amber-200 rounded-2xl p-4 shadow-inner">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-bold text-amber-800 flex items-center gap-1.5">
+                                    <i data-lucide="timer" class="w-4 h-4"></i> เวลาจำกัดความสด 120 นาที
+                                </span>
+                                <span id="driverKpiTimer" class="font-mono font-black text-lg text-amber-600">00:00</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                                <div id="driverKpiBar" class="bg-emerald-500 h-full transition-all duration-1000" style="width: 100%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Map -->
+                        <div class="relative w-full h-40 rounded-2xl overflow-hidden border border-slate-200 z-0 bg-slate-100">
+                            <div id="driverMap" class="w-full h-full"></div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="grid grid-cols-2 gap-3 mt-auto">
+                            <a href="${navLink}" target="_blank" class="bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm shadow-sm">
+                                <i data-lucide="navigation" class="w-4 h-4"></i> นำทาง
+                            </a>
+                            <a href="tel:${activeOrder.phone}" class="bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm shadow-sm">
+                                <i data-lucide="phone-call" class="w-4 h-4"></i> โทรหาลูกค้า
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Complete Job Button -->
+                    <div class="p-4 bg-white border-t border-slate-100">
+                        <button onclick="window.completeJob()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-4 rounded-2xl transition active:scale-95 shadow-xl flex items-center justify-center gap-2 text-lg h-14">
+                            <i data-lucide="check-circle" class="w-6 h-6"></i> เทคอนกรีตเสร็จสิ้น (ปิดงาน)
+                        </button>
+                    </div>
+
+                </div>
+            `;
+            lucide.createIcons();
+            
+            // Setup Map
+            initDriverMap(destLat, destLng);
+            
+            // Setup Timer
+            startDriverKpiTimer();
+        }
+
+        function initDriverMap(destLat, destLng) {
+            const mapId = 'driverMap';
+            const container = L.DomUtil.get(mapId);
+            if(container !== null && container._leaflet_id){ container._leaflet_id = null; }
+
+            map = L.map(mapId, { zoomControl: false, attributionControl: false }).setView([destLat, destLng], 14);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
+
+            const destIconHtml = '<div style="background-color:#10b981;padding:4px;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.3);border:2px solid white"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>';
+            markerDest = L.marker([destLat, destLng], { icon: L.divIcon({ html: destIconHtml, iconSize: [28, 28], className: '' }) }).addTo(map);
+            
+            const truckIconHtml = '<div style="background-color:white;padding:3px;border-radius:50%;box-shadow:0 3px 6px rgba(0,0,0,0.3);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><path d="M14 17h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>';
+            markerTruck = L.marker([destLat, destLng], { icon: L.divIcon({ html: truckIconHtml, iconSize: [30, 30], className: '' }) }).addTo(map);
+
+            setTimeout(() => { map.invalidateSize(); }, 300);
+        }
+
+        // =====================================
+        // GPS Tracking System
+        // =====================================
+        window.startGPS = function() {
+            if (gpsWatchId) return;
+
+            const ind = document.getElementById('gpsIndicator');
+            const tit = document.getElementById('gpsStatusTitle');
+            const desc = document.getElementById('gpsStatusDesc');
+
+            if ("geolocation" in navigator) {
+                if(ind) ind.className = "w-4 h-4 rounded-full bg-emerald-500 ml-2 gps-pulse";
+                if(tit) tit.innerText = "กำลังส่งพิกัด GPS เรียลไทม์...";
+                if(tit) tit.className = "text-xs font-bold text-emerald-700";
+                if(desc) desc.innerText = "แอดมินและลูกค้าสามารถมองเห็นรถคุณบนแผนที่ได้";
+
+                gpsWatchId = navigator.geolocation.watchPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        const accuracy = position.coords.accuracy;
+
+                        // อัปเดต Map ในเครื่องคนขับ
+                        if (map && markerTruck) {
+                            markerTruck.setLatLng([lat, lng]);
+                            if(activeOrder) {
+                                const bounds = L.latLngBounds([[lat, lng], [activeOrder.customerLat || lat, activeOrder.customerLng || lng]]);
+                                map.fitBounds(bounds, { padding: [20, 20], maxZoom: 16 });
+                            }
+                        }
+
+                        // ยิงข้อมูลขึ้น Firebase
+                        if (activeOrder && activeOrder.id) {
+                            if (accuracy < 100) { 
+                                updateDoc(doc(db, ordersCollectionPath, activeOrder.id), {
+                                    currentLat: lat,
+                                    currentLng: lng,
+                                    lastGpsUpdate: Date.now()
+                                }).catch(e => console.error("GPS Sync Error:", e));
+                            }
+                        }
+                    },
+                    (error) => {
+                        console.error("GPS Error:", error);
+                        if(tit) tit.innerText = "ไม่สามารถดึง GPS ได้";
+                        if(tit) tit.className = "text-xs font-bold text-red-600";
+                        if(desc) desc.innerText = "กรุณาเปิด Location Services ในมือถือ";
+                        if(ind) ind.className = "w-4 h-4 rounded-full bg-red-500 ml-2";
+                        window.showModal('GPS ถูกปิดกั้น', 'แอปจำเป็นต้องใช้ตำแหน่งของคุณเพื่อรายงานสถานะการจัดส่งให้ลูกค้า กรุณากดอนุญาตการเข้าถึงตำแหน่ง (Location) ในเบราว์เซอร์', 'error');
+                    },
+                    { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
+                );
+            } else {
+                window.showModal('ไม่รองรับ', 'อุปกรณ์ของคุณไม่รองรับระบบ GPS');
+            }
+        };
+
+        window.stopGPS = function() {
+            if (gpsWatchId) {
+                navigator.geolocation.clearWatch(gpsWatchId);
+                gpsWatchId = null;
+            }
+            const ind = document.getElementById('gpsIndicator');
+            const tit = document.getElementById('gpsStatusTitle');
+            const desc = document.getElementById('gpsStatusDesc');
+            if (ind) ind.className = "w-4 h-4 rounded-full bg-slate-300 ml-2";
+            if (tit) tit.innerText = "ระบบ GPS ปิดอยู่";
+            if (tit) tit.className = "text-xs font-bold text-slate-700";
+            if (desc) desc.innerText = "จะเปิดอัตโนมัติเมื่อมีงานจัดส่ง";
+        };
+
+        // =====================================
+        // KPI Timer
+        // =====================================
+        function startDriverKpiTimer() {
+            if (kpiTimerInterval) clearInterval(kpiTimerInterval);
+            
+            kpiTimerInterval = setInterval(() => {
+                if (!activeOrder) return;
+                
+                const startTime = activeOrder.deliveryStartTime || activeOrder.createdAt;
+                const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
+                
+                const mins = Math.floor(elapsedSec / 60);
+                const secs = elapsedSec % 60;
+                
+                const timerEl = document.getElementById('driverKpiTimer');
+                const barEl = document.getElementById('driverKpiBar');
+                
+                if (timerEl) {
+                    timerEl.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                }
+
+                if (barEl) {
+                    const totalLimitMins = 120;
+                    let freshness = Math.max(0, 100 - (mins / totalLimitMins * 100));
+                    barEl.style.width = `${freshness}%`;
+                    if (freshness > 60) {
+                        barEl.className = "bg-emerald-500 h-full transition-all duration-1000";
+                    } else if (freshness > 30) {
+                        barEl.className = "bg-amber-500 h-full transition-all duration-1000";
+                    } else {
+                        barEl.className = "bg-red-500 h-full transition-all duration-1000";
+                    }
+                }
+            }, 1000);
+        }
+
+        // =====================================
+        // completeJob
+        // =====================================
+        window.completeJob = async function() {
+            if (!activeOrder) return;
+            window.showConfirm('ยืนยันเทเสร็จสิ้น', 'คุณได้ทำการเทคอนกรีตเรียบร้อยแล้วใช่หรือไม่? งานนี้จะถือเป็นงานที่เสร็จสมบูรณ์', async () => {
+                try {
+                    window.stopGPS();
+                    if (kpiTimerInterval) clearInterval(kpiTimerInterval);
+
+                    const orderRef = doc(db, ordersCollectionPath, activeOrder.id);
+                    await updateDoc(orderRef, {
+                        status: 'delivered',
+                        deliveredAt: Date.now()
+                    });
+
+                    window.showModal('ปิดงานสำเร็จ!', 'บันทึกเวลาปิดงานและส่งพิกัดสุดท้ายเรียบร้อยแล้ว เดินทางกลับแพลนท์อย่างปลอดภัยครับ', 'success', () => {
+                        activeOrder = null;
+                        renderNoJob();
+                    });
+                } catch (error) {
+                    console.error("Error completing job:", error);
+                    window.showModal('เกิดข้อผิดพลาด', 'ไม่สามารถบันทึกสถานะปิดงานได้ กรุณาลองใหม่อีกครั้ง', 'error');
+                }
+            });
+        };
+    </script>
+</body>
+</html>
