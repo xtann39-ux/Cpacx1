@@ -266,16 +266,38 @@
                     <div class="bg-white p-6 rounded-3xl border shadow-sm">
                         <div class="relative w-full h-[320px]"><canvas id="salesChart"></canvas></div>
                     </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-3xl border shadow-sm flex flex-col">
+                    
+                    <!-- ส่วนตารางรายงาน 3 ตาราง (รายวัน, ลูกค้าสูงสุด, ประสิทธิภาพคนขับ) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-3xl border shadow-sm flex flex-col lg:col-span-1">
                             <div class="p-5 border-b bg-slate-50/50"><h3 class="font-bold text-slate-900 flex items-center gap-2"><i data-lucide="table" class="w-5 h-5 text-emerald-600"></i> แจกแจงรายวัน</h3></div>
                             <div class="overflow-x-auto"><table class="w-full text-sm"><tbody id="reportTableBody"></tbody></table></div>
                         </div>
-                        <div class="bg-white rounded-3xl border shadow-sm flex flex-col">
+                        <div class="bg-white rounded-3xl border shadow-sm flex flex-col lg:col-span-1">
                             <div class="p-5 border-b bg-slate-50/50 flex justify-between items-center">
-                                <h3 class="font-bold text-slate-900 flex items-center gap-2"><i data-lucide="trophy" class="w-5 h-5 text-amber-500"></i> 10 อันดับลูกค้าสูงสุด</h3>
+                                <h3 class="font-bold text-slate-900 flex items-center gap-2"><i data-lucide="trophy" class="w-5 h-5 text-amber-500"></i> 10 อันดับลูกค้า</h3>
                             </div>
                             <div class="overflow-x-auto"><table class="w-full text-sm"><tbody id="topCustomersTableBody"></tbody></table></div>
+                        </div>
+                        <!-- 🚛 ตารางเพิ่มใหม่: ประสิทธิภาพคนขับ (Driver KPI) -->
+                        <div class="bg-white rounded-3xl border shadow-sm flex flex-col lg:col-span-1 border-blue-200">
+                            <div class="p-5 border-b border-blue-100 bg-blue-50/30 flex justify-between items-center">
+                                <h3 class="font-bold text-slate-900 flex items-center gap-2"><i data-lucide="timer" class="w-5 h-5 text-blue-500"></i> ประสิทธิภาพพนักงานขับรถ</h3>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="bg-slate-50 text-slate-500 border-b border-slate-100 text-xs">
+                                        <tr>
+                                            <th class="p-4 font-bold">ชื่อคนขับ</th>
+                                            <th class="p-4 font-bold text-center">จำนวนรอบ</th>
+                                            <th class="p-4 font-bold text-center">เวลาเฉลี่ย (นาที)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="driverKpiTableBody" class="divide-y divide-slate-100 font-medium text-xs sm:text-sm">
+                                        <!-- populated by js -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -284,14 +306,25 @@
         </div>
     </div> <!-- End App Container -->
 
-    <!-- Modals -->
-    <div id="slipModal" class="fixed inset-0 z-50 hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col"><div class="flex justify-between p-4 border-b"><h3 class="font-bold">หลักฐานการโอน</h3><button onclick="document.getElementById('slipModal').classList.add('hidden')">X</button></div><div class="p-4 bg-slate-100 flex justify-center"><img id="slipImageDisplay" class="max-h-[60vh] rounded shadow-sm"></div></div>
+    <!-- Modals (Adjusted Z-Index to 200+) -->
+    <div id="slipModal" class="fixed inset-0 z-[200] hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-slate-100">
+                <h3 class="font-bold text-slate-900 flex items-center gap-2"><i data-lucide="image" class="w-5 h-5 text-emerald-600"></i> หลักฐานการโอนเงิน</h3>
+                <button onclick="document.getElementById('slipModal').classList.add('hidden')" class="text-slate-400 hover:text-red-500 hover:bg-slate-100 p-2 rounded-full transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="p-4 bg-slate-100 flex justify-center max-h-[70vh] overflow-y-auto">
+                <img id="slipImageDisplay" src="" alt="Slip Image" class="max-w-full h-auto rounded shadow-sm border border-slate-200">
+            </div>
+            <div class="p-3 bg-white text-center border-t border-slate-100">
+                <span id="slipRefDisplay" class="text-xs font-bold text-slate-500"></span>
+            </div>
+        </div>
     </div>
 
-    <div id="taxModal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
+    <div id="taxModal" class="fixed inset-0 z-[200] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
-            <div class="flex justify-between p-5 border-b bg-slate-50"><h3 class="font-bold text-blue-600">ข้อมูลภาษี</h3><button onclick="document.getElementById('taxModal').classList.add('hidden')">X</button></div>
+            <div class="flex justify-between p-5 border-b bg-slate-50"><h3 class="font-bold text-blue-600">ข้อมูลภาษี</h3><button onclick="document.getElementById('taxModal').classList.add('hidden')"><i data-lucide="x" class="w-5 h-5 text-slate-400 hover:text-red-500"></i></button></div>
             <div class="p-6 space-y-4 text-sm">
                 <p class="font-bold text-slate-900" id="taxCompanyName"></p>
                 <p class="font-mono bg-slate-100 p-2 rounded border" id="taxIdDisplay"></p>
@@ -300,10 +333,10 @@
         </div>
     </div>
 
-    <div id="globalModal" class="fixed inset-0 z-[100] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
+    <div id="globalModal" class="fixed inset-0 z-[210] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
             <h3 id="modalTitle" class="text-lg font-bold mb-1">Title</h3><p id="modalMessage" class="text-sm text-slate-500 mb-4">Msg</p>
-            <div class="flex gap-2"><button id="modalCancelBtn" class="hidden flex-1 py-2 bg-slate-100 rounded-lg">ยกเลิก</button><button id="modalOkBtn" class="flex-1 py-2 bg-slate-900 text-white rounded-lg">ตกลง</button></div>
+            <div class="flex gap-2"><button id="modalCancelBtn" class="hidden flex-1 py-2 bg-slate-100 rounded-lg font-bold text-slate-600 hover:bg-slate-200">ยกเลิก</button><button id="modalOkBtn" class="flex-1 py-2 bg-slate-900 text-white rounded-lg font-bold hover:bg-slate-800">ตกลง</button></div>
         </div>
     </div>
 
@@ -384,7 +417,7 @@
         </div>
     </div>
 
-    <!-- 2. สำหรับพิมพ์สรุปรายงานยอดขายทั้งหมด (พิมพ์รายงาน PDF) -->
+    <!-- 2. สำหรับพิมพ์สรุปรายงานยอดขายและ KPI พนักงาน (พิมพ์รายงาน PDF) -->
     <div id="printable-report" class="hidden absolute bg-white text-black p-8 text-sm">
         <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
             <div>
@@ -392,7 +425,7 @@
                 <p class="text-xs text-slate-600">รายงานสรุปยอดขายแพลนท์คอนกรีต (Sales Summary Report)</p>
             </div>
             <div class="text-right">
-                <h2 class="text-lg font-bold text-slate-800 uppercase">รายงานสรุปผลการเทปูน</h2>
+                <h2 class="text-lg font-bold text-slate-800 uppercase">รายงานสรุปผลการเทปูนและประเมินคนขับ</h2>
                 <p class="text-xs text-slate-600 mt-1">ช่วงเวลา: <span id="printReportRange"></span></p>
                 <p class="text-xs text-slate-600">วันที่พิมพ์: <span id="printReportDate"></span></p>
             </div>
@@ -403,12 +436,29 @@
             <div class="text-center"><p class="text-[10px] font-bold text-slate-500 uppercase">ออเดอร์</p><p class="text-base font-bold text-slate-800"><span id="print_kpi_count">0</span> บิล</p></div>
             <div class="text-center"><p class="text-[10px] font-bold text-slate-500 uppercase">เฉลี่ยต่อบิล</p><p class="text-base font-bold text-slate-800">฿<span id="print_kpi_avg">0.00</span></p></div>
         </div>
-        <table class="w-full text-xs border-collapse mb-6">
-            <thead>
-                <tr class="bg-slate-100 border-y border-slate-300"><th class="p-2 text-left">วันที่</th><th class="p-2 text-center">บิล</th><th class="p-2 text-right">คิว</th><th class="p-2 text-right">ยอดรวม (บาท)</th></tr>
-            </thead>
-            <tbody id="printReportTableBody" class="divide-y divide-slate-200"></tbody>
-        </table>
+
+        <div class="flex gap-4">
+            <div class="w-1/2">
+                <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-wide bg-slate-100 p-1">🏆 10 อันดับลูกค้าที่สั่งซื้อสูงสุด</p>
+                <table class="w-full text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 border-y border-slate-300"><th class="p-2 text-left">ลูกค้า</th><th class="p-2 text-center">บิล</th><th class="p-2 text-right">ยอดสุทธิ (บาท)</th></tr>
+                    </thead>
+                    <tbody id="printTopCustomersTableBody" class="divide-y divide-slate-200"></tbody>
+                </table>
+            </div>
+            
+            <!-- ตารางประสิทธิภาพคนขับที่จะพิมพ์ลง PDF -->
+            <div class="w-1/2">
+                <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-wide bg-blue-50 text-blue-700 p-1 border-l-2 border-blue-500">🚛 ประสิทธิภาพพนักงานขับรถ (Driver KPI)</p>
+                <table class="w-full text-[11px] border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 border-y border-slate-300"><th class="p-2 text-left">ชื่อคนขับ</th><th class="p-2 text-center">จำนวนรอบ</th><th class="p-2 text-center">เวลาเฉลี่ย/รอบ</th><th class="p-2 text-center">ตามเกณฑ์ KPI</th></tr>
+                    </thead>
+                    <tbody id="printDriverKpiTableBody" class="divide-y divide-slate-200"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <!-- Firebase Scripts -->
@@ -849,9 +899,9 @@
                         </div>
 
                         <div class="flex flex-wrap gap-2 mb-3 mt-auto">
-                            ${order.slipImage ? `
-                                <button onclick="window.viewSlip('${order.id}')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 border border-slate-200">
-                                    <i data-lucide="image" class="w-3.5 h-3.5"></i> ตรวจสลิป
+                            ${(order.slipImage && order.slipImage.length > 0) ? `
+                                <button onclick="window.viewSlip('${order.id}')" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5 border border-emerald-200">
+                                    <i data-lucide="image" class="w-3.5 h-3.5"></i> ตรวจสลิปโอนเงิน
                                 </button>
                             ` : `<div class="flex-1 bg-red-50 text-red-500 text-xs font-bold py-2 px-3 rounded-lg text-center border border-red-100 flex justify-center items-center gap-1.5"><i data-lucide="image-off" class="w-3.5 h-3.5"></i> ไม่มีสลิป</div>`}
                             
@@ -888,7 +938,13 @@
 
         window.updateOrderStatus = async function(id, status) {
             try { 
-                await updateDoc(doc(db, ordersCollectionPath, id), { status }); 
+                let dataToUpdate = { status: status };
+                // เริ่มจับเวลาการจัดส่งเมื่อเปลี่ยนเป็น delivering
+                if (status === 'delivering') dataToUpdate.deliveryStartTime = Date.now();
+                // สิ้นสุดเวลาและปิดออเดอร์เมื่อเปลี่ยนเป็น delivered
+                if (status === 'delivered') dataToUpdate.deliveredAt = Date.now();
+
+                await updateDoc(doc(db, ordersCollectionPath, id), dataToUpdate); 
             } catch(e) { 
                 window.showModal('ผิดพลาด', 'ไม่สามารถอัปเดตสถานะได้'); 
             }
@@ -933,6 +989,8 @@
                 document.getElementById('slipImageDisplay').src = order.slipImage;
                 document.getElementById('slipRefDisplay').innerText = "REF: " + order.orderNumber;
                 document.getElementById('slipModal').classList.remove('hidden');
+            } else {
+                window.showModal('แจ้งเตือน', 'ไม่พบรูปภาพสลิปโอนเงิน');
             }
         };
 
@@ -1104,7 +1162,6 @@
             // 🏆 จัดอันดับลูกค้าที่มียอดสั่งซื้อสูงสุด 10 อันดับแรก
             const customerGroups = {};
             filteredOrders.forEach(o => {
-                // จัดกลุ่มด้วยชื่อลูกค้าและเบอร์โทรเป็นหลัก
                 const key = o.name + "_" + (o.phone || "");
                 if (!customerGroups[key]) {
                     customerGroups[key] = {
@@ -1126,7 +1183,6 @@
                 .sort((a, b) => b.totalSpent - a.totalSpent)
                 .slice(0, 10);
 
-            // แสดงผลตารางลูกค้าสูงสุด 10 อันดับแรกในหน้า Dashboard
             const topCustBody = document.getElementById('topCustomersTableBody');
             topCustBody.innerHTML = '';
 
@@ -1147,6 +1203,72 @@
                         <td class="p-4 text-right font-black text-emerald-600">฿${cust.totalSpent.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>
                     `;
                     topCustBody.appendChild(row);
+                });
+            }
+
+            // 🚛 สรุปประสิทธิภาพคนขับรถโม่ (Driver KPI)
+            const driverStats = {};
+            filteredOrders.forEach(o => {
+                if (o.status === 'delivered' && o.assignedTruck && o.assignedTruck.driverName) {
+                    const driverKey = o.assignedTruck.driverName;
+                    if (!driverStats[driverKey]) {
+                        driverStats[driverKey] = {
+                            name: o.assignedTruck.driverName,
+                            plate: o.assignedTruck.licensePlate,
+                            trips: 0,
+                            totalSecs: 0,
+                            passedKpi: 0 // จำนวนเที่ยวที่เวลา <= 120 นาที
+                        };
+                    }
+                    
+                    const startTime = o.deliveryStartTime || o.createdAt;
+                    const endTime = o.deliveredAt || o.lastGpsUpdate || (o.createdAt + 1800000);
+                    const elapsedSec = Math.max(0, Math.floor((endTime - startTime) / 1000));
+                    
+                    driverStats[driverKey].trips += 1;
+                    driverStats[driverKey].totalSecs += elapsedSec;
+                    
+                    if (elapsedSec <= 7200) { // 120 นาที = 7200 วินาที
+                        driverStats[driverKey].passedKpi += 1;
+                    }
+                }
+            });
+
+            // เรียงลำดับจากจำนวนรอบที่เยอะสุด และเปอร์เซ็นต์ KPI สูงสุด
+            const topDrivers = Object.values(driverStats).sort((a, b) => {
+                if (b.trips === a.trips) {
+                    return (b.passedKpi / b.trips) - (a.passedKpi / a.trips);
+                }
+                return b.trips - a.trips;
+            });
+
+            const driverKpiBody = document.getElementById('driverKpiTableBody');
+            driverKpiBody.innerHTML = '';
+            
+            if (topDrivers.length === 0) {
+                driverKpiBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีประวัติการปิดงานจัดส่งในช่วงเวลานี้</td></tr>`;
+            } else {
+                topDrivers.forEach((driver, index) => {
+                    const avgSecs = driver.trips > 0 ? driver.totalSecs / driver.trips : 0;
+                    const avgMins = Math.floor(avgSecs / 60);
+                    const kpiPassRate = Math.round((driver.passedKpi / driver.trips) * 100);
+                    
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-50/50 transition border-b border-slate-100';
+                    row.innerHTML = `
+                        <td class="p-4 font-bold text-slate-700">
+                            ${index + 1}. ${driver.name}
+                            <div class="text-[10px] text-slate-400 font-medium">${driver.plate}</div>
+                        </td>
+                        <td class="p-4 text-center font-black text-slate-800">${driver.trips}</td>
+                        <td class="p-4 text-center font-bold ${avgMins <= 120 ? 'text-emerald-600' : 'text-red-500'}">${avgMins} นาที</td>
+                        <td class="p-4 text-center">
+                            <span class="px-2 py-1 rounded-md text-[11px] font-bold ${kpiPassRate >= 80 ? 'bg-emerald-100 text-emerald-700' : (kpiPassRate >= 50 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700')}">
+                                ${kpiPassRate}%
+                            </span>
+                        </td>
+                    `;
+                    driverKpiBody.appendChild(row);
                 });
             }
         };
@@ -1324,6 +1446,53 @@
                         <td class="p-2 text-right font-bold">฿${cust.totalSpent.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>
                     `;
                     printTopCustBody.appendChild(row);
+                });
+            }
+
+            // คัดลอกตารางพนักงานขับรถลงในหน้าพิมพ์เอกสาร
+            const driverStats = {};
+            filteredOrders.forEach(o => {
+                if (o.status === 'delivered' && o.assignedTruck && o.assignedTruck.driverName) {
+                    const driverKey = o.assignedTruck.driverName;
+                    if (!driverStats[driverKey]) {
+                        driverStats[driverKey] = {
+                            name: o.assignedTruck.driverName,
+                            trips: 0,
+                            totalSecs: 0,
+                            passedKpi: 0 
+                        };
+                    }
+                    const startTime = o.deliveryStartTime || o.createdAt;
+                    const endTime = o.deliveredAt || o.lastGpsUpdate || (o.createdAt + 1800000);
+                    const elapsedSec = Math.max(0, Math.floor((endTime - startTime) / 1000));
+                    
+                    driverStats[driverKey].trips += 1;
+                    driverStats[driverKey].totalSecs += elapsedSec;
+                    if (elapsedSec <= 7200) driverStats[driverKey].passedKpi += 1;
+                }
+            });
+
+            const topDrivers = Object.values(driverStats).sort((a, b) => b.trips - a.trips);
+            const printDriverKpiBody = document.getElementById('printDriverKpiTableBody');
+            printDriverKpiBody.innerHTML = '';
+            
+            if (topDrivers.length === 0) {
+                printDriverKpiBody.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-slate-400">ไม่มีข้อมูลพนักงานในช่วงเวลานี้</td></tr>`;
+            } else {
+                topDrivers.forEach((driver) => {
+                    const avgSecs = driver.trips > 0 ? driver.totalSecs / driver.trips : 0;
+                    const avgMins = Math.floor(avgSecs / 60);
+                    const kpiPassRate = Math.round((driver.passedKpi / driver.trips) * 100);
+                    
+                    const row = document.createElement('tr');
+                    row.className = 'border-b border-slate-200';
+                    row.innerHTML = `
+                        <td class="p-2 font-bold">${driver.name}</td>
+                        <td class="p-2 text-center">${driver.trips}</td>
+                        <td class="p-2 text-center font-bold ${avgMins <= 120 ? 'text-emerald-600' : 'text-red-500'}">${avgMins} นาที</td>
+                        <td class="p-2 text-center font-bold ${kpiPassRate >= 80 ? 'text-emerald-600' : (kpiPassRate >= 50 ? 'text-amber-600' : 'text-red-600')}">${kpiPassRate}%</td>
+                    `;
+                    printDriverKpiBody.appendChild(row);
                 });
             }
 
