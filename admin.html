@@ -105,7 +105,7 @@
                         <i data-lucide="users" class="w-4 h-4"></i> รถและคนขับ
                     </button>
                     <button onclick="window.switchAdminTab('settings')" id="btnAdminSettings" class="tab-btn px-4 py-2.5 text-sm font-semibold rounded-xl transition-all flex items-center gap-2 text-slate-500 hover:bg-slate-50 hover:text-slate-700">
-                        <i data-lucide="settings-2" class="w-4 h-4"></i> ตั้งค่าราคา
+                        <i data-lucide="settings-2" class="w-4 h-4"></i> ตั้งค่าระบบ
                     </button>
                     <button onclick="window.switchAdminTab('report')" id="btnAdminReport" class="tab-btn px-4 py-2.5 text-sm font-semibold rounded-xl transition-all flex items-center gap-2 text-slate-500 hover:bg-slate-50 hover:text-slate-700">
                         <i data-lucide="bar-chart-3" class="w-4 h-4"></i> สรุปยอดขาย
@@ -138,7 +138,7 @@
                         </div>
                     </div>
 
-                    <!-- พื้นที่แสดงผลลัพธ์การค้นหาบิลเก่า (จะขึ้นเมื่อกดค้นหา) -->
+                    <!-- พื้นที่แสดงผลลัพธ์การค้นหาบิลเก่า -->
                     <div id="historySearchResultsSection" class="hidden space-y-4">
                         <div class="flex justify-between items-center border-b border-slate-200 pb-2">
                             <h3 class="font-bold text-blue-600 text-base flex items-center gap-2">
@@ -151,7 +151,7 @@
 
                     <!-- รายการคิวงานปกติแยกสถานะ -->
                     <div id="normalOrdersSection" class="space-y-8">
-                        <!-- ส่วนที่ 1: กำลังดำเนินการ (Active Orders) -->
+                        <!-- ส่วนที่ 1: กำลังดำเนินการ -->
                         <div class="space-y-4">
                             <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
                                 <span class="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
@@ -160,7 +160,7 @@
                             <div id="activeOrdersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
                         </div>
 
-                        <!-- ส่วนที่ 2: เสร็จสิ้นวันนี้ (Completed Today) -->
+                        <!-- ส่วนที่ 2: เสร็จสิ้นวันนี้ -->
                         <div class="space-y-4">
                             <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
                                 <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
@@ -222,16 +222,19 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: ตั้งค่าราคา (Price Settings) -->
+                <!-- TAB 2: ตั้งค่าระบบ -->
                 <div id="adminSettingsView" class="tab-content">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div class="lg:col-span-2 bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm space-y-6">
-                            <h2 class="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
-                                <i data-lucide="badge-dollar-sign" class="w-6 h-6 text-emerald-600"></i> ตั้งค่าราคากลางคอนกรีต
-                            </h2>
-                            <div class="space-y-6">
-                                <div>
-                                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">ราคาคอนกรีต (บาท / คิว)</h3>
+                        <div class="lg:col-span-2 space-y-6">
+                            
+                            <!-- ตั้งค่าราคากลางคอนกรีต -->
+                            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm space-y-6">
+                                <h2 class="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+                                    <i data-lucide="badge-dollar-sign" class="w-6 h-6 text-emerald-600"></i> ตั้งค่าราคากลางคอนกรีต
+                                </h2>
+                                <p class="text-sm text-slate-500 mb-6">ราคาคอนกรีตทั้ง 9 KSC และค่าธรรมเนียมพิเศษสำหรับหน้าบ้าน</p>
+                                
+                                <div class="space-y-6">
                                     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                                         <div class="space-y-1"><label class="text-xs font-semibold text-slate-500">180 KSC</label><input type="number" id="setting_price_180" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800"></div>
                                         <div class="space-y-1"><label class="text-xs font-semibold text-slate-500">210 KSC</label><input type="number" id="setting_price_210" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800"></div>
@@ -243,26 +246,52 @@
                                         <div class="space-y-1"><label class="text-xs font-semibold text-slate-500">380 KSC</label><input type="number" id="setting_price_380" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800"></div>
                                         <div class="space-y-1"><label class="text-xs font-semibold text-slate-500">400 KSC</label><input type="number" id="setting_price_400" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800"></div>
                                     </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">ค่าบริการจัดส่งเพิ่มเติม</h3>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div class="space-y-1"><label class="text-xs font-semibold text-slate-500">ค่าส่งรถโม่เล็ก (บาท / เที่ยว)</label><input type="number" id="setting_shipping_fee" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800"></div>
+                                        <div class="space-y-1"><label class="text-xs font-semibold text-slate-500">ค่าบริการจัดส่งเพิ่มเติม (รถโม่เล็ก)</label><input type="number" id="setting_shipping_fee" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="pt-4 border-t border-slate-100 flex justify-end">
-                                <button onclick="window.savePriceSettings()" class="bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-8 rounded-xl shadow-sm transition active:scale-95 flex items-center gap-2">
-                                    <i data-lucide="save" class="w-4 h-4"></i> บันทึกราคากลาง
-                                </button>
+
+                            <!-- 🏢 ตั้งค่าข้อมูลบริษัทผู้ผลิต -->
+                            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm space-y-6">
+                                <h2 class="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+                                    <i data-lucide="building" class="w-6 h-6 text-emerald-600"></i> ตั้งค่าข้อมูลบริษัทผู้ผลิต (ออกใบแจ้งหนี้ / ใบจ่ายปูน)
+                                </h2>
+                                <p class="text-sm text-slate-500 mb-6">ข้อมูลที่อยู่และเลขภาษีของแพลนท์ผลิตคอนกรีตเพื่อพิมพ์เอกสารให้กับพนักงานและลูกค้า</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="space-y-1">
+                                        <label class="text-xs font-semibold text-slate-500">ชื่อย่อแบรนด์ (เช่น PRO CONCRETE ECO)</label>
+                                        <input type="text" id="setting_company_name" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-xs font-semibold text-slate-500">ชื่อจดทะเบียนบริษัทเต็ม (เช่น บริษัท โปร คอนกรีต จำกัด)</label>
+                                        <input type="text" id="setting_company_fullname" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800">
+                                    </div>
+                                    <div class="space-y-1 md:col-span-2">
+                                        <label class="text-xs font-semibold text-slate-500">ที่อยู่จดทะเบียนผู้ผลิต / ที่ตั้งแพลนท์ปูน</label>
+                                        <textarea id="setting_company_address" rows="2" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800 resize-none"></textarea>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-xs font-semibold text-slate-500">เบอร์โทรศัพท์สำนักงาน</label>
+                                        <input type="text" id="setting_company_phone" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-xs font-semibold text-slate-500">เบอร์มือถือฉุกเฉิน</label>
+                                        <input type="text" id="setting_company_mobile" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800">
+                                    </div>
+                                    <div class="space-y-1 md:col-span-2">
+                                        <label class="text-xs font-semibold text-slate-500">เลขประจำตัวผู้เสียภาษีผู้ผลิต (13 หลัก)</label>
+                                        <input type="text" id="setting_company_tax_id" maxlength="13" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800 font-mono tracking-widest">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- 🏦 ตั้งค่าบัญชีรับเงินและ QR Code -->
-                        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between h-fit gap-6">
                             <div class="space-y-4">
                                 <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                                    <i data-lucide="landmark" class="w-6 h-6 text-emerald-600"></i> บัญชีรับเงิน
+                                    <i data-lucide="landmark" class="w-6 h-6 text-emerald-600"></i> บัญชีรับเงินของระบบ
                                 </h2>
                                 <div class="space-y-3 pt-2">
                                     <div class="space-y-1"><label class="text-xs font-semibold text-slate-500">ธนาคาร</label><input type="text" id="setting_bank_name" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800"></div>
@@ -283,14 +312,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <button onclick="window.saveBankSettings()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-2 mt-4 text-sm">
-                                <i data-lucide="save" class="w-4 h-4"></i> บันทึกข้อมูลบัญชี
-                            </button>
                         </div>
+                    </div>
+                    
+                    <!-- ปุ่มบันทึกข้อมูลตั้งค่ารวมศูนย์ด้านล่าง -->
+                    <div class="mt-8 flex justify-end">
+                        <button onclick="window.saveSystemSettingsAll()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 px-12 rounded-2xl shadow-xl transition-all active:scale-95 flex items-center gap-2">
+                            <i data-lucide="save" class="w-5 h-5"></i> บันทึกการตั้งค่าระบบทั้งหมด
+                        </button>
                     </div>
                 </div>
 
-                <!-- TAB 3: รายงานสรุปยอดขาย (Reports) -->
+                <!-- TAB 3: รายงานสรุปยอดขาย -->
                 <div id="adminReportView" class="tab-content space-y-6">
                     <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
                         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -411,10 +444,10 @@
     <div id="printable-document" class="hidden absolute bg-white text-black p-8 text-sm">
         <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
             <div>
-                <h1 class="text-2xl font-black text-slate-900 mb-1">PRO CONCRETE ECO</h1>
-                <p class="text-xs text-slate-600">บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)</p>
-                <p class="text-xs text-slate-600">123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110</p>
-                <p class="text-xs text-slate-600">โทร. 02-123-4567 | เลขประจำตัวผู้เสียภาษี: 01055xxxxxxxx</p>
+                <h1 class="text-2xl font-black text-slate-900 mb-1" id="invPrintHeaderBrand">PRO CONCRETE ECO</h1>
+                <p class="text-xs text-slate-600" id="invPrintHeaderFullname">บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)</p>
+                <p class="text-xs text-slate-600" id="invPrintHeaderAddress">123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110</p>
+                <p class="text-xs text-slate-600">โทร. <span id="invPrintHeaderPhone">02-123-4567</span> | เลขประจำตัวผู้เสียภาษี (ผู้ผลิต): <span id="invPrintHeaderTaxId">01055xxxxxxxx</span></p>
             </div>
             <div class="text-right">
                 <h2 id="printDocTitle" class="text-xl font-bold text-slate-800 uppercase">ใบเสนอราคา / ใบแจ้งหนี้</h2>
@@ -486,7 +519,7 @@
     <div id="printable-report" class="hidden absolute bg-white text-black p-8 text-sm">
         <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
             <div>
-                <h1 class="text-2xl font-black text-slate-900 mb-1">PRO CONCRETE ECO</h1>
+                <h1 class="text-2xl font-black text-slate-900 mb-1" id="reportPrintHeaderBrand">PRO CONCRETE ECO</h1>
                 <p class="text-xs text-slate-600">รายงานสรุปยอดขายแพลนท์คอนกรีต (Sales Summary Report)</p>
             </div>
             <div class="text-right">
@@ -531,10 +564,10 @@
     <div id="printable-delivery-ticket" class="hidden absolute bg-white text-black p-8 text-sm">
         <div class="border-b-4 border-double border-slate-900 pb-4 mb-6 flex justify-between items-start">
             <div>
-                <h1 class="text-3xl font-black tracking-tight text-slate-900 mb-1">PRO CONCRETE ECO</h1>
-                <p class="text-xs text-slate-700 font-bold">บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)</p>
-                <p class="text-xs text-slate-600">123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110</p>
-                <p class="text-xs text-slate-600">โทร. 02-123-4567 | เลขประจำตัวผู้เสียภาษี (ผู้ผลิต): 0105559001234</p>
+                <h1 class="text-3xl font-black tracking-tight text-slate-900 mb-1" id="ticketPrintHeaderBrand">PRO CONCRETE ECO</h1>
+                <p class="text-xs text-slate-700 font-bold" id="ticketPrintHeaderFullname">บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)</p>
+                <p class="text-xs text-slate-600" id="ticketPrintHeaderAddress">123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110</p>
+                <p class="text-xs text-slate-600">โทร. <span id="ticketPrintHeaderPhone">02-123-4567</span> | เลขประจำตัวผู้เสียภาษี (ผู้ผลิต): <span id="ticketPrintHeaderTaxId">0105559001234</span></p>
             </div>
             <div class="text-right">
                 <h2 class="text-2xl font-black text-slate-900 uppercase">ใบส่งคอนกรีต</h2>
@@ -627,33 +660,6 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Global Modals
-        window.showModal = function(title, message, onOk = null) {
-            const modal = document.getElementById('globalModal');
-            if (!modal) return;
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalMessage').innerText = message;
-            document.getElementById('modalCancelBtn').classList.add('hidden');
-            const okBtn = document.getElementById('modalOkBtn');
-            okBtn.onclick = () => { modal.classList.add('hidden'); if(onOk) onOk(); };
-            modal.classList.remove('hidden');
-        };
-
-        window.showConfirm = function(title, message, onConfirm) {
-            const modal = document.getElementById('globalModal');
-            if (!modal) return;
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalMessage').innerText = message;
-            const cancelBtn = document.getElementById('modalCancelBtn');
-            cancelBtn.classList.remove('hidden');
-            cancelBtn.onclick = () => modal.classList.add('hidden');
-            const okBtn = document.getElementById('modalOkBtn');
-            okBtn.onclick = () => { modal.classList.add('hidden'); onConfirm(); };
-            modal.classList.remove('hidden');
-        };
-
-        window.addEventListener('DOMContentLoaded', () => { if(window.lucide) lucide.createIcons(); });
-
         const ADMIN_PASSWORD = '9999';
 
         const firebaseConfig = {
@@ -676,43 +682,112 @@
         let salesChartInstance = null;
         let settingQrBase64 = "";
 
-        // Firebase Initialization
-        if (typeof __firebase_config !== 'undefined') {
-            const canvasConfig = JSON.parse(__firebase_config);
-            app = initializeApp(canvasConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            ordersCollectionPath = `artifacts/${appId}/public/data/concrete_orders`;
-            trucksCollectionPath = `artifacts/${appId}/public/data/trucks`;
+        // ราคาและตั้งค่าบัญชีโอนรับเงินส่วนกลาง (รวมถึงข้อมูลบริษัทผู้ผลิตใหม่ที่จะดึงแบบ Real-time)
+        let priceSettings = {
+            price_180: 1650, price_210: 1720, price_240: 1800, price_280: 1900, price_300: 1980,
+            price_320: 2050, price_350: 2150, price_380: 2250, price_400: 2350, shipping_fee: 500,
+            bank_name: "ธนาคารกสิกรไทย",
+            bank_no: "123-4-56789-0",
+            bank_account: "บจก. โปร คอนกรีต ประเทศไทย",
+            bank_qr_image: "",
+            // ฟิลด์ข้อมูลบริษัทผู้ผลิตใหม่
+            company_name: "ProConcrete Eco",
+            company_fullname: "บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)",
+            company_address: "123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110",
+            company_phone: "02-123-4567",
+            company_mobile: "081-234-5678",
+            company_tax_id: "0105559001234"
+        };
+
+        // ----------------------------------------------------
+        // ประกาศฟังก์ชันหลักของโมดูลล่วงหน้าเพื่อป้องกันปัญหา ReferenceError
+        // ----------------------------------------------------
+        function setupDatabaseListener() {
+            if (!currentUser && !isOfflineMode) return;
+            if (!db) return; // Guard ป้องกันการเรียกใช้ collection() ก่อน Firestore โหลดสำเร็จ
             
-            const initCanvasAuth = async () => {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                } catch (e) { console.error(e); }
-            };
-            initCanvasAuth();
-        } else {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            signInAnonymously(auth).catch((error) => { isOfflineMode = true; });
+            // ดึงข้อมูลรถโม่ที่ลงทะเบียน
+            onSnapshot(collection(db, trucksCollectionPath), (snapshot) => {
+                allTrucksMemory = [];
+                snapshot.forEach(doc => allTrucksMemory.push({id: doc.id, ...doc.data()}));
+                if (document.getElementById('adminTrucksView').classList.contains('active')) renderTrucksGrid();
+                if (document.getElementById('adminListView').classList.contains('active')) renderOrdersGrid();
+            }, (error) => {
+                console.error("Trucks subscription failed:", error);
+            });
+
+            const ordersRef = collection(db, ordersCollectionPath);
+            onSnapshot(ordersRef, (snapshot) => {
+                allOrdersMemory = [];
+                snapshot.forEach(doc => { allOrdersMemory.push({ id: doc.id, ...doc.data() }); });
+                allOrdersMemory.sort((a, b) => b.createdAt - a.createdAt);
+
+                if (document.getElementById('adminListView').classList.contains('active')) renderOrdersGrid();
+                if (document.getElementById('adminReportView').classList.contains('active')) window.generateAnalyticsReport();
+            }, (error) => {
+                console.error("Orders subscription failed:", error);
+            });
         }
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) { 
-                currentUser = user; 
-                if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-                    setupDatabaseListener(); 
-                    setupPriceSettingsListener();
-                }
-            } 
-        });
+        function setupPriceSettingsListener() {
+            if (isOfflineMode) return;
+            if (!db) return; // Guard ป้องกันการเรียกใช้ doc() ก่อน Firestore โหลดสำเร็จ
+            
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const settingsDocRef = typeof __firebase_config !== 'undefined'
+                ? doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'prices')
+                : doc(db, 'settings', 'prices');
 
+            onSnapshot(settingsDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    // 1. ตั้งค่าราคาปูน
+                    document.getElementById('setting_price_180').value = data.price_180 || 1650;
+                    document.getElementById('setting_price_210').value = data.price_210 || 1720;
+                    document.getElementById('setting_price_240').value = data.price_240 || 1800;
+                    document.getElementById('setting_price_280').value = data.price_280 || 1900;
+                    document.getElementById('setting_price_300').value = data.price_300 || 1980;
+                    document.getElementById('setting_price_320').value = data.price_320 || 2050;
+                    document.getElementById('setting_price_350').value = data.price_350 || 2150;
+                    document.getElementById('setting_price_380').value = data.price_380 || 2250;
+                    document.getElementById('setting_price_400').value = data.price_400 || 2350;
+                    document.getElementById('setting_shipping_fee').value = data.shipping_fee || 500;
+                    
+                    // 2. ตั้งค่าช่องทางรับโอนเงิน
+                    document.getElementById('setting_bank_name').value = data.bank_name || '';
+                    document.getElementById('setting_bank_no').value = data.bank_no || '';
+                    document.getElementById('setting_bank_account').value = data.bank_account || '';
+                    if (data.bank_qr_image) {
+                        settingQrBase64 = data.bank_qr_image;
+                        const p = document.getElementById('qrUploadPlaceholder');
+                        const c = document.getElementById('qrPreviewContainer');
+                        const img = document.getElementById('qrPreviewImg');
+                        if(p && c && img) {
+                            p.classList.add('hidden'); c.classList.remove('hidden');
+                            img.src = settingQrBase64;
+                        }
+                    }
+
+                    // 3. ตั้งค่าข้อมูลบริษัทผู้ผลิต (Dynamic Manufacturer Info)
+                    document.getElementById('setting_company_name').value = data.company_name || 'ProConcrete Eco';
+                    document.getElementById('setting_company_fullname').value = data.company_fullname || 'บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)';
+                    document.getElementById('setting_company_address').value = data.company_address || '123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110';
+                    document.getElementById('setting_company_phone').value = data.company_phone || '02-123-4567';
+                    document.getElementById('setting_company_mobile').value = data.company_mobile || '081-234-5678';
+                    document.getElementById('setting_company_tax_id').value = data.company_tax_id || '0105559001234';
+
+                    // ซิงค์บันทึกลงตัวแปรระบบ
+                    priceSettings = { ...priceSettings, ...data };
+                }
+            }, (error) => {
+                console.error("Prices settings subscription failed:", error);
+            });
+        }
+
+        // ----------------------------------------------------
+        // ฟังก์ชันระบบล็อกอินและการทำงานทั่วไป
+        // ----------------------------------------------------
         window.loginAdmin = function() {
             const pin = document.getElementById('adminPasswordInput').value;
             if (pin === ADMIN_PASSWORD) {
@@ -847,47 +922,6 @@
             });
         }
 
-        // ----------------------------------------------------
-        // ราคา (Price Settings)
-        // ----------------------------------------------------
-        function setupPriceSettingsListener() {
-            if (isOfflineMode) return;
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            const settingsDocRef = typeof __firebase_config !== 'undefined'
-                ? doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'prices')
-                : doc(db, 'settings', 'prices');
-
-            onSnapshot(settingsDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    document.getElementById('setting_price_180').value = data.price_180 || 1650;
-                    document.getElementById('setting_price_210').value = data.price_210 || 1720;
-                    document.getElementById('setting_price_240').value = data.price_240 || 1800;
-                    document.getElementById('setting_price_280').value = data.price_280 || 1900;
-                    document.getElementById('setting_price_300').value = data.price_300 || 1980;
-                    document.getElementById('setting_price_320').value = data.price_320 || 2050;
-                    document.getElementById('setting_price_350').value = data.price_350 || 2150;
-                    document.getElementById('setting_price_380').value = data.price_380 || 2250;
-                    document.getElementById('setting_price_400').value = data.price_400 || 2350;
-                    document.getElementById('setting_shipping_fee').value = data.shipping_fee || 500;
-                    
-                    document.getElementById('setting_bank_name').value = data.bank_name || '';
-                    document.getElementById('setting_bank_no').value = data.bank_no || '';
-                    document.getElementById('setting_bank_account').value = data.bank_account || '';
-                    if (data.bank_qr_image) {
-                        settingQrBase64 = data.bank_qr_image;
-                        const p = document.getElementById('qrUploadPlaceholder');
-                        const c = document.getElementById('qrPreviewContainer');
-                        const img = document.getElementById('qrPreviewImg');
-                        if(p && c && img) {
-                            p.classList.add('hidden'); c.classList.remove('hidden');
-                            img.src = settingQrBase64;
-                        }
-                    }
-                }
-            });
-        }
-
         window.handleQrCodeUpload = function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -911,7 +945,7 @@
             document.getElementById('qrPreviewContainer').classList.add('hidden');
         };
 
-        window.savePriceSettings = async function() {
+        window.saveSystemSettingsAll = async function() {
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
             const settingsDocRef = typeof __firebase_config !== 'undefined'
                 ? doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'prices')
@@ -928,43 +962,31 @@
                 price_380: parseFloat(document.getElementById('setting_price_380').value) || 2250,
                 price_400: parseFloat(document.getElementById('setting_price_400').value) || 2350,
                 shipping_fee: parseFloat(document.getElementById('setting_shipping_fee').value) || 500,
+                
                 bank_name: document.getElementById('setting_bank_name').value.trim(),
                 bank_no: document.getElementById('setting_bank_no').value.trim(),
                 bank_account: document.getElementById('setting_bank_account').value.trim(),
                 bank_qr_image: settingQrBase64 || '',
+
+                company_name: document.getElementById('setting_company_name').value.trim(),
+                company_fullname: document.getElementById('setting_company_fullname').value.trim(),
+                company_address: document.getElementById('setting_company_address').value.trim(),
+                company_phone: document.getElementById('setting_company_phone').value.trim(),
+                company_mobile: document.getElementById('setting_company_mobile').value.trim(),
+                company_tax_id: document.getElementById('setting_company_tax_id').value.trim(),
+                
                 updatedAt: Date.now()
             };
 
             try {
                 await setDoc(settingsDocRef, currentData);
-                window.showModal("บันทึกสำเร็จ!", "อัปเดตข้อมูลไปยังระบบหน้าบ้านลูกค้าแบบ Real-time เรียบร้อยแล้วครับ");
-            } catch (error) { window.showModal("ข้อผิดพลาด", "ไม่สามารถอัปเดตข้อมูลได้"); }
+                priceSettings = { ...priceSettings, ...currentData };
+                window.showModal("บันทึกการตั้งค่าระบบสำเร็จ!", "ข้อมูลราคา, ช่องทางการชำระเงิน และข้อมูลบริษัทผู้ผลิตได้ถูกเผยแพร่ไปที่หน้าบ้านลูกค้าเรียบร้อยแล้วครับ");
+            } catch (error) {
+                console.error("Save system settings failed:", error);
+                window.showModal("ข้อผิดพลาด", "ไม่สามารถบันทึกข้อมูลตั้งค่าได้");
+            }
         };
-
-        // ----------------------------------------------------
-        // คิวงาน (Orders)
-        // ----------------------------------------------------
-        function setupDatabaseListener() {
-            if (!currentUser && !isOfflineMode) return;
-            
-            // ดึงข้อมูลรถโม่ที่ลงทะเบียน
-            onSnapshot(collection(db, trucksCollectionPath), (snapshot) => {
-                allTrucksMemory = [];
-                snapshot.forEach(doc => allTrucksMemory.push({id: doc.id, ...doc.data()}));
-                if (document.getElementById('adminTrucksView').classList.contains('active')) renderTrucksGrid();
-                if (document.getElementById('adminListView').classList.contains('active')) renderOrdersGrid();
-            });
-
-            const ordersRef = collection(db, ordersCollectionPath);
-            onSnapshot(ordersRef, (snapshot) => {
-                allOrdersMemory = [];
-                snapshot.forEach(doc => { allOrdersMemory.push({ id: doc.id, ...doc.data() }); });
-                allOrdersMemory.sort((a, b) => b.createdAt - a.createdAt);
-
-                if (document.getElementById('adminListView').classList.contains('active')) renderOrdersGrid();
-                if (document.getElementById('adminReportView').classList.contains('active')) window.generateAnalyticsReport();
-            });
-        }
 
         // ค้นหาประวัติการจองและบิลเก่าย้อนหลังจากเบอร์โทรศัพท์
         window.searchOrderHistory = function() {
@@ -1254,84 +1276,6 @@
             if(window.lucide) lucide.createIcons();
         }
 
-        window.updateOrderStatus = async function(id, status) {
-            try { 
-                let dataToUpdate = { status: status };
-                // 1. สั่งผสมปูน (Batching) - บันทึกเวลาแพลนท์เริ่มผสมปูน
-                if (status === 'batching') dataToUpdate.batchingStartTime = Date.now();
-                // 2. เริ่มจัดส่ง (Delivering)
-                if (status === 'delivering') dataToUpdate.deliveryStartTime = Date.now();
-                // 3. เทเสร็จสิ้น (Delivered)
-                if (status === 'delivered') dataToUpdate.deliveredAt = Date.now();
-
-                await updateDoc(doc(db, ordersCollectionPath, id), dataToUpdate); 
-            } catch(e) { 
-                window.showModal('ผิดพลาด', 'ไม่สามารถอัปเดตสถานะได้'); 
-            }
-        };
-
-        // ฟังก์ชันแก้ไขกำหนดเวลาเทคอนกรีตเรียลไทม์
-        window.saveNewDateTime = async function(id) {
-            const dateVal = document.getElementById(`editDate-${id}`).value;
-            const timeVal = document.getElementById(`editTime-${id}`).value;
-            
-            if(!dateVal || !timeVal) {
-                window.showModal('แจ้งเตือน', 'กรุณาระบุวันและเวลาที่ถูกต้อง');
-                return;
-            }
-
-            const [y, m, d] = dateVal.split('-');
-            const formattedDateTime = `${d}/${m}/${y} เวลา ${timeVal} น.`;
-
-            try {
-                await updateDoc(doc(db, ordersCollectionPath, id), {
-                    deliveryDateTime: formattedDateTime
-                });
-                window.showModal('สำเร็จ', 'อัปเดตกำหนดวันเวลาเทคอนกรีตเรียบร้อยแล้วครับ ระบบได้ส่งการแจ้งเตือนพิกัดใหม่ไปที่คนขับและลูกค้าแล้ว');
-                // ซ่อน editor
-                document.getElementById(`dateTimeEditor-${id}`).classList.add('hidden');
-            } catch(e) {
-                window.showModal('ผิดพลาด', 'ไม่สามารถอัปเดตข้อมูลวันเวลาได้');
-            }
-        };
-
-        window.toggleEditDateTime = function(id) {
-            const editor = document.getElementById(`dateTimeEditor-${id}`);
-            if (editor) {
-                editor.classList.toggle('hidden');
-            }
-        };
-
-        window.assignTruck = async function(orderId, truckId) {
-            try {
-                if (!truckId) {
-                    await updateDoc(doc(db, ordersCollectionPath, orderId), { assignedTruck: null });
-                } else {
-                    const truck = allTrucksMemory.find(t => t.id === truckId);
-                    if (truck) {
-                        await updateDoc(doc(db, ordersCollectionPath, orderId), { 
-                            assignedTruck: {
-                                truckId: truck.id,
-                                driverName: truck.driverName,
-                                phone: truck.phone,
-                                licensePlate: truck.licensePlate
-                            }
-                        });
-                    }
-                }
-            } catch(e) {
-                console.error(e);
-                window.showModal('ผิดพลาด', 'ไม่สามารถมอบหมายรถได้');
-            }
-        };
-
-        window.deleteOrder = async function(id) {
-            window.showConfirm('ลบออเดอร์', 'คุณยืนยันที่จะลบรายการคิวงานนี้ใช่หรือไม่? (การกระทำนี้ลบถาวร)', async () => {
-                try { await deleteDoc(doc(db, ordersCollectionPath, id)); } 
-                catch(e) { window.showModal('ผิดพลาด', 'ลบออเดอร์ไม่สำเร็จ'); }
-            });
-        };
-
         // ----------------------------------------------------
         // Viewer Modals
         // ----------------------------------------------------
@@ -1356,7 +1300,7 @@
             }
         };
 
-        // 🚨 ฟังก์ชันพิมพ์ใบกำกับภาษี / ใบเสร็จรับเงิน
+        // 🚨 ฟังก์ชันแปลงข้อมูลเพื่อพิมพ์ใบแจ้งหนี้ / ใบกำกับภาษี PDF ดิบขนาดกะทัดรัด (Dynamic Manufacturer Profile)
         window.printDocument = function(orderId) {
             const order = allOrdersMemory.find(o => o.id === orderId);
             if(!order) {
@@ -1407,13 +1351,20 @@
             setVal('printVat', order.vat ? order.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
             setVal('printGrandTotal', order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
 
+            // ซิงค์โปรไฟล์ผู้ผลิตแบบไดนามิกลงบิลใบเสร็จรับเงิน
+            setVal('invPrintHeaderBrand', priceSettings.company_name || "PRO CONCRETE ECO");
+            setVal('invPrintHeaderFullname', priceSettings.company_fullname || "บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)");
+            setVal('invPrintHeaderAddress', priceSettings.company_address || "123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110");
+            setVal('invPrintHeaderPhone', `${priceSettings.company_phone || "02-123-4567"} / ${priceSettings.company_mobile || ""}`);
+            setVal('invPrintHeaderTaxId', priceSettings.company_tax_id || "0105559001234");
+
             document.body.classList.add('print-invoice');
             document.body.classList.remove('print-report', 'print-delivery-ticket');
 
             window.print();
         };
 
-        // 🚨 ฟังก์ชันสำหรับสั่งจัดพิมพ์ "ใบจ่ายสินค้า / ใบส่งคอนกรีต" เพื่อมอบพนักงานขับรถส่งลูกค้าเซ็นต์
+        // 🚨 ฟังก์ชันสำหรับสั่งจัดพิมพ์ "ใบจ่ายสินค้า / ใบส่งคอนกรีต" เพื่อมอบพนักงานขับรถส่งลูกค้าเซ็นต์ (Dynamic Manufacturer Profile)
         window.printDeliveryTicket = function(orderId) {
             const order = allOrdersMemory.find(o => o.id === orderId);
             if(!order) {
@@ -1441,7 +1392,7 @@
             setVal('ticketCustomerPhone', order.phone);
 
             // ข้อมูลการขนส่งและคนขับ
-            setVal('ticketDriverName', order.assignedTruck ? `${order.assignedTruck.driverName} (${order.assignedTruck.licensePlate})` : "ยังไม่ได้ระบุคนส่งปูน");
+            setVal('ticketDriverName', order.assignedTruck ? `${order.assignedTruck.driverName}` : "ยังไม่ได้ระบุคนส่งปูน");
             setVal('ticketAddress', order.address || 'จัดส่งตามพิกัดแผนที่สั่งซื้อ');
 
             // รายละเอียดสินค้า
@@ -1463,6 +1414,13 @@
                     : "-- : -- น. (ยังไม่ปล่อยรถ)";
             }
 
+            // ซิงค์โปรไฟล์ผู้ผลิตแบบไดนามิกลงใบส่งของ
+            setVal('ticketPrintHeaderBrand', priceSettings.company_name || "PRO CONCRETE ECO");
+            setVal('ticketPrintHeaderFullname', priceSettings.company_fullname || "บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)");
+            setVal('ticketPrintHeaderAddress', priceSettings.company_address || "123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110");
+            setVal('ticketPrintHeaderPhone', `${priceSettings.company_phone || "02-123-4567"} / ${priceSettings.company_mobile || ""}`);
+            setVal('ticketPrintHeaderTaxId', priceSettings.company_tax_id || "0105559001234");
+
             // ควบคุม Class เพื่อสั่งพิมพ์ใบจ่ายปูนเท่านั้น
             document.body.classList.add('print-delivery-ticket');
             document.body.classList.remove('print-invoice', 'print-report');
@@ -1473,8 +1431,6 @@
         // ----------------------------------------------------
         // 📊 ระบบวิเคราะห์รายงานสถิติยอดขาย (Reports & Analytics)
         // ----------------------------------------------------
-        
-        // ช่วยตั้งค่าวันที่รายงานแบบช่วงเวลาสำเร็จรูป
         window.setReportPresetRange = function(range) {
             const today = new Date();
             let start = new Date();
@@ -1494,7 +1450,6 @@
             window.generateAnalyticsReport();
         };
 
-        // ฟังก์ชันประมวลผลสรุปยอดขายจากข้อมูลในหน่วยความจำ
         window.generateAnalyticsReport = function() {
             const startVal = document.getElementById('analyticsStartDate').value;
             const endVal = document.getElementById('analyticsEndDate').value;
@@ -1503,10 +1458,8 @@
             const start = new Date(startVal).setHours(0,0,0,0);
             const end = new Date(endVal).setHours(23,59,59,999);
 
-            // คัดกรองออเดอร์เฉพาะที่อยู่ในช่วงเวลาที่กำหนด
             const filteredOrders = allOrdersMemory.filter(o => o.createdAt >= start && o.createdAt <= end);
 
-            // เริ่มคำนวณ KPIs หลัก
             let totalRevenue = 0;
             let totalVolume = 0;
             let orderCount = filteredOrders.length;
@@ -1518,13 +1471,11 @@
 
             let avgOrderValue = orderCount > 0 ? (totalRevenue / orderCount) : 0;
 
-            // อัปเดตข้อมูลขึ้นการ์ด KPIs หน้าแผงควบคุม
             document.getElementById('kpi_total_revenue').innerText = totalRevenue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
             document.getElementById('kpi_total_volume').innerText = totalVolume.toFixed(1);
             document.getElementById('kpi_order_count').innerText = orderCount;
             document.getElementById('kpi_avg_order_value').innerText = avgOrderValue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
 
-            // 🏷️ เตรียมรวบรวมข้อมูลแจกแจงแบบรายวันเพื่อป้อนให้ชาร์ตและตารางสรุป
             const dailyData = {};
             let current = new Date(start);
             while(current <= end) {
@@ -1533,7 +1484,6 @@
                 current.setDate(current.getDate() + 1);
             }
 
-            // จัดกลุ่มยอดขายลงในแต่ละวัน
             filteredOrders.forEach(o => {
                 const dateKey = new Date(o.createdAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
                 if (dailyData[dateKey]) {
@@ -1547,10 +1497,8 @@
             const revenues = labels.map(l => dailyData[l].revenue);
             const volumes = labels.map(l => dailyData[l].volume);
 
-            // วาดกราฟเปรียบเทียบยอดขายและคิว (Chart.js)
             renderChart(labels, revenues, volumes);
 
-            // เขียนรายการลงในตารางรายงานสรุปรายวัน
             const tableBody = document.getElementById('reportTableBody');
             tableBody.innerHTML = '';
 
@@ -1567,7 +1515,6 @@
                 tableBody.appendChild(row);
             });
 
-            // 🏆 จัดอันดับลูกค้าที่มียอดสั่งซื้อสูงสุด 10 อันดับแรก
             const customerGroups = {};
             filteredOrders.forEach(o => {
                 const key = o.name + "_" + (o.phone || "");
@@ -1614,7 +1561,6 @@
                 });
             }
 
-            // 🚛 สรุปประสิทธิภาพคนขับรถโม่ (Driver KPI)
             const driverStats = {};
             filteredOrders.forEach(o => {
                 if (o.status === 'delivered' && o.assignedTruck && o.assignedTruck.driverName) {
@@ -1625,7 +1571,7 @@
                             plate: o.assignedTruck.licensePlate,
                             trips: 0,
                             totalSecs: 0,
-                            passedKpi: 0 // จำนวนเที่ยวที่เวลา <= 120 นาที
+                            passedKpi: 0 
                         };
                     }
                     
@@ -1636,13 +1582,12 @@
                     driverStats[driverKey].trips += 1;
                     driverStats[driverKey].totalSecs += elapsedSec;
                     
-                    if (elapsedSec <= 7200) { // 120 นาที = 7200 วินาที
+                    if (elapsedSec <= 7200) { 
                         driverStats[driverKey].passedKpi += 1;
                     }
                 }
             });
 
-            // เรียงลำดับจากจำนวนรอบที่เยอะสุด และเปอร์เซ็นต์ KPI สูงสุด
             const topDrivers = Object.values(driverStats).sort((a, b) => {
                 if (b.trips === a.trips) {
                     return (b.passedKpi / b.trips) - (a.passedKpi / a.trips);
@@ -1681,12 +1626,10 @@
             }
         };
 
-        // ฟังก์ชันวาดกราฟสถิติ
         function renderChart(labels, revenues, volumes) {
             const ctx = document.getElementById('salesChart');
             if (!ctx) return;
 
-            // ตรวจสอบและทำลายชาร์ตตัวเก่าทิ้งเพื่อป้องกันไม่ให้บั๊กแสดงซ้อนทับกันเวลาลากเมาส์ผ่าน
             if (salesChartInstance) {
                 salesChartInstance.destroy();
             }
@@ -1699,8 +1642,8 @@
                         {
                             label: 'ยอดขายรวม (บาท)',
                             data: revenues,
-                            backgroundColor: 'rgba(16, 185, 129, 0.2)', // Emerald bg
-                            borderColor: '#10b981', // Emerald border
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)', 
+                            borderColor: '#10b981', 
                             borderWidth: 2,
                             borderRadius: 6,
                             yAxisID: 'y_rev',
@@ -1709,7 +1652,7 @@
                         {
                             label: 'ปริมาณปูนรวม (คิว)',
                             data: volumes,
-                            borderColor: '#0f172a', // Dark Slate
+                            borderColor: '#0f172a', 
                             backgroundColor: '#0f172a',
                             borderWidth: 3,
                             pointRadius: 4,
@@ -1747,7 +1690,6 @@
             });
         }
 
-        // 🖨️ ฟังก์ชันจัดเรียงฟอร์แมตเพื่อพิมพ์รายงานสรุปยอดขาย (Print Sales Report to PDF)
         window.printSalesReport = function() {
             const startVal = document.getElementById('analyticsStartDate').value;
             const endVal = document.getElementById('analyticsEndDate').value;
@@ -1769,7 +1711,6 @@
 
             let avgOrderValue = orderCount > 0 ? (totalRevenue / orderCount) : 0;
 
-            // นำข้อมูลไปใส่ในหน้าเอกสารเปลือยรายงาน
             const fmtTh = (d) => new Date(d).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
             document.getElementById('printReportRange').innerText = `${fmtTh(start)} - ${fmtTh(end)}`;
             document.getElementById('printReportDate').innerText = new Date().toLocaleDateString('th-TH');
@@ -1779,7 +1720,6 @@
             document.getElementById('print_kpi_count').innerText = orderCount;
             document.getElementById('print_kpi_avg').innerText = avgOrderValue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
 
-            // คัดลอกตารางมาแสดง (รายละเอียดแจกแจงรายวัน)
             const printTableBody = document.getElementById('printReportTableBody');
             printTableBody.innerHTML = '';
 
@@ -1813,7 +1753,6 @@
                 printTableBody.appendChild(row);
             });
 
-            // คัดลอกตาราง 10 อันดับลูกค้าสูงสุดมาพิมพ์เอกสาร
             const customerGroups = {};
             filteredOrders.forEach(o => {
                 const key = o.name + "_" + (o.phone || "");
@@ -1856,7 +1795,6 @@
                 });
             }
 
-            // คัดลอกตารางพนักงานขับรถลงในหน้าพิมพ์เอกสาร
             const driverStats = {};
             filteredOrders.forEach(o => {
                 if (o.status === 'delivered' && o.assignedTruck && o.assignedTruck.driverName) {
@@ -1903,14 +1841,14 @@
                 });
             }
 
-            // ใช้คลาสควบคุมบน body สำหรับการพิมพ์เฉพาะสรุปรายงานยอดขาย
+            setVal('reportPrintHeaderBrand', priceSettings.company_name || "PRO CONCRETE ECO");
+
             document.body.classList.add('print-report');
             document.body.classList.remove('print-invoice', 'print-delivery-ticket');
 
             window.print();
         };
 
-        // สลับคลาสควบคุมกลับทันทีหลังสั่งพิมพ์เสร็จสิ้นหรือยกเลิก เพื่อป้องกันการแสดงผลทับซ้อน
         window.addEventListener('afterprint', () => {
             document.body.classList.remove('print-invoice', 'print-report', 'print-delivery-ticket');
         });
