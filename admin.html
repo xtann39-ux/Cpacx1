@@ -242,7 +242,7 @@
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="lg:col-span-2 space-y-6">
                             
-                            <!-- ตั้งค่าราคากลาง -->
+                            <!-- 💡 ปรับปรุงส่วนตั้งค่าราคากลางคอนกรีต (เพิ่มเปิด/ปิดจำหน่าย และราคาโปรโมชั่น) -->
                             <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200 shadow-sm">
                                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-slate-100 pb-4 mb-5 gap-4">
                                     <div>
@@ -250,25 +250,165 @@
                                             <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
                                                 <i data-lucide="badge-dollar-sign" class="w-4 h-4"></i>
                                             </div>
-                                            ราคากลางคอนกรีตมาตรฐาน
+                                            จัดการผลิตภัณฑ์และราคาขาย
                                         </h2>
-                                        <p class="text-[11px] text-slate-500 mt-1">อัปเดตราคาแบบ Real-time ไปยังหน้าจอลูกค้า (ใช้ร่วมกันทุกสาขา)</p>
+                                        <p class="text-[11px] text-slate-500 mt-1">เปิด/ปิดการขายสินค้า และกำหนดราคาโปรโมชั่นดึงดูดลูกค้า (ซิงค์ทุกสาขา)</p>
                                     </div>
                                     <button onclick="window.savePriceOnlySettings()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-6 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-1.5 w-full sm:w-auto active:scale-95">
-                                        <i data-lucide="save" class="w-3.5 h-3.5"></i> บันทึกราคา
+                                        <i data-lucide="save" class="w-3.5 h-3.5"></i> บันทึกผลิตภัณฑ์
                                     </button>
                                 </div>
                                 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                                    <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase">180 KSC</label><input type="number" id="setting_price_180" class="modern-input w-full p-3 rounded-xl text-sm font-bold text-slate-800"></div>
-                                    <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase">210 KSC</label><input type="number" id="setting_price_210" class="modern-input w-full p-3 rounded-xl text-sm font-bold text-slate-800"></div>
-                                    <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase">240 KSC</label><input type="number" id="setting_price_240" class="modern-input w-full p-3 rounded-xl text-sm font-bold text-slate-800"></div>
-                                    <div class="space-y-1"><label class="text-[10px] font-bold text-emerald-600 uppercase">280 KSC (ยอดนิยม)</label><input type="number" id="setting_price_280" class="modern-input w-full p-3 rounded-xl text-sm font-bold text-slate-800 border-emerald-300 bg-emerald-50/50 shadow-inner"></div>
-                                    <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase">300 KSC</label><input type="number" id="setting_price_300" class="modern-input w-full p-3 rounded-xl text-sm font-bold text-slate-800"></div>
-                                    <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase">320 KSC</label><input type="number" id="setting_price_320" class="modern-input w-full p-3 rounded-xl text-sm font-bold text-slate-800"></div>
-                                    <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase">350 KSC</label><input type="number" id="setting_price_350" class="modern-input w-full p-3 rounded-xl text-sm font-bold text-slate-800"></div>
-                                    <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase">380 KSC</label><input type="number" id="setting_price_380" class="modern-input w-full p-3 rounded-xl text-sm font-bold text-slate-800"></div>
-                                    <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase">400 KSC</label><input type="number" id="setting_price_400" class="modern-input w-full p-3 rounded-xl text-sm font-bold text-slate-800"></div>
+                                <div class="space-y-3">
+                                    <!-- ส่วนหัวคอลัมน์สำหรับ Desktop -->
+                                    <div class="hidden sm:flex items-center gap-4 px-4 pb-2 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                        <div class="w-28">ผลิตภัณฑ์ (KSC)</div>
+                                        <div class="flex-1">ราคาเต็ม (ขีดฆ่า)</div>
+                                        <div class="flex-1 text-emerald-600">ราคาขายจริง (โปร)</div>
+                                    </div>
+
+                                    <!-- สินค้า KSC -->
+                                    <div id="kscPricingContainer" class="space-y-3">
+                                        <!-- สร้างแบบฟอร์ม 9 รายการโดยตรงเพื่อความเสถียร -->
+                                        
+                                        <!-- 180 KSC -->
+                                        <div id="ksc_row_180" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl border border-slate-200 bg-white transition-all">
+                                            <div class="w-full sm:w-28 flex items-center justify-between sm:justify-start gap-3">
+                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                    <input type="checkbox" id="setting_active_180" onchange="window.toggleKscRow('180')" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked>
+                                                    <span class="font-black text-slate-700">180 KSC</span>
+                                                </label>
+                                                <span class="sm:hidden text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">มีจำหน่าย</span>
+                                            </div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <label class="text-[10px] font-bold text-slate-400 uppercase block sm:hidden mb-1">ราคาเต็ม (บาท)</label>
+                                                <input type="number" id="setting_full_price_180" placeholder="เช่น 1,800" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through">
+                                            </div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <label class="text-[10px] font-bold text-emerald-600 uppercase block sm:hidden mb-1">ราคาโปรโมชั่น (บาท)</label>
+                                                <input type="number" id="setting_price_180" placeholder="ราคาขายจริง" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white focus:border-emerald-500">
+                                            </div>
+                                        </div>
+
+                                        <!-- 210 KSC -->
+                                        <div id="ksc_row_210" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl border border-slate-200 bg-white transition-all">
+                                            <div class="w-full sm:w-28 flex items-center justify-between sm:justify-start gap-3">
+                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                    <input type="checkbox" id="setting_active_210" onchange="window.toggleKscRow('210')" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked>
+                                                    <span class="font-black text-slate-700">210 KSC</span>
+                                                </label>
+                                                <span class="sm:hidden text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">มีจำหน่าย</span>
+                                            </div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <label class="text-[10px] font-bold text-slate-400 uppercase block sm:hidden mb-1">ราคาเต็ม (บาท)</label>
+                                                <input type="number" id="setting_full_price_210" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through">
+                                            </div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <label class="text-[10px] font-bold text-emerald-600 uppercase block sm:hidden mb-1">ราคาโปรโมชั่น (บาท)</label>
+                                                <input type="number" id="setting_price_210" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white">
+                                            </div>
+                                        </div>
+
+                                        <!-- 240 KSC -->
+                                        <div id="ksc_row_240" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl border border-slate-200 bg-white transition-all">
+                                            <div class="w-full sm:w-28 flex items-center justify-between sm:justify-start gap-3">
+                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                    <input type="checkbox" id="setting_active_240" onchange="window.toggleKscRow('240')" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked>
+                                                    <span class="font-black text-slate-700">240 KSC</span>
+                                                </label>
+                                                <span class="sm:hidden text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">มีจำหน่าย</span>
+                                            </div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <label class="text-[10px] font-bold text-slate-400 uppercase block sm:hidden mb-1">ราคาเต็ม (บาท)</label>
+                                                <input type="number" id="setting_full_price_240" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through">
+                                            </div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <label class="text-[10px] font-bold text-emerald-600 uppercase block sm:hidden mb-1">ราคาโปรโมชั่น (บาท)</label>
+                                                <input type="number" id="setting_price_240" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white">
+                                            </div>
+                                        </div>
+
+                                        <!-- 280 KSC (ยอดนิยม) -->
+                                        <div id="ksc_row_280" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl border-2 border-emerald-300 bg-emerald-50/30 transition-all relative overflow-hidden">
+                                            <div class="absolute right-0 top-0 bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-bl-lg">ขายดี</div>
+                                            <div class="w-full sm:w-28 flex items-center justify-between sm:justify-start gap-3">
+                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                    <input type="checkbox" id="setting_active_280" onchange="window.toggleKscRow('280')" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked>
+                                                    <span class="font-black text-emerald-800">280 KSC</span>
+                                                </label>
+                                                <span class="sm:hidden text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">มีจำหน่าย</span>
+                                            </div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <label class="text-[10px] font-bold text-slate-400 uppercase block sm:hidden mb-1">ราคาเต็ม (บาท)</label>
+                                                <input type="number" id="setting_full_price_280" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-500 line-through bg-white">
+                                            </div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <label class="text-[10px] font-bold text-emerald-600 uppercase block sm:hidden mb-1">ราคาโปรโมชั่น (บาท)</label>
+                                                <input type="number" id="setting_price_280" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-400 bg-white focus:ring-1 focus:ring-emerald-500 shadow-sm">
+                                            </div>
+                                        </div>
+
+                                        <!-- 300 KSC -->
+                                        <div id="ksc_row_300" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl border border-slate-200 bg-white transition-all">
+                                            <div class="w-full sm:w-28 flex items-center justify-between sm:justify-start gap-3">
+                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                    <input type="checkbox" id="setting_active_300" onchange="window.toggleKscRow('300')" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked>
+                                                    <span class="font-black text-slate-700">300 KSC</span>
+                                                </label>
+                                            </div>
+                                            <div class="w-full sm:flex-1"><input type="number" id="setting_full_price_300" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through"></div>
+                                            <div class="w-full sm:flex-1"><input type="number" id="setting_price_300" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white"></div>
+                                        </div>
+
+                                        <!-- 320 KSC -->
+                                        <div id="ksc_row_320" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl border border-slate-200 bg-white transition-all">
+                                            <div class="w-full sm:w-28 flex items-center justify-between sm:justify-start gap-3">
+                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                    <input type="checkbox" id="setting_active_320" onchange="window.toggleKscRow('320')" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked>
+                                                    <span class="font-black text-slate-700">320 KSC</span>
+                                                </label>
+                                            </div>
+                                            <div class="w-full sm:flex-1"><input type="number" id="setting_full_price_320" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through"></div>
+                                            <div class="w-full sm:flex-1"><input type="number" id="setting_price_320" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white"></div>
+                                        </div>
+
+                                        <!-- 350 KSC -->
+                                        <div id="ksc_row_350" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl border border-slate-200 bg-white transition-all">
+                                            <div class="w-full sm:w-28 flex items-center justify-between sm:justify-start gap-3">
+                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                    <input type="checkbox" id="setting_active_350" onchange="window.toggleKscRow('350')" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked>
+                                                    <span class="font-black text-slate-700">350 KSC</span>
+                                                </label>
+                                            </div>
+                                            <div class="w-full sm:flex-1"><input type="number" id="setting_full_price_350" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through"></div>
+                                            <div class="w-full sm:flex-1"><input type="number" id="setting_price_350" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white"></div>
+                                        </div>
+
+                                        <!-- 380 KSC -->
+                                        <div id="ksc_row_380" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl border border-slate-200 bg-white transition-all">
+                                            <div class="w-full sm:w-28 flex items-center justify-between sm:justify-start gap-3">
+                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                    <input type="checkbox" id="setting_active_380" onchange="window.toggleKscRow('380')" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked>
+                                                    <span class="font-black text-slate-700">380 KSC</span>
+                                                </label>
+                                            </div>
+                                            <div class="w-full sm:flex-1"><input type="number" id="setting_full_price_380" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through"></div>
+                                            <div class="w-full sm:flex-1"><input type="number" id="setting_price_380" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white"></div>
+                                        </div>
+
+                                        <!-- 400 KSC -->
+                                        <div id="ksc_row_400" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl border border-slate-200 bg-white transition-all">
+                                            <div class="w-full sm:w-28 flex items-center justify-between sm:justify-start gap-3">
+                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                    <input type="checkbox" id="setting_active_400" onchange="window.toggleKscRow('400')" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked>
+                                                    <span class="font-black text-slate-700">400 KSC</span>
+                                                </label>
+                                            </div>
+                                            <div class="w-full sm:flex-1"><input type="number" id="setting_full_price_400" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through"></div>
+                                            <div class="w-full sm:flex-1"><input type="number" id="setting_price_400" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white"></div>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="mt-6 pt-5 border-t border-slate-100">
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -366,8 +506,10 @@
                         <!-- Sidebar Summary -->
                         <div class="hidden lg:block">
                             <div class="bg-emerald-50 rounded-3xl p-6 border border-emerald-100 shadow-sm sticky top-24">
-                                <h3 class="font-black text-emerald-800 mb-2">ระบบ Multi-Branch</h3>
-                                <p class="text-xs text-emerald-700 leading-relaxed mb-4">ขณะนี้ระบบเปิดใช้งานโหมดหลายสาขาเรียบร้อยแล้ว <br><br><b>ข้อควรระวัง:</b><br>- ข้อมูลบริษัทหลัก "บริษัท โปรคอนกรีต ประเทศไทย จำกัด" จะถูกคงไว้เป็นค่าเริ่มต้นของระบบสำหรับพิมพ์ใบเสร็จ<br>- แต่ละสาขาสามารถมีบัญชีรับเงินและ QR Code เป็นของตัวเองได้ ลูกค้าจะเห็น QR ตามสาขาที่เลือก</p>
+                                <h3 class="font-black text-emerald-800 mb-2">ระบบจัดการผลิตภัณฑ์</h3>
+                                <p class="text-xs text-emerald-700 leading-relaxed mb-4">ปรับปรุงกลยุทธ์การขายด้วยระบบแสดงราคาเต็มเปรียบเทียบราคาโปรโมชั่น และปิดการขายชั่วคราวสำหรับผลิตภัณฑ์ที่หมดสต๊อก</p>
+                                <h3 class="font-black text-emerald-800 mb-2 border-t border-emerald-200 pt-4">ระบบ Multi-Branch</h3>
+                                <p class="text-xs text-emerald-700 leading-relaxed">ขณะนี้ระบบเปิดใช้งานโหมดหลายสาขา<br>- แต่ละสาขาสามารถมีบัญชีรับเงินและ QR Code เป็นของตัวเองได้</p>
                             </div>
                         </div>
                     </div>
@@ -605,10 +747,10 @@
     <div id="printable-delivery-ticket" class="hidden absolute bg-white text-black p-8 text-sm">
         <div class="border-b-4 border-double border-slate-900 pb-4 mb-6 flex justify-between items-start">
             <div>
-                <h1 class="text-3xl font-black tracking-tight text-slate-900 mb-1">บริษัท โปรคอนกรีต ประเทศไทย จำกัด</h1>
-                <p class="text-xs text-slate-700 font-bold">สาขา: <span id="ticketPrintBranchName">...</span></p>
-                <p class="text-xs text-slate-600" id="ticketPrintBranchAddress">...</p>
-                <p class="text-xs text-slate-600">โทร. <span id="ticketPrintBranchPhone">...</span> | เลขประจำตัวผู้เสียภาษี: 0105559001234</p>
+                <h1 class="text-3xl font-black tracking-tight text-slate-900 mb-1" id="ticketPrintHeaderBrand">PRO CONCRETE ECO</h1>
+                <p class="text-xs text-slate-700 font-bold" id="ticketPrintHeaderFullname">บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)</p>
+                <p class="text-xs text-slate-600" id="ticketPrintHeaderAddress">123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110</p>
+                <p class="text-xs text-slate-600">โทร. <span id="ticketPrintHeaderPhone">02-123-4567</span> | เลขประจำตัวผู้เสียภาษี (ผู้ผลิต): <span id="ticketPrintHeaderTaxId">0105559001234</span></p>
             </div>
             <div class="text-right">
                 <h2 class="text-2xl font-black text-slate-900 uppercase">ใบส่งคอนกรีต</h2>
@@ -786,6 +928,18 @@
 
         window.addEventListener('DOMContentLoaded', () => { if(window.lucide) lucide.createIcons(); });
 
+        window.toggleKscRow = function(ksc) {
+            const row = document.getElementById(`ksc_row_${ksc}`);
+            const cb = document.getElementById(`setting_active_${ksc}`);
+            if(cb && row) {
+                if(cb.checked) {
+                    row.classList.remove('opacity-50', 'grayscale');
+                } else {
+                    row.classList.add('opacity-50', 'grayscale');
+                }
+            }
+        };
+
         // ----------------------------------------------------
         // SYSTEM INIT
         // ----------------------------------------------------
@@ -840,17 +994,21 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    document.getElementById('setting_price_180').value = data.price_180 || 1650;
-                    document.getElementById('setting_price_210').value = data.price_210 || 1720;
-                    document.getElementById('setting_price_240').value = data.price_240 || 1800;
-                    document.getElementById('setting_price_280').value = data.price_280 || 1900;
-                    document.getElementById('setting_price_300').value = data.price_300 || 1980;
-                    document.getElementById('setting_price_320').value = data.price_320 || 2050;
-                    document.getElementById('setting_price_350').value = data.price_350 || 2150;
-                    document.getElementById('setting_price_380').value = data.price_380 || 2250;
-                    document.getElementById('setting_price_400').value = data.price_400 || 2350;
+                    const kscs = ['180', '210', '240', '280', '300', '320', '350', '380', '400'];
+                    kscs.forEach(k => {
+                        const activeEl = document.getElementById(`setting_active_${k}`);
+                        const fullPriceEl = document.getElementById(`setting_full_price_${k}`);
+                        const priceEl = document.getElementById(`setting_price_${k}`);
+                        
+                        if(activeEl) {
+                            activeEl.checked = data[`active_${k}`] !== false; // Default true if undefined
+                            window.toggleKscRow(k);
+                        }
+                        if(fullPriceEl) fullPriceEl.value = data[`full_price_${k}`] || '';
+                        if(priceEl) priceEl.value = data[`price_${k}`] || data[`price_${k}`] || '';
+                    });
+
                     document.getElementById('setting_shipping_fee').value = data.shipping_fee || 500;
-                    
                     priceSettings = { ...priceSettings, ...data };
                 }
             }, (error) => {
@@ -1161,7 +1319,7 @@
         };
 
         // ----------------------------------------------------
-        // ราคา (Price Settings)
+        // ราคา (Price Settings - KSC Products)
         // ----------------------------------------------------
         window.savePriceOnlySettings = async function() {
             if (!db) return;
@@ -1172,24 +1330,24 @@
                 const docSnap = await getDoc(settingsDocRef);
                 const existingData = docSnap.exists() ? docSnap.data() : {};
 
-                const newPricesData = {
-                    ...existingData,
-                    price_180: parseFloat(document.getElementById('setting_price_180').value) || 1650,
-                    price_210: parseFloat(document.getElementById('setting_price_210').value) || 1720,
-                    price_240: parseFloat(document.getElementById('setting_price_240').value) || 1800,
-                    price_280: parseFloat(document.getElementById('setting_price_280').value) || 1900,
-                    price_300: parseFloat(document.getElementById('setting_price_300').value) || 1980,
-                    price_320: parseFloat(document.getElementById('setting_price_320').value) || 2050,
-                    price_350: parseFloat(document.getElementById('setting_price_350').value) || 2150,
-                    price_380: parseFloat(document.getElementById('setting_price_380').value) || 2250,
-                    price_400: parseFloat(document.getElementById('setting_price_400').value) || 2350,
-                    shipping_fee: parseFloat(document.getElementById('setting_shipping_fee').value) || 500,
-                    updatedAt: Date.now()
-                };
+                const newPricesData = { ...existingData, updatedAt: Date.now() };
+
+                const kscs = ['180', '210', '240', '280', '300', '320', '350', '380', '400'];
+                kscs.forEach(k => {
+                    const activeEl = document.getElementById(`setting_active_${k}`);
+                    const fullPriceEl = document.getElementById(`setting_full_price_${k}`);
+                    const priceEl = document.getElementById(`setting_price_${k}`);
+                    
+                    if (activeEl) newPricesData[`active_${k}`] = activeEl.checked;
+                    if (fullPriceEl) newPricesData[`full_price_${k}`] = parseFloat(fullPriceEl.value) || 0;
+                    if (priceEl) newPricesData[`price_${k}`] = parseFloat(priceEl.value) || 0;
+                });
+
+                newPricesData.shipping_fee = parseFloat(document.getElementById('setting_shipping_fee').value) || 500;
 
                 await setDoc(settingsDocRef, newPricesData);
                 priceSettings = { ...priceSettings, ...newPricesData };
-                window.showModal("บันทึกราคาปูนสำเร็จ!", "อัปเดตราคาคอนกรีตเรียลไทม์ไปยังหน้าหลักการจองของลูกค้าเรียบร้อยแล้ว", 'success');
+                window.showModal("บันทึกราคาผลิตภัณฑ์สำเร็จ!", "อัปเดตสถานะและราคาคอนกรีตเรียลไทม์ไปยังหน้าหลักการจองของลูกค้าเรียบร้อยแล้ว", 'success');
             } catch (error) {
                 console.error("Save prices failed:", error);
                 window.showModal("ข้อผิดพลาด", "ไม่สามารถบันทึกข้อมูลราคากลางคอนกรีตได้", 'error');
@@ -1646,16 +1804,12 @@
             setVal('printVat', order.vat ? order.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
             setVal('printGrandTotal', order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
 
-            setVal('invPrintHeaderBrand', priceSettings.company_name || "PRO CONCRETE ECO");
-            setVal('invPrintHeaderFullname', priceSettings.company_fullname || "บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)");
-            setVal('invPrintHeaderAddress', priceSettings.company_address || "123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110");
-            setVal('invPrintHeaderPhone', `${priceSettings.company_phone || "02-123-4567"} / ${priceSettings.company_mobile || ""}`);
-            setVal('invPrintHeaderTaxId', priceSettings.company_tax_id || "0105559001234");
-
+            setVal('invPrintHeaderBrand', "บริษัท โปรคอนกรีต ประเทศไทย จำกัด");
+            
             // หาข้อมูลสาขาที่ผูกกับออเดอร์
-            let branchName = "";
-            let branchAddress = "";
-            let branchPhone = "";
+            let branchName = "สำนักงานใหญ่";
+            let branchAddress = "ไม่ระบุ";
+            let branchPhone = "-";
             
             if (order.branchId) {
                 const branch = allBranchesMemory.find(b => b.id === order.branchId);
@@ -1727,11 +1881,7 @@
             }
 
             // ซิงค์โปรไฟล์ผู้ผลิตแบบไดนามิกลงใบส่งของ
-            setVal('ticketPrintHeaderBrand', priceSettings.company_name || "PRO CONCRETE ECO");
-            setVal('ticketPrintHeaderFullname', priceSettings.company_fullname || "บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)");
-            setVal('ticketPrintHeaderAddress', priceSettings.company_address || "123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110");
-            setVal('ticketPrintHeaderPhone', `${priceSettings.company_phone || "02-123-4567"} / ${priceSettings.company_mobile || ""}`);
-            setVal('ticketPrintHeaderTaxId', priceSettings.company_tax_id || "0105559001234");
+            setVal('ticketPrintHeaderBrand', "บริษัท โปรคอนกรีต ประเทศไทย จำกัด");
             
             // หาข้อมูลสาขาที่ผูกกับออเดอร์
             let branchName = "สำนักงานใหญ่";
@@ -2172,11 +2322,6 @@
                     `;
                     printDriverKpiBody.appendChild(row);
                 });
-            }
-
-            const brandHeader = document.getElementById('reportPrintHeaderBrand');
-            if (brandHeader) {
-                brandHeader.innerText = priceSettings.company_name || "PRO CONCRETE ECO";
             }
 
             document.body.classList.add('print-report');
