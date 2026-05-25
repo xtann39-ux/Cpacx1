@@ -242,7 +242,7 @@
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="lg:col-span-2 space-y-6">
                             
-                            <!-- 💡 ปรับปรุงส่วนตั้งค่าราคากลางคอนกรีต (เพิ่มเปิด/ปิดจำหน่าย และราคาโปรโมชั่น) -->
+                            <!-- ตั้งค่าราคากลางคอนกรีต -->
                             <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200 shadow-sm">
                                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-slate-100 pb-4 mb-5 gap-4">
                                     <div>
@@ -260,17 +260,13 @@
                                 </div>
                                 
                                 <div class="space-y-3">
-                                    <!-- ส่วนหัวคอลัมน์สำหรับ Desktop -->
                                     <div class="hidden sm:flex items-center gap-4 px-4 pb-2 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                                         <div class="w-28">ผลิตภัณฑ์ (KSC)</div>
                                         <div class="flex-1">ราคาเต็ม (ขีดฆ่า)</div>
                                         <div class="flex-1 text-emerald-600">ราคาขายจริง (โปร)</div>
                                     </div>
 
-                                    <!-- สินค้า KSC -->
                                     <div id="kscPricingContainer" class="space-y-3">
-                                        <!-- สร้างแบบฟอร์ม 9 รายการโดยตรงเพื่อความเสถียร -->
-                                        
                                         <!-- 180 KSC -->
                                         <div id="ksc_row_180" class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl border border-slate-200 bg-white transition-all">
                                             <div class="w-full sm:w-28 flex items-center justify-between sm:justify-start gap-3">
@@ -297,14 +293,11 @@
                                                     <input type="checkbox" id="setting_active_210" onchange="window.toggleKscRow('210')" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked>
                                                     <span class="font-black text-slate-700">210 KSC</span>
                                                 </label>
-                                                <span class="sm:hidden text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">มีจำหน่าย</span>
                                             </div>
                                             <div class="w-full sm:flex-1 relative">
-                                                <label class="text-[10px] font-bold text-slate-400 uppercase block sm:hidden mb-1">ราคาเต็ม (บาท)</label>
                                                 <input type="number" id="setting_full_price_210" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through">
                                             </div>
                                             <div class="w-full sm:flex-1 relative">
-                                                <label class="text-[10px] font-bold text-emerald-600 uppercase block sm:hidden mb-1">ราคาโปรโมชั่น (บาท)</label>
                                                 <input type="number" id="setting_price_210" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white">
                                             </div>
                                         </div>
@@ -316,14 +309,11 @@
                                                     <input type="checkbox" id="setting_active_240" onchange="window.toggleKscRow('240')" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked>
                                                     <span class="font-black text-slate-700">240 KSC</span>
                                                 </label>
-                                                <span class="sm:hidden text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">มีจำหน่าย</span>
                                             </div>
                                             <div class="w-full sm:flex-1 relative">
-                                                <label class="text-[10px] font-bold text-slate-400 uppercase block sm:hidden mb-1">ราคาเต็ม (บาท)</label>
                                                 <input type="number" id="setting_full_price_240" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through">
                                             </div>
                                             <div class="w-full sm:flex-1 relative">
-                                                <label class="text-[10px] font-bold text-emerald-600 uppercase block sm:hidden mb-1">ราคาโปรโมชั่น (บาท)</label>
                                                 <input type="number" id="setting_price_240" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white">
                                             </div>
                                         </div>
@@ -336,14 +326,11 @@
                                                     <input type="checkbox" id="setting_active_280" onchange="window.toggleKscRow('280')" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked>
                                                     <span class="font-black text-emerald-800">280 KSC</span>
                                                 </label>
-                                                <span class="sm:hidden text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">มีจำหน่าย</span>
                                             </div>
                                             <div class="w-full sm:flex-1 relative">
-                                                <label class="text-[10px] font-bold text-slate-400 uppercase block sm:hidden mb-1">ราคาเต็ม (บาท)</label>
-                                                <input type="number" id="setting_full_price_280" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-500 line-through bg-white">
+                                                <input type="number" id="setting_full_price_280" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-505 line-through bg-white">
                                             </div>
                                             <div class="w-full sm:flex-1 relative">
-                                                <label class="text-[10px] font-bold text-emerald-600 uppercase block sm:hidden mb-1">ราคาโปรโมชั่น (บาท)</label>
                                                 <input type="number" id="setting_price_280" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-400 bg-white focus:ring-1 focus:ring-emerald-500 shadow-sm">
                                             </div>
                                         </div>
@@ -408,7 +395,6 @@
                                             <div class="w-full sm:flex-1"><input type="number" id="setting_price_400" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white"></div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="mt-6 pt-5 border-t border-slate-100">
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -417,7 +403,7 @@
                                 </div>
                             </div>
 
-                            <!-- 🏢 จัดการสาขา และบัญชีธนาคาร (Branch Management) -->
+                            <!-- 🏢 จัดการสาขา และบัญชีธนาคาร -->
                             <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200 shadow-sm space-y-6">
                                 <div class="flex justify-between items-center border-b border-slate-100 pb-4">
                                     <div>
@@ -517,6 +503,7 @@
 
                 <!-- TAB 3: รายงานสรุปยอดขาย -->
                 <div id="adminReportView" class="tab-content space-y-6">
+                    <!-- Filter -->
                     <div class="bg-white p-5 md:p-6 rounded-[2rem] border border-slate-200 shadow-sm">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                             <div>
@@ -531,7 +518,13 @@
                                 <button onclick="window.setReportPresetRange('month')" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors">เดือนนี้</button>
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
+                            <div class="sm:col-span-2 md:col-span-1">
+                                <label class="text-[10px] font-bold text-slate-500 mb-1.5 block uppercase pl-1">เลือกสาขาประมวลผล</label>
+                                <select id="analyticsBranchSelect" onchange="window.generateAnalyticsReport()" class="modern-input w-full p-3 rounded-xl text-sm font-bold text-slate-800" style="appearance: auto;">
+                                    <option value="">-- ทุกสาขารวมกัน --</option>
+                                </select>
+                            </div>
                             <div><label class="text-[10px] font-bold text-slate-500 mb-1.5 block uppercase pl-1">ตั้งแต่วันที่</label><input type="date" id="analyticsStartDate" class="modern-input w-full p-3 rounded-xl text-sm font-semibold"></div>
                             <div><label class="text-[10px] font-bold text-slate-500 mb-1.5 block uppercase pl-1">ถึงวันที่</label><input type="date" id="analyticsEndDate" class="modern-input w-full p-3 rounded-xl text-sm font-semibold"></div>
                             <div class="sm:col-span-2 flex gap-2">
@@ -545,6 +538,7 @@
                         </div>
                     </div>
 
+                    <!-- KPIs -->
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                         <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-center">
                             <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">ยอดขายรวมสุทธิ</p>
@@ -564,22 +558,65 @@
                         </div>
                     </div>
 
+                    <!-- Chart -->
                     <div class="bg-white p-5 md:p-6 rounded-[2rem] border border-slate-200 shadow-sm">
                         <div class="relative w-full h-[300px] md:h-[350px]"><canvas id="salesChart"></canvas></div>
                     </div>
                     
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm flex flex-col lg:col-span-1 overflow-hidden">
+                    <!-- ส่วนตารางรายงาน 4 ตาราง -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        
+                        <div class="bg-white rounded-[2rem] border-2 border-emerald-100 shadow-sm flex flex-col overflow-hidden">
+                            <div class="p-5 border-b border-emerald-100 bg-emerald-50/50 flex justify-between items-center">
+                                <h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm">
+                                    <i data-lucide="medal" class="w-4 h-4 text-emerald-600 animate-bounce"></i> รายงานวิเคราะห์ยอดขายแยกตามสาขา (Branch Ranking)
+                                </h3>
+                            </div>
+                            <div class="overflow-x-auto hide-scrollbar flex-1">
+                                <table class="w-full text-sm min-w-[450px]">
+                                    <thead class="bg-slate-50 text-[10px] text-slate-500 uppercase border-b border-slate-100">
+                                        <tr>
+                                            <th class="p-3 text-left">อันดับ / ชื่อสาขา</th>
+                                            <th class="p-3 text-center">จังหวัด</th>
+                                            <th class="p-3 text-center">บิลทั้งหมด</th>
+                                            <th class="p-3 text-right">ปูนรวม (คิว)</th>
+                                            <th class="p-3 text-right">ยอดรวมรวม VAT (฿)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="branchLeaderboardTableBody" class="divide-y divide-slate-100"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-[2rem] border-2 border-blue-100 shadow-sm flex flex-col overflow-hidden">
+                            <div class="p-5 border-b border-blue-100 bg-blue-50/50 flex justify-between items-center">
+                                <h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm">
+                                    <i data-lucide="timer" class="w-4 h-4 text-blue-500"></i> ประสิทธิภาพคนขับรถประจำสาขา
+                                </h3>
+                            </div>
+                            <div class="overflow-x-auto hide-scrollbar flex-1">
+                                <table class="w-full text-sm min-w-[400px]">
+                                    <thead class="bg-slate-50 text-[10px] text-slate-500 uppercase border-b border-slate-100">
+                                        <tr>
+                                            <th class="p-3 text-left">พนักงานขับรถ</th>
+                                            <th class="p-3 text-center">รอบจัดส่ง</th>
+                                            <th class="p-3 text-center">เวลาจัดส่งเฉลี่ย</th>
+                                            <th class="p-3 text-center">ตามเกณฑ์ KPI (120 นาที)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="driverKpiTableBody" class="divide-y divide-slate-100"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm flex flex-col overflow-hidden">
                             <div class="p-5 border-b border-slate-100 bg-slate-50/50"><h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm"><i data-lucide="table" class="w-4 h-4 text-emerald-600"></i> แจกแจงรายวัน</h3></div>
                             <div class="overflow-x-auto hide-scrollbar flex-1"><table class="w-full text-sm min-w-[350px]"><thead class="bg-slate-50 text-[10px] text-slate-500 uppercase border-b border-slate-100"><tr><th class="p-3 text-left">วันที่</th><th class="p-3 text-center">บิล</th><th class="p-3 text-right">คิว</th><th class="p-3 text-right">ยอดรวม (฿)</th></tr></thead><tbody id="reportTableBody" class="divide-y divide-slate-100"></tbody></table></div>
                         </div>
-                        <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm flex flex-col lg:col-span-1 overflow-hidden">
-                            <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center"><h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm"><i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> 10 อันดับลูกค้า</h3></div>
+
+                        <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+                            <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center"><h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm"><i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> 10 อันดับลูกค้าที่สั่งซื้อสะสมสูงสุด</h3></div>
                             <div class="overflow-x-auto hide-scrollbar flex-1"><table class="w-full text-sm min-w-[350px]"><thead class="bg-slate-50 text-[10px] text-slate-500 uppercase border-b border-slate-100"><tr><th class="p-3 text-left">ลูกค้า</th><th class="p-3 text-center">บิล</th><th class="p-3 text-right">คิว</th><th class="p-3 text-right">ยอดสุทธิ (฿)</th></tr></thead><tbody id="topCustomersTableBody" class="divide-y divide-slate-100"></tbody></table></div>
-                        </div>
-                        <div class="bg-white rounded-[2rem] border-2 border-blue-100 shadow-sm flex flex-col lg:col-span-1 overflow-hidden">
-                            <div class="p-5 border-b border-blue-100 bg-blue-50/50 flex justify-between items-center"><h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm"><i data-lucide="timer" class="w-4 h-4 text-blue-500"></i> ประสิทธิภาพคนขับ</h3></div>
-                            <div class="overflow-x-auto hide-scrollbar flex-1"><table class="w-full text-sm min-w-[350px]"><thead class="bg-slate-50 text-[10px] text-slate-500 uppercase border-b border-slate-100"><tr><th class="p-3 text-left">พนักงานขับรถ</th><th class="p-3 text-center">รอบ</th><th class="p-3 text-center">เวลาเฉลี่ย</th><th class="p-3 text-center">KPI</th></tr></thead><tbody id="driverKpiTableBody" class="divide-y divide-slate-100"></tbody></table></div>
                         </div>
                     </div>
                 </div>
@@ -597,7 +634,7 @@
         </div>
     </div>
 
-    <div id="taxModal" class="fixed inset-0 z-[200] hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 print:hidden animate-[fadeIn_0.2s_ease-out]">
+    <div id="taxModal" class="fixed inset-0 z-[200] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 print:hidden animate-[fadeIn_0.2s_ease-out]">
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
             <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50/50"><h3 class="font-bold text-blue-600 flex items-center gap-2"><i data-lucide="file-text" class="w-5 h-5"></i> ข้อมูลภาษี</h3><button onclick="document.getElementById('taxModal').classList.add('hidden')" class="text-slate-400 hover:text-red-500 bg-white hover:bg-red-50 p-2 rounded-full transition shadow-sm border border-slate-200"><i data-lucide="x" class="w-4 h-4"></i></button></div>
             <div class="p-6 space-y-5 text-sm">
@@ -624,7 +661,7 @@
         <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
             <div>
                 <h1 class="text-2xl font-black text-slate-900 mb-1" id="invPrintHeaderBrand">PRO CONCRETE ECO</h1>
-                <p class="text-xs text-slate-600 font-bold">สาขา: <span id="invPrintBranchName">...</span></p>
+                <p class="text-xs text-slate-700 font-bold">สาขา: <span id="invPrintBranchName">...</span></p>
                 <p class="text-xs text-slate-600" id="invPrintBranchAddress">...</p>
                 <p class="text-xs text-slate-600">โทร. <span id="invPrintBranchPhone">...</span> | เลขประจำตัวผู้เสียภาษี: 0105559001234</p>
             </div>
@@ -700,12 +737,13 @@
         </div>
     </div>
 
-    <!-- 2. สำหรับพิมพ์สรุปรายงานยอดขายทั้งหมด (พิมพ์รายงาน PDF) -->
+    <!-- 2. สำหรับพิมพ์สรุปรายงานยอดขายทั้งหมด -->
     <div id="printable-report" class="hidden absolute bg-white text-black p-8 text-sm">
         <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
             <div>
-                <h1 class="text-2xl font-black text-slate-900 mb-1">บริษัท โปรคอนกรีต ประเทศไทย จำกัด</h1>
+                <h1 class="text-2xl font-black text-slate-900 mb-1" id="reportPrintHeaderBrand">PRO CONCRETE ECO</h1>
                 <p class="text-xs text-slate-600">รายงานสรุปยอดขายแพลนท์คอนกรีต (Sales Summary Report)</p>
+                <p class="text-xs text-slate-600">วิเคราะห์สำหรับ: <span id="printReportBranchName" class="font-bold">ทุกสาขารวมกัน</span></p>
             </div>
             <div class="text-right">
                 <h2 class="text-lg font-bold text-slate-800 uppercase">รายงานสรุปผลการเทปูนและประเมินคนขับ</h2>
@@ -720,7 +758,7 @@
             <div class="text-center"><p class="text-[10px] font-bold text-slate-500 uppercase">เฉลี่ยต่อบิล</p><p class="text-base font-bold text-slate-800">฿<span id="print_kpi_avg">0.00</span></p></div>
         </div>
 
-        <div class="flex gap-4">
+        <div class="flex gap-4 mb-6">
             <div class="w-1/2">
                 <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-wide bg-slate-100 p-1">🏆 10 อันดับลูกค้าที่สั่งซื้อสูงสุด</p>
                 <table class="w-full text-xs border-collapse">
@@ -741,9 +779,25 @@
                 </table>
             </div>
         </div>
+
+        <div class="w-full">
+            <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-wide bg-emerald-50 text-emerald-800 p-1 border-l-2 border-emerald-500">🏢 สรุปผลงานยอดขายเปรียบเทียบในแต่ละสาขา (Branch Leaders)</p>
+            <table class="w-full text-xs border-collapse">
+                <thead>
+                    <tr class="bg-slate-100 border-y border-slate-300">
+                        <th class="p-2 text-left">อันดับ / สาขา</th>
+                        <th class="p-2 text-center">จังหวัด</th>
+                        <th class="p-2 text-center">บิลรวม</th>
+                        <th class="p-2 text-right">ปริมาณปูนรวม (คิว)</th>
+                        <th class="p-2 text-right font-bold">ยอดขายรวมสุทธิ (บาท)</th>
+                    </tr>
+                </thead>
+                <tbody id="printBranchLeaderboardTableBody" class="divide-y divide-slate-200"></tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- 3. สำหรับพิมพ์ใบจ่ายสินค้า / ใบส่งคอนกรีต (พิมพ์เพื่อมอบพนักงานจัดส่ง) -->
+    <!-- 3. สำหรับพิมพ์ใบส่งคอนกรีต -->
     <div id="printable-delivery-ticket" class="hidden absolute bg-white text-black p-8 text-sm">
         <div class="border-b-4 border-double border-slate-900 pb-4 mb-6 flex justify-between items-start">
             <div>
@@ -777,7 +831,6 @@
             </div>
         </div>
 
-        <!-- รายละเอียดสินค้าที่ส่งมอบ -->
         <table class="w-full text-xs mb-6 border-collapse">
             <thead>
                 <tr class="bg-slate-100 border-y-2 border-slate-400">
@@ -802,7 +855,6 @@
             </tbody>
         </table>
 
-        <!-- ตารางรายละเอียดเวลา KPI ความสดของคอนกรีต -->
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-8">
             <h3 class="font-black text-xs text-slate-800 uppercase tracking-wider mb-2.5 flex items-center gap-1.5"><i data-lucide="timer" class="w-4 h-4 text-emerald-600"></i> บันทึกเวลาขนส่งและการเทคอนกรีตหน้างาน (Logistics KPI)</h3>
             <div class="grid grid-cols-3 gap-4 text-center">
@@ -822,7 +874,6 @@
             <p class="text-[9px] text-slate-400 mt-2 font-medium leading-relaxed">* หมายเหตุ: เพื่อประสิทธิภาพสูงสุด คอนกรีตรักษ์โลกควรเริ่มเทลงแบบและเทให้เสร็จสิ้นภายใน 120 นาทีหลังจากเวลาเริ่มผลิต (เวลาเริ่มผสมปูน) เพื่อให้เนื้อปูนยึดเกาะประสานได้ตามกำลังอัดที่ตกลงกัน</p>
         </div>
 
-        <!-- ลายเซ็นต์ยืนยันการรับสินค้า -->
         <div class="grid grid-cols-2 gap-12 mt-16 text-center">
             <div class="flex flex-col items-center">
                 <p class="text-slate-400 mb-10">.........................................................................</p>
@@ -843,7 +894,7 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, setDoc, getDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        const ADMIN_PASSWORD = 'aaa9999';
+        const ADMIN_PASSWORD = '9999';
 
         const firebaseConfig = {
             apiKey: "AIzaSyBID-uSTCksR8AlgWMEzgJWlcRWn0UD7Ks",
@@ -874,30 +925,28 @@
         };
 
         // ----------------------------------------------------
-        // UI HELPERS
+        // 🚨 MAPPING GLOBAL FUNCTIONS (ป้องกัน ReferenceError)
         // ----------------------------------------------------
+
+        // 1. UI Modals & Navigation
         window.showModal = function(title, message, type = 'info', onOk = null) {
             const modal = document.getElementById('globalModal');
             if (!modal) return;
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalMessage').innerText = message;
             document.getElementById('modalCancelBtn').classList.add('hidden');
-            
             const icon = document.getElementById('modalIcon');
             if (type === 'success') { 
                 icon.setAttribute('data-lucide', 'check-circle-2'); 
                 icon.parentElement.className = "w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-5 border border-emerald-100"; 
-            }
-            else if (type === 'error') { 
+            } else if (type === 'error') { 
                 icon.setAttribute('data-lucide', 'alert-triangle'); 
                 icon.parentElement.className = "w-16 h-16 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-5 border border-red-100"; 
-            }
-            else { 
+            } else { 
                 icon.setAttribute('data-lucide', 'info'); 
                 icon.parentElement.className = "w-16 h-16 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-5 border border-blue-100"; 
             }
-            lucide.createIcons();
-
+            if (window.lucide) lucide.createIcons();
             const okBtn = document.getElementById('modalOkBtn');
             okBtn.className = "flex-1 py-3.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-black shadow-md transition active:scale-95 w-full";
             okBtn.onclick = () => { modal.classList.add('hidden'); if(onOk) onOk(); };
@@ -909,112 +958,19 @@
             if (!modal) return;
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalMessage').innerText = message;
-            
             const icon = document.getElementById('modalIcon');
             icon.setAttribute('data-lucide', 'help-circle');
             icon.parentElement.className = "w-16 h-16 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-5 border border-amber-100";
-            lucide.createIcons();
-
+            if (window.lucide) lucide.createIcons();
             const cancelBtn = document.getElementById('modalCancelBtn');
             cancelBtn.classList.remove('hidden');
             cancelBtn.onclick = () => modal.classList.add('hidden');
-            
             const okBtn = document.getElementById('modalOkBtn');
             okBtn.className = "flex-1 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-black shadow-md transition active:scale-95";
             okBtn.innerText = "ยืนยัน";
             okBtn.onclick = () => { modal.classList.add('hidden'); onConfirm(); };
             modal.classList.remove('hidden');
         };
-
-        window.addEventListener('DOMContentLoaded', () => { if(window.lucide) lucide.createIcons(); });
-
-        window.toggleKscRow = function(ksc) {
-            const row = document.getElementById(`ksc_row_${ksc}`);
-            const cb = document.getElementById(`setting_active_${ksc}`);
-            if(cb && row) {
-                if(cb.checked) {
-                    row.classList.remove('opacity-50', 'grayscale');
-                } else {
-                    row.classList.add('opacity-50', 'grayscale');
-                }
-            }
-        };
-
-        // ----------------------------------------------------
-        // SYSTEM INIT
-        // ----------------------------------------------------
-        function setupDatabaseListener() {
-            if (!currentUser && !isOfflineMode) return;
-            if (!db) return;
-            
-            // ดึงข้อมูลสาขา
-            onSnapshot(collection(db, branchesCollectionPath), (snapshot) => {
-                allBranchesMemory = [];
-                snapshot.forEach(doc => allBranchesMemory.push({id: doc.id, ...doc.data()}));
-                if (document.getElementById('adminSettingsView').classList.contains('active')) window.renderBranchesGrid();
-                if (window.populateBranchSelectInTruckForm) window.populateBranchSelectInTruckForm();
-                if (document.getElementById('adminListView').classList.contains('active')) window.renderOrdersGrid();
-            }, (error) => {
-                console.error("Branches subscription failed:", error);
-            });
-
-            // ดึงข้อมูลรถโม่ที่ลงทะเบียน
-            onSnapshot(collection(db, trucksCollectionPath), (snapshot) => {
-                allTrucksMemory = [];
-                snapshot.forEach(doc => allTrucksMemory.push({id: doc.id, ...doc.data()}));
-                if (document.getElementById('adminTrucksView').classList.contains('active')) window.renderTrucksGrid();
-                if (document.getElementById('adminListView').classList.contains('active')) window.renderOrdersGrid();
-            }, (error) => {
-                console.error("Trucks subscription failed:", error);
-            });
-
-            const ordersRef = collection(db, ordersCollectionPath);
-            onSnapshot(ordersRef, (snapshot) => {
-                allOrdersMemory = [];
-                snapshot.forEach(doc => { allOrdersMemory.push({ id: doc.id, ...doc.data() }); });
-                allOrdersMemory.sort((a, b) => b.createdAt - a.createdAt);
-
-                if (document.getElementById('adminListView').classList.contains('active')) window.renderOrdersGrid();
-                if (document.getElementById('adminReportView').classList.contains('active')) window.generateAnalyticsReport();
-            }, (error) => {
-                console.error("Orders subscription failed:", error);
-            });
-        }
-
-        function setupPriceSettingsListener() {
-            if (isOfflineMode) return;
-            if (!db) return;
-            
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            const settingsDocRef = typeof __firebase_config !== 'undefined'
-                ? doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'prices')
-                : doc(db, 'settings', 'prices');
-
-            onSnapshot(settingsDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    
-                    const kscs = ['180', '210', '240', '280', '300', '320', '350', '380', '400'];
-                    kscs.forEach(k => {
-                        const activeEl = document.getElementById(`setting_active_${k}`);
-                        const fullPriceEl = document.getElementById(`setting_full_price_${k}`);
-                        const priceEl = document.getElementById(`setting_price_${k}`);
-                        
-                        if(activeEl) {
-                            activeEl.checked = data[`active_${k}`] !== false; // Default true if undefined
-                            window.toggleKscRow(k);
-                        }
-                        if(fullPriceEl) fullPriceEl.value = data[`full_price_${k}`] || '';
-                        if(priceEl) priceEl.value = data[`price_${k}`] || data[`price_${k}`] || '';
-                    });
-
-                    document.getElementById('setting_shipping_fee').value = data.shipping_fee || 500;
-                    priceSettings = { ...priceSettings, ...data };
-                }
-            }, (error) => {
-                console.error("Prices settings subscription failed:", error);
-            });
-        }
 
         window.loginAdmin = function() {
             const pin = document.getElementById('adminPasswordInput').value;
@@ -1023,8 +979,8 @@
                 document.getElementById('adminPasswordInput').value = '';
                 document.getElementById('adminErrorText').classList.add('hidden');
                 window.checkAdminAuth();
-                setupDatabaseListener();
-                setupPriceSettingsListener();
+                window.setupDatabaseListener();
+                window.setupPriceSettingsListener();
             } else {
                 document.getElementById('adminErrorText').classList.remove('hidden');
             }
@@ -1047,78 +1003,20 @@
             }
             if(window.lucide) lucide.createIcons();
         };
-        
-        // Auto check on load
-        window.addEventListener('load', window.checkAdminAuth);
 
-        // Firebase Initialization
-        if (typeof __firebase_config !== 'undefined') {
-            const canvasConfig = JSON.parse(__firebase_config);
-            app = initializeApp(canvasConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            ordersCollectionPath = `artifacts/${appId}/public/data/concrete_orders`;
-            trucksCollectionPath = `artifacts/${appId}/public/data/trucks`;
-            branchesCollectionPath = `artifacts/${appId}/public/data/branches`;
-            
-            const initCanvasAuth = async () => {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                } catch (e) { console.error(e); }
-            };
-            initCanvasAuth();
-        } else {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            signInAnonymously(auth).catch((error) => { isOfflineMode = true; });
-        }
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) { 
-                currentUser = user; 
-                if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-                    setupDatabaseListener(); 
-                    setupPriceSettingsListener();
-                }
-            } 
-        });
-
-        // ----------------------------------------------------
-        // Tabs Navigation
-        // ----------------------------------------------------
         window.switchAdminTab = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('bg-emerald-50', 'text-emerald-700');
                 btn.classList.add('text-slate-500', 'bg-transparent');
             });
-
-            const activeBtnIds = {
-                'list': 'btnAdminList',
-                'trucks': 'btnAdminTrucks',
-                'settings': 'btnAdminSettings',
-                'report': 'btnAdminReport'
-            };
-
-            const viewIds = {
-                'list': 'adminListView',
-                'trucks': 'adminTrucksView',
-                'settings': 'adminSettingsView',
-                'report': 'adminReportView'
-            };
-
+            const activeBtnIds = { 'list': 'btnAdminList', 'trucks': 'btnAdminTrucks', 'settings': 'btnAdminSettings', 'report': 'btnAdminReport' };
+            const viewIds = { 'list': 'adminListView', 'trucks': 'adminTrucksView', 'settings': 'adminSettingsView', 'report': 'adminReportView' };
             if(activeBtnIds[tabId]) {
                 document.getElementById(viewIds[tabId]).classList.add('active');
                 document.getElementById(activeBtnIds[tabId]).classList.add('bg-emerald-50', 'text-emerald-700');
                 document.getElementById(activeBtnIds[tabId]).classList.remove('text-slate-500', 'bg-transparent');
             }
-
             if (tabId === 'list') {
                 window.renderOrdersGrid();
             } else if (tabId === 'trucks') {
@@ -1131,9 +1029,379 @@
             }
         };
 
-        // ----------------------------------------------------
-        // จัดการสาขา (Branches Management)
-        // ----------------------------------------------------
+        // 2. Chart & Report Functions
+        window.renderChart = function(labels, revenues, volumes) {
+            const ctx = document.getElementById('salesChart');
+            if (!ctx) return;
+            if (salesChartInstance) salesChartInstance.destroy();
+            salesChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'ยอดขายรวม (บาท)', data: revenues, backgroundColor: 'rgba(16, 185, 129, 0.2)', borderColor: '#10b981', borderWidth: 2, borderRadius: 6, yAxisID: 'y_rev', type: 'bar' },
+                        { label: 'ปริมาณปูนรวม (คิว)', data: volumes, borderColor: '#0f172a', backgroundColor: '#0f172a', borderWidth: 3, pointRadius: 4, tension: 0.3, yAxisID: 'y_vol', type: 'line' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y_rev: { type: 'linear', position: 'left', title: { display: true, text: 'ยอดขายรวม (บาท)', font: { family: 'Prompt', weight: 'bold' } }, ticks: { font: { family: 'Prompt' } } },
+                        y_vol: { type: 'linear', position: 'right', title: { display: true, text: 'สถิติน้ำปูนรวม (คิว)', font: { family: 'Prompt', weight: 'bold' } }, grid: { drawOnChartArea: false }, ticks: { font: { family: 'Prompt' } } },
+                        x: { ticks: { font: { family: 'Prompt' } } }
+                    },
+                    plugins: { legend: { labels: { font: { family: 'Prompt', weight: 'semibold' } } } }
+                }
+            });
+        };
+
+        window.setReportPresetRange = function(range) {
+            const today = new Date();
+            let start = new Date();
+            if (range === 'today') { start = today; } 
+            else if (range === 'week') { start.setDate(today.getDate() - 7); } 
+            else if (range === 'month') { start = new Date(today.getFullYear(), today.getMonth(), 1); }
+            const fmt = (d) => [d.getFullYear(), ('0'+(d.getMonth()+1)).slice(-2), ('0'+d.getDate()).slice(-2)].join('-');
+            document.getElementById('analyticsStartDate').value = fmt(start);
+            document.getElementById('analyticsEndDate').value = fmt(today);
+            window.generateAnalyticsReport();
+        };
+
+        window.generateAnalyticsReport = function() {
+            const startVal = document.getElementById('analyticsStartDate').value;
+            const endVal = document.getElementById('analyticsEndDate').value;
+            const selectedBranchId = document.getElementById('analyticsBranchSelect').value;
+            if(!startVal || !endVal) return;
+            const start = new Date(startVal).setHours(0,0,0,0);
+            const end = new Date(endVal).setHours(23,59,59,999);
+            let filteredOrders = allOrdersMemory.filter(o => o.createdAt >= start && o.createdAt <= end);
+            if (selectedBranchId) filteredOrders = filteredOrders.filter(o => o.branchId === selectedBranchId);
+
+            let totalRevenue = 0; let totalVolume = 0; let orderCount = filteredOrders.length;
+            filteredOrders.forEach(o => {
+                totalRevenue += parseFloat(o.grandTotal || 0);
+                totalVolume += parseFloat(o.volume || 0);
+            });
+            let avgOrderValue = orderCount > 0 ? (totalRevenue / orderCount) : 0;
+            document.getElementById('kpi_total_revenue').innerText = totalRevenue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+            document.getElementById('kpi_total_volume').innerText = totalVolume.toFixed(1);
+            document.getElementById('kpi_order_count').innerText = orderCount;
+            document.getElementById('kpi_avg_order_value').innerText = avgOrderValue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+
+            const dailyData = {};
+            let current = new Date(start);
+            while(current <= end) {
+                const dateStr = current.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
+                dailyData[dateStr] = { revenue: 0, volume: 0, count: 0 };
+                current.setDate(current.getDate() + 1);
+            }
+            filteredOrders.forEach(o => {
+                const dateKey = new Date(o.createdAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
+                if (dailyData[dateKey]) {
+                    dailyData[dateKey].revenue += parseFloat(o.grandTotal || 0);
+                    dailyData[dateKey].volume += parseFloat(o.volume || 0);
+                    dailyData[dateKey].count += 1;
+                }
+            });
+
+            const labels = Object.keys(dailyData);
+            const revenues = labels.map(l => dailyData[l].revenue);
+            const volumes = labels.map(l => dailyData[l].volume);
+            window.renderChart(labels, revenues, volumes);
+
+            const tableBody = document.getElementById('reportTableBody');
+            if (tableBody) {
+                tableBody.innerHTML = '';
+                labels.forEach(dateStr => {
+                    const data = dailyData[dateStr];
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-50/50 transition border-b border-slate-100';
+                    row.innerHTML = `<td class="p-4 font-bold text-slate-700">${dateStr}</td><td class="p-4 text-center font-bold text-slate-500">${data.count}</td><td class="p-4 text-right font-black text-slate-800">${data.volume.toFixed(1)} คิว</td><td class="p-4 text-right font-black text-emerald-600">฿${data.revenue.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>`;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            const customerGroups = {};
+            filteredOrders.forEach(o => {
+                const key = o.name + "_" + (o.phone || "");
+                if (!customerGroups[key]) {
+                    customerGroups[key] = { name: o.name, phone: o.phone, companyName: o.companyName || "", reqTaxInvoice: o.reqTaxInvoice || false, totalSpent: 0, totalVolume: 0, count: 0 };
+                }
+                customerGroups[key].totalSpent += parseFloat(o.grandTotal || 0);
+                customerGroups[key].totalVolume += parseFloat(o.volume || 0);
+                customerGroups[key].count += 1;
+            });
+            const topCustomers = Object.values(customerGroups).sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 10);
+            const topCustBody = document.getElementById('topCustomersTableBody');
+            if (topCustBody) {
+                topCustBody.innerHTML = '';
+                if (topCustomers.length === 0) {
+                    topCustBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีข้อมูลในช่วงเวลานี้</td></tr>`;
+                } else {
+                    topCustomers.forEach((cust, index) => {
+                        const displayName = cust.companyName ? `${cust.companyName} (${cust.name})` : cust.name;
+                        const row = document.createElement('tr');
+                        row.className = 'hover:bg-slate-50/50 transition border-b border-slate-100 text-xs sm:text-sm';
+                        row.innerHTML = `<td class="p-4 font-semibold text-slate-700 flex items-center min-w-0"><span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mr-2.5 border border-emerald-100">${index + 1}</span><span class="truncate" title="${displayName}">${displayName}</span></td><td class="p-4 text-center font-bold text-slate-500">${cust.count} บิล</td><td class="p-4 text-right font-black text-slate-800">${cust.totalVolume.toFixed(1)} คิว</td><td class="p-4 text-right font-black text-emerald-600">฿${cust.totalSpent.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>`;
+                        topCustBody.appendChild(row);
+                    });
+                }
+            }
+
+            const driverStats = {};
+            filteredOrders.forEach(o => {
+                if (o.status === 'delivered' && o.assignedTruck && o.assignedTruck.driverName) {
+                    const driverKey = o.assignedTruck.driverName;
+                    if (!driverStats[driverKey]) {
+                        driverStats[driverKey] = { name: o.assignedTruck.driverName, plate: o.assignedTruck.licensePlate || "", trips: 0, totalSecs: 0, passedKpi: 0 };
+                    }
+                    const startTime = o.deliveryStartTime || o.createdAt;
+                    const endTime = o.deliveredAt || o.lastGpsUpdate || (o.createdAt + 1800000);
+                    const elapsedSec = Math.max(0, Math.floor((endTime - startTime) / 1000));
+                    driverStats[driverKey].trips += 1;
+                    driverStats[driverKey].totalSecs += elapsedSec;
+                    if (elapsedSec <= 7200) driverStats[driverKey].passedKpi += 1;
+                }
+            });
+            const topDrivers = Object.values(driverStats).sort((a, b) => {
+                if (b.trips === a.trips) return (b.passedKpi / b.trips) - (a.passedKpi / a.trips);
+                return b.trips - a.trips;
+            });
+            const driverKpiBody = document.getElementById('driverKpiTableBody');
+            if (driverKpiBody) {
+                driverKpiBody.innerHTML = '';
+                if (topDrivers.length === 0) {
+                    driverKpiBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีประวัติการปิดงานในช่วงเวลานี้</td></tr>`;
+                } else {
+                    topDrivers.forEach((driver, index) => {
+                        const avgSecs = driver.trips > 0 ? driver.totalSecs / driver.trips : 0;
+                        const avgMins = Math.floor(avgSecs / 60);
+                        const kpiPassRate = Math.round((driver.passedKpi / driver.trips) * 100);
+                        const row = document.createElement('tr');
+                        row.className = 'hover:bg-slate-50/50 transition border-b border-slate-100';
+                        row.innerHTML = `<td class="p-4 font-bold text-slate-700">${index + 1}. ${driver.name}<div class="text-[10px] text-slate-400 font-medium">${driver.plate}</div></td><td class="p-4 text-center font-black text-slate-800">${driver.trips}</td><td class="p-4 text-center font-bold ${avgMins <= 120 ? 'text-emerald-600' : 'text-red-500'}">${avgMins} นาที</td><td class="p-4 text-center"><span class="px-2 py-1 rounded-md text-[11px] font-bold ${kpiPassRate >= 80 ? 'bg-emerald-100 text-emerald-700' : (kpiPassRate >= 50 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700')}">${kpiPassRate}%</span></td>`;
+                        driverKpiBody.appendChild(row);
+                    });
+                }
+            }
+
+            const branchStats = {};
+            allBranchesMemory.forEach(b => {
+                branchStats[b.id] = { name: b.name, province: b.province, orderCount: 0, volumeCount: 0, revenueCount: 0 };
+            });
+            allOrdersMemory.forEach(o => {
+                if (o.createdAt >= start && o.createdAt <= end) {
+                    const bId = o.branchId;
+                    if (bId && branchStats[bId]) {
+                        branchStats[bId].orderCount += 1;
+                        branchStats[bId].volumeCount += parseFloat(o.volume || 0);
+                        branchStats[bId].revenueCount += parseFloat(o.grandTotal || 0);
+                    }
+                }
+            });
+            const branchLeaderboard = Object.values(branchStats).sort((a, b) => b.revenueCount - a.revenueCount);
+            const branchLeaderBody = document.getElementById('branchLeaderboardTableBody');
+            if (branchLeaderBody) {
+                branchLeaderBody.innerHTML = '';
+                branchLeaderboard.forEach((branch, index) => {
+                    const alertClass = branch.revenueCount === 0 ? 'bg-red-50/50 text-red-600' : 'hover:bg-slate-50/50';
+                    const row = document.createElement('tr');
+                    row.className = `${alertClass} transition border-b border-slate-100 text-xs`;
+                    row.innerHTML = `<td class="p-3 font-bold flex items-center gap-2"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full ${index === 0 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'} text-[10px] font-bold">${index + 1}</span><span>${branch.name}</span></td><td class="p-3 text-center text-slate-500 font-medium">${branch.province}</td><td class="p-3 text-center font-bold">${branch.orderCount} บิล</td><td class="p-3 text-right font-bold text-slate-700">${branch.volumeCount.toFixed(1)} คิว</td><td class="p-3 text-right font-black ${branch.revenueCount > 0 ? 'text-emerald-600' : 'text-slate-400'}">฿${branch.revenueCount.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>`;
+                    branchLeaderBody.appendChild(row);
+                });
+            }
+        };
+
+        window.printSalesReport = function() {
+            const startVal = document.getElementById('analyticsStartDate').value;
+            const endVal = document.getElementById('analyticsEndDate').value;
+            const selectedBranchId = document.getElementById('analyticsBranchSelect').value;
+            if(!startVal || !endVal) { window.showModal('แจ้งเตือน', 'กรุณาเลือกช่วงวันที่ต้องการออกรายงานก่อนพิมพ์ครับ', 'error'); return; }
+
+            const start = new Date(startVal).setHours(0,0,0,0);
+            const end = new Date(endVal).setHours(23,59,59,999);
+
+            let filteredOrders = allOrdersMemory.filter(o => o.createdAt >= start && o.createdAt <= end);
+            let selectedBranchName = "ทุกสาขารวมกัน";
+            if (selectedBranchId) {
+                filteredOrders = filteredOrders.filter(o => o.branchId === selectedBranchId);
+                const branchObj = allBranchesMemory.find(b => b.id === selectedBranchId);
+                if (branchObj) selectedBranchName = `${branchObj.name} (${branchObj.province})`;
+            }
+
+            let totalRevenue = 0; let totalVolume = 0; let orderCount = filteredOrders.length;
+            filteredOrders.forEach(o => {
+                totalRevenue += parseFloat(o.grandTotal || 0);
+                totalVolume += parseFloat(o.volume || 0);
+            });
+            let avgOrderValue = orderCount > 0 ? (totalRevenue / orderCount) : 0;
+
+            const fmtTh = (d) => new Date(d).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+            document.getElementById('printReportRange').innerText = `${fmtTh(start)} - ${fmtTh(end)}`;
+            document.getElementById('printReportDate').innerText = new Date().toLocaleDateString('th-TH');
+            document.getElementById('printReportBranchName').innerText = selectedBranchName;
+
+            document.getElementById('print_kpi_revenue').innerText = totalRevenue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+            document.getElementById('print_kpi_volume').innerText = totalVolume.toFixed(1);
+            document.getElementById('print_kpi_count').innerText = orderCount;
+            document.getElementById('print_kpi_avg').innerText = avgOrderValue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+
+            const printBranchLeaderboardTableBody = document.getElementById('printBranchLeaderboardTableBody');
+            if (printBranchLeaderboardTableBody) {
+                printBranchLeaderboardTableBody.innerHTML = '';
+                const branchStats = {};
+                allBranchesMemory.forEach(b => { branchStats[b.id] = { name: b.name, province: b.province, orderCount: 0, volumeCount: 0, revenueCount: 0 }; });
+                allOrdersMemory.forEach(o => {
+                    if (o.createdAt >= start && o.createdAt <= end) {
+                        const bId = o.branchId;
+                        if (bId && branchStats[bId]) {
+                            branchStats[bId].orderCount += 1;
+                            branchStats[bId].volumeCount += parseFloat(o.volume || 0);
+                            branchStats[bId].revenueCount += parseFloat(o.grandTotal || 0);
+                        }
+                    }
+                });
+                const branchLeaderboard = Object.values(branchStats).sort((a, b) => b.revenueCount - a.revenueCount);
+                branchLeaderboard.forEach((branch, index) => {
+                    const row = document.createElement('tr');
+                    row.className = 'border-b border-slate-200 text-xs';
+                    row.innerHTML = `<td class="p-2 font-bold">${index + 1}. ${branch.name}</td><td class="p-2 text-center text-slate-500">${branch.province}</td><td class="p-2 text-center">${branch.orderCount} บิล</td><td class="p-2 text-right">${branch.volumeCount.toFixed(1)} คิว</td><td class="p-2 text-right font-bold">฿${branch.revenueCount.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>`;
+                    printBranchLeaderboardTableBody.appendChild(row);
+                });
+            }
+
+            const customerGroups = {};
+            filteredOrders.forEach(o => {
+                const key = o.name + "_" + (o.phone || "");
+                if (!customerGroups[key]) { customerGroups[key] = { name: o.name, phone: o.phone, companyName: o.companyName || "", totalSpent: 0, totalVolume: 0, count: 0 }; }
+                customerGroups[key].totalSpent += parseFloat(o.grandTotal || 0);
+                customerGroups[key].totalVolume += parseFloat(o.volume || 0);
+                customerGroups[key].count += 1;
+            });
+            const topCustomers = Object.values(customerGroups).sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 10);
+            const printTopCustBody = document.getElementById('printTopCustomersTableBody');
+            if (printTopCustBody) {
+                printTopCustBody.innerHTML = '';
+                if (topCustomers.length === 0) {
+                    printTopCustBody.innerHTML = `<tr><td colspan="3" class="p-2 text-center text-slate-400">ไม่มีข้อมูลในช่วงเวลานี้</td></tr>`;
+                } else {
+                    topCustomers.forEach((cust, index) => {
+                        const displayName = cust.companyName ? `${cust.companyName} (${cust.name})` : cust.name;
+                        const row = document.createElement('tr');
+                        row.className = 'border-b border-slate-200';
+                        row.innerHTML = `<td class="p-2 font-bold">${index + 1}. ${displayName}</td><td class="p-2 text-center">${cust.count} บิล</td><td class="p-2 text-right font-bold">฿${cust.totalSpent.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>`;
+                        printTopCustBody.appendChild(row);
+                    });
+                }
+            }
+
+            const driverStats = {};
+            filteredOrders.forEach(o => {
+                if (o.status === 'delivered' && o.assignedTruck && o.assignedTruck.driverName) {
+                    const driverKey = o.assignedTruck.driverName;
+                    if (!driverStats[driverKey]) { driverStats[driverKey] = { name: o.assignedTruck.driverName, trips: 0, totalSecs: 0, passedKpi: 0 }; }
+                    const startTime = o.deliveryStartTime || o.createdAt;
+                    const endTime = o.deliveredAt || o.lastGpsUpdate || (o.createdAt + 1800000);
+                    const elapsedSec = Math.max(0, Math.floor((endTime - startTime) / 1000));
+                    driverStats[driverKey].trips += 1;
+                    driverStats[driverKey].totalSecs += elapsedSec;
+                    if (elapsedSec <= 7200) driverStats[driverKey].passedKpi += 1;
+                }
+            });
+            const topDrivers = Object.values(driverStats).sort((a, b) => b.trips - a.trips);
+            const printDriverKpiBody = document.getElementById('printDriverKpiTableBody');
+            if (printDriverKpiBody) {
+                printDriverKpiBody.innerHTML = '';
+                if (topDrivers.length === 0) {
+                    printDriverKpiBody.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-slate-400">ไม่มีข้อมูลพนักงานในช่วงเวลานี้</td></tr>`;
+                } else {
+                    topDrivers.forEach((driver) => {
+                        const avgSecs = driver.trips > 0 ? driver.totalSecs / driver.trips : 0;
+                        const avgMins = Math.floor(avgSecs / 60);
+                        const kpiPassRate = Math.round((driver.passedKpi / driver.trips) * 100);
+                        const row = document.createElement('tr');
+                        row.className = 'border-b border-slate-200';
+                        row.innerHTML = `<td class="p-2 font-bold">${driver.name}</td><td class="p-2 text-center">${driver.trips}</td><td class="p-2 text-center font-bold ${avgMins <= 120 ? 'text-emerald-600' : 'text-red-500'}">${avgMins} นาที</td><td class="p-2 text-center font-bold ${kpiPassRate >= 80 ? 'text-emerald-600' : (kpiPassRate >= 50 ? 'text-amber-600' : 'text-red-600')}">${kpiPassRate}%</td>`;
+                        printDriverKpiBody.appendChild(row);
+                    });
+                }
+            }
+
+            document.body.classList.add('print-report');
+            document.body.classList.remove('print-invoice', 'print-delivery-ticket');
+            window.print();
+        };
+
+        // 4. Firebase Database Functions
+        window.setupDatabaseListener = function() {
+            if (!currentUser && !isOfflineMode) return;
+            if (!db) return;
+            
+            onSnapshot(collection(db, branchesCollectionPath), (snapshot) => {
+                allBranchesMemory = [];
+                snapshot.forEach(doc => allBranchesMemory.push({id: doc.id, ...doc.data()}));
+                if (document.getElementById('adminSettingsView').classList.contains('active')) window.renderBranchesGrid();
+                if (window.populateBranchSelectInTruckForm) window.populateBranchSelectInTruckForm();
+                if (window.populateBranchSelectorInAnalytics) window.populateBranchSelectorInAnalytics();
+                if (document.getElementById('adminListView').classList.contains('active')) window.renderOrdersGrid();
+            }, (error) => console.error(error));
+
+            onSnapshot(collection(db, trucksCollectionPath), (snapshot) => {
+                allTrucksMemory = [];
+                snapshot.forEach(doc => allTrucksMemory.push({id: doc.id, ...doc.data()}));
+                if (document.getElementById('adminTrucksView').classList.contains('active')) window.renderTrucksGrid();
+                if (document.getElementById('adminListView').classList.contains('active')) window.renderOrdersGrid();
+            }, (error) => console.error(error));
+
+            const ordersRef = collection(db, ordersCollectionPath);
+            onSnapshot(ordersRef, (snapshot) => {
+                allOrdersMemory = [];
+                snapshot.forEach(doc => { allOrdersMemory.push({ id: doc.id, ...doc.data() }); });
+                allOrdersMemory.sort((a, b) => b.createdAt - a.createdAt);
+                if (document.getElementById('adminListView').classList.contains('active')) window.renderOrdersGrid();
+                if (document.getElementById('adminReportView').classList.contains('active')) window.generateAnalyticsReport();
+            }, (error) => console.error(error));
+        };
+
+        window.setupPriceSettingsListener = function() {
+            if (isOfflineMode) return;
+            if (!db) return;
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const settingsDocRef = typeof __firebase_config !== 'undefined' ? doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'prices') : doc(db, 'settings', 'prices');
+
+            onSnapshot(settingsDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const kscs = ['180', '210', '240', '280', '300', '320', '350', '380', '400'];
+                    kscs.forEach(k => {
+                        const activeEl = document.getElementById(`setting_active_${k}`);
+                        const fullPriceEl = document.getElementById(`setting_full_price_${k}`);
+                        const priceEl = document.getElementById(`setting_price_${k}`);
+                        if(activeEl) { activeEl.checked = data[`active_${k}`] !== false; window.toggleKscRow(k); }
+                        if(fullPriceEl) fullPriceEl.value = data[`full_price_${k}`] || '';
+                        if(priceEl) priceEl.value = data[`price_${k}`] || '';
+                    });
+                    document.getElementById('setting_shipping_fee').value = data.shipping_fee || 500;
+                    priceSettings = { ...priceSettings, ...data };
+                }
+            }, (error) => console.error(error));
+        };
+
+        // 5. Branch Management Functions
+        window.populateBranchSelectorInAnalytics = function() {
+            const select = document.getElementById('analyticsBranchSelect');
+            if(!select) return;
+            const currentVal = select.value;
+            select.innerHTML = '<option value="">-- ทุกสาขารวมกัน --</option>';
+            allBranchesMemory.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.id; opt.text = `${b.name} (${b.province})`;
+                if (b.id === currentVal) opt.selected = true;
+                select.appendChild(opt);
+            });
+        };
+
         window.handleBranchQrUpload = function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1163,46 +1431,27 @@
             const branchDist = document.getElementById('branchDist').value.trim();
             const branchAddr = document.getElementById('branchAddr').value.trim();
             const branchPhone = document.getElementById('branchPhone').value.trim();
-            
             const bankName = document.getElementById('branchBankName').value.trim();
             const bankNo = document.getElementById('branchBankNo').value.trim();
             const bankAcc = document.getElementById('branchBankAcc').value.trim();
 
-            if(!branchName || !branchProv || !branchAddr || !branchPhone || !bankName || !bankNo) {
-                window.showModal('แจ้งเตือน', 'กรุณากรอกข้อมูลสาขาและบัญชีรับเงินให้ครบถ้วน');
-                return;
-            }
+            if(!branchName || !branchProv || !branchAddr || !branchPhone || !bankName || !bankNo) { window.showModal('แจ้งเตือน', 'กรุณากรอกข้อมูลสาขาและบัญชีรับเงินให้ครบถ้วน'); return; }
 
             try {
                 await addDoc(collection(db, branchesCollectionPath), {
-                    name: branchName,
-                    province: branchProv,
-                    district: branchDist,
-                    address: branchAddr,
-                    phone: branchPhone,
-                    bank_name: bankName,
-                    bank_no: bankNo,
-                    bank_account: bankAcc,
-                    qr_image: branchQrBase64,
-                    createdAt: Date.now()
+                    name: branchName, province: branchProv, district: branchDist, address: branchAddr, phone: branchPhone,
+                    bank_name: bankName, bank_no: bankNo, bank_account: bankAcc, qr_image: branchQrBase64, createdAt: Date.now()
                 });
-                
                 document.getElementById('addBranchForm').reset();
                 window.removeBranchQr(null);
                 window.showModal('สำเร็จ', 'เพิ่มข้อมูลสาขาใหม่ลงในระบบแล้ว', 'success');
-            } catch (error) {
-                console.error(error);
-                window.showModal('ข้อผิดพลาด', 'ไม่สามารถบันทึกข้อมูลสาขาได้', 'error');
-            }
+            } catch (error) { window.showModal('ข้อผิดพลาด', 'ไม่สามารถบันทึกข้อมูลสาขาได้', 'error'); }
         };
 
         window.deleteBranch = async function(id) {
             window.showConfirm('ลบสาขา', 'คุณยืนยันที่จะลบข้อมูลสาขานี้ออกจากระบบใช่หรือไม่? รถโม่และออเดอร์ที่ผูกกับสาขานี้อาจได้รับผลกระทบ', async () => {
-                try { 
-                    await deleteDoc(doc(db, branchesCollectionPath, id)); 
-                } catch(e) { 
-                    window.showModal('ผิดพลาด', 'ลบข้อมูลไม่สำเร็จ', 'error'); 
-                }
+                try { await deleteDoc(doc(db, branchesCollectionPath, id)); } 
+                catch(e) { window.showModal('ผิดพลาด', 'ลบข้อมูลไม่สำเร็จ', 'error'); }
             });
         };
 
@@ -1210,27 +1459,17 @@
             const tbody = document.getElementById('branchesTableBody');
             if(!tbody) return;
             tbody.innerHTML = '';
-
             if (allBranchesMemory.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400 font-medium">ยังไม่มีข้อมูลสาขาในระบบ กรุณาเพิ่มสาขาแรก</td></tr>`;
                 return;
             }
-
             allBranchesMemory.forEach(b => {
                 const tr = document.createElement('tr');
                 tr.className = 'border-b border-slate-100 hover:bg-slate-50/50';
                 tr.innerHTML = `
-                    <td class="p-3 font-black text-emerald-700">${b.name}</td>
-                    <td class="p-3 text-sm text-slate-600">${b.province}</td>
-                    <td class="p-3">
-                        <p class="font-bold text-slate-800 text-xs">${b.bank_name}</p>
-                        <p class="text-[10px] text-slate-500 font-mono">${b.bank_no}</p>
-                    </td>
-                    <td class="p-3 text-center">
-                        <button onclick="window.deleteBranch('${b.id}')" class="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-lg font-bold text-xs transition">
-                            ลบ
-                        </button>
-                    </td>
+                    <td class="p-3 font-black text-emerald-700">${b.name}</td><td class="p-3 text-sm text-slate-600">${b.province}</td>
+                    <td class="p-3"><p class="font-bold text-slate-800 text-xs">${b.bank_name}</p><p class="text-[10px] text-slate-500 font-mono">${b.bank_no}</p></td>
+                    <td class="p-3 text-center"><button onclick="window.deleteBranch('${b.id}')" class="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-lg font-bold text-xs transition">ลบ</button></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1239,16 +1478,11 @@
         window.populateBranchSelectInTruckForm = function() {
             const select = document.getElementById('truckBranchId');
             if (!select) return;
-            
-            select.innerHTML = '<option value="">-- เลือกสาขาที่คนขับสังกัด --</option>';
-            allBranchesMemory.forEach(b => {
-                select.innerHTML += `<option value="${b.id}">${b.name} (${b.province})</option>`;
-            });
+            select.innerHTML = '<option value="">-- เลือกสาขา --</option>';
+            allBranchesMemory.forEach(b => { select.innerHTML += `<option value="${b.id}">${b.name} (${b.province})</option>`; });
         };
 
-        // ----------------------------------------------------
-        // จัดการรถโม่และคนขับ (Trucks Management)
-        // ----------------------------------------------------
+        // 6. Truck Management Functions
         window.saveTruck = async function(event) {
             event.preventDefault();
             const branchId = document.getElementById('truckBranchId').value;
@@ -1256,33 +1490,19 @@
             const truckDriver = document.getElementById('truckDriver').value.trim();
             const truckPhone = document.getElementById('truckPhone').value.trim();
 
-            if(!branchId || !truckPlate || !truckDriver || !truckPhone) {
-                window.showModal('แจ้งเตือน', 'กรุณากรอกข้อมูลและเลือกสาขาให้ครบถ้วน');
-                return;
-            }
+            if(!branchId || !truckPlate || !truckDriver || !truckPhone) { window.showModal('แจ้งเตือน', 'กรุณากรอกข้อมูลและเลือกสาขาให้ครบถ้วน'); return; }
 
             try {
-                await addDoc(collection(db, trucksCollectionPath), {
-                    branchId: branchId,
-                    licensePlate: truckPlate,
-                    driverName: truckDriver,
-                    phone: truckPhone,
-                    createdAt: Date.now()
-                });
+                await addDoc(collection(db, trucksCollectionPath), { branchId, licensePlate: truckPlate, driverName: truckDriver, phone: truckPhone, createdAt: Date.now() });
                 document.getElementById('addTruckForm').reset();
                 window.showModal('สำเร็จ', 'เพิ่มข้อมูลรถและพนักงานขับรถลงในระบบแล้ว', 'success');
-            } catch (error) {
-                window.showModal('ข้อผิดพลาด', 'ไม่สามารถบันทึกข้อมูลรถได้', 'error');
-            }
+            } catch (error) { window.showModal('ข้อผิดพลาด', 'ไม่สามารถบันทึกข้อมูลรถได้', 'error'); }
         };
 
         window.deleteTruck = async function(id) {
             window.showConfirm('ลบข้อมูลรถ', 'คุณยืนยันที่จะลบข้อมูลรถคันนี้ออกจากระบบใช่หรือไม่?', async () => {
-                try { 
-                    await deleteDoc(doc(db, trucksCollectionPath, id)); 
-                } catch(e) { 
-                    window.showModal('ผิดพลาด', 'ลบข้อมูลไม่สำเร็จ', 'error'); 
-                }
+                try { await deleteDoc(doc(db, trucksCollectionPath, id)); } 
+                catch(e) { window.showModal('ผิดพลาด', 'ลบข้อมูลไม่สำเร็จ', 'error'); }
             });
         };
 
@@ -1290,85 +1510,31 @@
             const tbody = document.getElementById('trucksTableBody');
             if(!tbody) return;
             tbody.innerHTML = '';
-
             if (allTrucksMemory.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400 font-medium">ยังไม่มีข้อมูลรถโม่ปูนในระบบ</td></tr>`;
                 return;
             }
-
             allTrucksMemory.forEach(t => {
                 const branchName = allBranchesMemory.find(b => b.id === t.branchId)?.name || 'ไม่ทราบสาขา';
-                
                 const tr = document.createElement('tr');
                 tr.className = 'border-b border-slate-100 hover:bg-slate-50/50';
                 tr.innerHTML = `
-                    <td class="p-4">
-                        <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-[10px] font-bold border border-blue-200">${branchName}</span>
-                    </td>
-                    <td class="p-4 font-black text-slate-800">${t.licensePlate}</td>
-                    <td class="p-4 font-semibold">${t.driverName}</td>
-                    <td class="p-4 text-sm font-medium text-slate-500">${t.phone}</td>
-                    <td class="p-4 text-center">
-                        <button onclick="window.deleteTruck('${t.id}')" class="text-red-500 hover:text-white hover:bg-red-500 bg-red-50 p-2 rounded-lg font-bold text-[10px] transition active:scale-95">
-                            ลบ
-                        </button>
-                    </td>
+                    <td class="p-4"><span class="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-[10px] font-bold border border-blue-200">${branchName}</span></td>
+                    <td class="p-4 font-black text-slate-800">${t.licensePlate}</td><td class="p-4 font-semibold">${t.driverName}</td><td class="p-4 text-sm font-medium text-slate-500">${t.phone}</td>
+                    <td class="p-4 text-center"><button onclick="window.deleteTruck('${t.id}')" class="text-red-500 hover:text-white hover:bg-red-500 bg-red-50 p-2 rounded-lg font-bold text-[10px] transition active:scale-95">ลบ</button></td>
                 `;
                 tbody.appendChild(tr);
             });
         };
 
-        // ----------------------------------------------------
-        // ราคา (Price Settings - KSC Products)
-        // ----------------------------------------------------
-        window.savePriceOnlySettings = async function() {
-            if (!db) return;
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'prices');
-
-            try {
-                const docSnap = await getDoc(settingsDocRef);
-                const existingData = docSnap.exists() ? docSnap.data() : {};
-
-                const newPricesData = { ...existingData, updatedAt: Date.now() };
-
-                const kscs = ['180', '210', '240', '280', '300', '320', '350', '380', '400'];
-                kscs.forEach(k => {
-                    const activeEl = document.getElementById(`setting_active_${k}`);
-                    const fullPriceEl = document.getElementById(`setting_full_price_${k}`);
-                    const priceEl = document.getElementById(`setting_price_${k}`);
-                    
-                    if (activeEl) newPricesData[`active_${k}`] = activeEl.checked;
-                    if (fullPriceEl) newPricesData[`full_price_${k}`] = parseFloat(fullPriceEl.value) || 0;
-                    if (priceEl) newPricesData[`price_${k}`] = parseFloat(priceEl.value) || 0;
-                });
-
-                newPricesData.shipping_fee = parseFloat(document.getElementById('setting_shipping_fee').value) || 500;
-
-                await setDoc(settingsDocRef, newPricesData);
-                priceSettings = { ...priceSettings, ...newPricesData };
-                window.showModal("บันทึกราคาผลิตภัณฑ์สำเร็จ!", "อัปเดตสถานะและราคาคอนกรีตเรียลไทม์ไปยังหน้าหลักการจองของลูกค้าเรียบร้อยแล้ว", 'success');
-            } catch (error) {
-                console.error("Save prices failed:", error);
-                window.showModal("ข้อผิดพลาด", "ไม่สามารถบันทึกข้อมูลราคากลางคอนกรีตได้", 'error');
-            }
-        };
-
-        // ----------------------------------------------------
-        // ค้นหาคิวงาน
-        // ----------------------------------------------------
+        // 7. Order & Search Functions
         window.searchOrderHistory = function() {
             const phoneInput = document.getElementById('orderSearchPhone');
             if (!phoneInput) return;
             const phone = phoneInput.value.trim();
-
-            if (!phone) {
-                window.showModal('แจ้งเตือน', 'กรุณาระบุเบอร์โทรศัพท์ลูกค้าเพื่อใช้ค้นหาครับ', 'error');
-                return;
-            }
+            if (!phone) { window.showModal('แจ้งเตือน', 'กรุณาระบุเบอร์โทรศัพท์ลูกค้าเพื่อใช้ค้นหาครับ', 'error'); return; }
 
             historySearchResults = allOrdersMemory.filter(o => o.phone && o.phone.replace(/\s+/g, '').includes(phone.replace(/\s+/g, '')));
-            
             const resultsSection = document.getElementById('historySearchResultsSection');
             const resultsGrid = document.getElementById('historySearchResultsGrid');
             const clearBtn = document.getElementById('btnClearSearch');
@@ -1380,12 +1546,8 @@
             if (historySearchResults.length === 0) {
                 resultsGrid.innerHTML = `<div class="col-span-full py-10 text-center bg-white rounded-2xl border border-slate-200/80 text-slate-500 font-medium"><i data-lucide="inbox" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i> ไม่พบประวัติออเดอร์เก่าที่มีเบอร์โทร "${phone}"</div>`;
             } else {
-                historySearchResults.forEach(order => {
-                    const card = window.createOrderCardElement(order, true);
-                    resultsGrid.appendChild(card);
-                });
+                historySearchResults.forEach(order => { resultsGrid.appendChild(window.createOrderCardElement(order, true)); });
             }
-
             if(window.lucide) lucide.createIcons();
         };
 
@@ -1393,27 +1555,122 @@
             historySearchResults = [];
             const phoneInput = document.getElementById('orderSearchPhone');
             if (phoneInput) phoneInput.value = '';
-
             document.getElementById('historySearchResultsSection').classList.add('hidden');
             const clearBtn = document.getElementById('btnClearSearch');
             if (clearBtn) clearBtn.classList.add('hidden');
-            
             window.renderOrdersGrid();
         };
 
         window.updateOrderBranch = async function(orderId, branchId) {
+            try { await updateDoc(doc(db, ordersCollectionPath, orderId), { branchId: branchId, assignedTruck: null }); } 
+            catch(e) { window.showModal('ผิดพลาด', 'ไม่สามารถอัปเดตสาขาได้', 'error'); }
+        };
+
+        window.updateOrderStatus = async function(id, status) {
+            try { 
+                let dataToUpdate = { status: status };
+                if (status === 'batching') dataToUpdate.batchingStartTime = Date.now();
+                if (status === 'delivering') dataToUpdate.deliveryStartTime = Date.now();
+                if (status === 'delivered') dataToUpdate.deliveredAt = Date.now();
+                await updateDoc(doc(db, ordersCollectionPath, id), dataToUpdate); 
+            } catch(e) { window.showModal('ผิดพลาด', 'ไม่สามารถอัปเดตสถานะได้', 'error'); }
+        };
+
+        window.saveNewDateTime = async function(id) {
+            const dateVal = document.getElementById(`editDate-${id}`).value;
+            const timeVal = document.getElementById(`editTime-${id}`).value;
+            if(!dateVal || !timeVal) { window.showModal('แจ้งเตือน', 'กรุณาระบุวันและเวลาที่ถูกต้อง', 'error'); return; }
+            const [y, m, d] = dateVal.split('-');
+            const formattedDateTime = `${d}/${m}/${y} เวลา ${timeVal} น.`;
             try {
-                await updateDoc(doc(db, ordersCollectionPath, orderId), { 
-                    branchId: branchId,
-                    assignedTruck: null 
-                });
-            } catch(e) {
-                console.error(e);
-                window.showModal('ผิดพลาด', 'ไม่สามารถอัปเดตสาขาได้', 'error');
+                await updateDoc(doc(db, ordersCollectionPath, id), { deliveryDateTime: formattedDateTime });
+                window.showModal('สำเร็จ', 'อัปเดตกำหนดวันเวลาเทคอนกรีตเรียบร้อยแล้วครับ ระบบได้ส่งการแจ้งเตือนพิกัดใหม่ไปที่คนขับและลูกค้าแล้ว', 'success');
+                document.getElementById(`dateTimeEditor-${id}`).classList.add('hidden');
+            } catch(e) { window.showModal('ผิดพลาด', 'ไม่สามารถอัปเดตข้อมูลวันเวลาได้', 'error'); }
+        };
+
+        window.toggleEditDateTime = function(id) {
+            const editor = document.getElementById(`dateTimeEditor-${id}`);
+            if (editor) editor.classList.toggle('hidden');
+        };
+
+        window.assignTruck = async function(orderId, truckId) {
+            try {
+                if (!truckId) {
+                    await updateDoc(doc(db, ordersCollectionPath, orderId), { assignedTruck: null });
+                } else {
+                    const truck = allTrucksMemory.find(t => t.id === truckId);
+                    if (truck) {
+                        await updateDoc(doc(db, ordersCollectionPath, orderId), { 
+                            assignedTruck: { truckId: truck.id, driverName: truck.driverName, phone: truck.phone, licensePlate: truck.licensePlate }
+                        });
+                    }
+                }
+            } catch(e) { window.showModal('ผิดพลาด', 'ไม่สามารถมอบหมายรถได้', 'error'); }
+        };
+
+        window.deleteOrder = async function(id) {
+            window.showConfirm('ลบออเดอร์', 'คุณยืนยันที่จะลบรายการคิวงานนี้ใช่หรือไม่? (การกระทำนี้ลบถาวร)', async () => {
+                try { await deleteDoc(doc(db, ordersCollectionPath, id)); } 
+                catch(e) { window.showModal('ผิดพลาด', 'ลบออเดอร์ไม่สำเร็จ', 'error'); }
+            });
+        };
+
+        window.viewSlip = function(id) {
+            const order = allOrdersMemory.find(o => o.id === id);
+            if (order && order.slipImage) {
+                document.getElementById('slipImageDisplay').src = order.slipImage;
+                document.getElementById('slipRefDisplay').innerText = "REF: " + order.orderNumber;
+                document.getElementById('slipModal').classList.remove('hidden');
+            } else { window.showModal('แจ้งเตือน', 'ไม่พบรูปภาพสลิปโอนเงิน'); }
+        };
+
+        window.viewTaxInfo = function(id) {
+            const order = allOrdersMemory.find(o => o.id === id);
+            if (order && order.reqTaxInvoice) {
+                document.getElementById('taxCompanyName').innerText = order.companyName;
+                document.getElementById('taxIdDisplay').innerText = order.taxId;
+                document.getElementById('taxAddress').innerText = order.companyAddress;
+                document.getElementById('taxModal').classList.remove('hidden');
             }
         };
 
-        // 📝 CARD GENERATOR
+        window.toggleKscRow = function(ksc) {
+            const row = document.getElementById(`ksc_row_${ksc}`);
+            const cb = document.getElementById(`setting_active_${ksc}`);
+            if(cb && row) {
+                if(cb.checked) row.classList.remove('opacity-50', 'grayscale');
+                else row.classList.add('opacity-50', 'grayscale');
+            }
+        };
+
+        window.savePriceOnlySettings = async function() {
+            if (!db) return;
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'prices');
+
+            try {
+                const docSnap = await getDoc(settingsDocRef);
+                const existingData = docSnap.exists() ? docSnap.data() : {};
+                const newPricesData = { ...existingData, updatedAt: Date.now() };
+
+                const kscs = ['180', '210', '240', '280', '300', '320', '350', '380', '400'];
+                kscs.forEach(k => {
+                    const activeEl = document.getElementById(`setting_active_${k}`);
+                    const fullPriceEl = document.getElementById(`setting_full_price_${k}`);
+                    const priceEl = document.getElementById(`setting_price_${k}`);
+                    if (activeEl) newPricesData[`active_${k}`] = activeEl.checked;
+                    if (fullPriceEl) newPricesData[`full_price_${k}`] = parseFloat(fullPriceEl.value) || 0;
+                    if (priceEl) newPricesData[`price_${k}`] = parseFloat(priceEl.value) || 0;
+                });
+                newPricesData.shipping_fee = parseFloat(document.getElementById('setting_shipping_fee').value) || 500;
+
+                await setDoc(settingsDocRef, newPricesData);
+                priceSettings = { ...priceSettings, ...newPricesData };
+                window.showModal("บันทึกราคาผลิตภัณฑ์สำเร็จ!", "อัปเดตสถานะและราคาคอนกรีตเรียลไทม์ไปยังหน้าหลักการจองของลูกค้าเรียบร้อยแล้ว", 'success');
+            } catch (error) { window.showModal("ข้อผิดพลาด", "ไม่สามารถบันทึกข้อมูลราคากลางคอนกรีตได้", 'error'); }
+        };
+
         window.createOrderCardElement = function(order, isHistorySearch = false) {
             const statusColors = {
                 'received': 'bg-amber-100 text-amber-800 border-amber-300',
@@ -1449,9 +1706,7 @@
                     const parts = order.deliveryDateTime.split(' เวลา ');
                     if (parts.length === 2) {
                         const dateParts = parts[0].split('/');
-                        if (dateParts.length === 3) {
-                            defaultDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
-                        }
+                        if (dateParts.length === 3) defaultDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
                         defaultTime = parts[1].replace(' น.', '').trim();
                     }
                 }
@@ -1515,19 +1770,10 @@
                         
                         <div id="dateTimeEditor-${order.id}" class="hidden mt-3 space-y-2 pt-3 border-t border-slate-200">
                             <div class="grid grid-cols-2 gap-2">
-                                <div class="space-y-1">
-                                    <span class="text-[10px] font-bold text-slate-500 uppercase">วันที่</span>
-                                    <input type="date" id="editDate-${order.id}" value="${defaultDate}" class="modern-input w-full p-2 rounded-lg text-xs font-bold text-slate-800">
-                                </div>
-                                <div class="space-y-1">
-                                    <span class="text-[10px] font-bold text-slate-500 uppercase">เวลา</span>
-                                    <input type="time" id="editTime-${order.id}" value="${defaultTime}" class="modern-input w-full p-2 rounded-lg text-xs font-bold text-slate-800">
-                                </div>
+                                <div class="space-y-1"><span class="text-[10px] font-bold text-slate-500 uppercase">วันที่</span><input type="date" id="editDate-${order.id}" value="${defaultDate}" class="modern-input w-full p-2 rounded-lg text-xs font-bold text-slate-800"></div>
+                                <div class="space-y-1"><span class="text-[10px] font-bold text-slate-500 uppercase">เวลา</span><input type="time" id="editTime-${order.id}" value="${defaultTime}" class="modern-input w-full p-2 rounded-lg text-xs font-bold text-slate-800"></div>
                             </div>
-                            <div class="flex justify-end gap-2 pt-2">
-                                <button onclick="window.toggleEditDateTime('${order.id}')" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-lg text-xs font-bold transition">ยกเลิก</button>
-                                <button onclick="window.saveNewDateTime('${order.id}')" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold shadow-sm transition">บันทึก</button>
-                            </div>
+                            <div class="flex justify-end gap-2 pt-2"><button onclick="window.toggleEditDateTime('${order.id}')" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-lg text-xs font-bold transition">ยกเลิก</button><button onclick="window.saveNewDateTime('${order.id}')" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold shadow-sm transition">บันทึก</button></div>
                         </div>
                     </div>
 
@@ -1546,7 +1792,6 @@
                         ${assignedBranchId ? `<p class="text-[9px] text-emerald-600 mt-1.5 text-right font-medium">แสดงเฉพาะรถในสาขาที่เลือก</p>` : ''}
                     </div>
 
-                    <!-- Action Buttons -->
                     <div class="grid grid-cols-2 gap-2 mt-auto">
                         <div class="flex gap-1 min-w-0">
                             ${(!isCash && !isCredit && order.slipImage && order.slipImage.length > 0) ? `
@@ -1554,20 +1799,11 @@
                                     <i data-lucide="image" class="w-4 h-4 mb-0.5"></i> สลิปโอน
                                 </button>
                             ` : `<div class="flex-1 bg-slate-50 text-slate-400 text-[10px] sm:text-xs font-bold py-2 rounded-xl flex flex-col items-center justify-center border border-slate-100 truncate"><i data-lucide="image-off" class="w-4 h-4 mb-0.5"></i> ไม่มีสลิป</div>`}
-                            
-                            ${order.reqTaxInvoice ? `
-                                <button onclick="window.viewTaxInfo('${order.id}')" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center border border-blue-200 truncate">
-                                    <i data-lucide="file-text" class="w-4 h-4 mb-0.5"></i> ภาษี
-                                </button>
-                            ` : ''}
+                            ${order.reqTaxInvoice ? `<button onclick="window.viewTaxInfo('${order.id}')" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center border border-blue-200 truncate"><i data-lucide="file-text" class="w-4 h-4 mb-0.5"></i> ภาษี</button>` : ''}
                         </div>
                         <div class="flex gap-1 min-w-0">
-                            <button onclick="window.printDocument('${order.id}')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center shadow-sm truncate">
-                                <i data-lucide="printer" class="w-4 h-4 mb-0.5"></i> ใบเสร็จ
-                            </button>
-                            <button onclick="window.printDeliveryTicket('${order.id}')" ${!isTicketPrintable ? 'disabled class="flex-1 bg-slate-100 text-slate-400 text-[10px] sm:text-xs font-bold py-2 rounded-xl flex flex-col items-center justify-center border border-slate-200 cursor-not-allowed truncate"' : 'class="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center shadow-sm truncate"'}>
-                                <i data-lucide="receipt" class="w-4 h-4 mb-0.5"></i> ใบส่งของ
-                            </button>
+                            <button onclick="window.printDocument('${order.id}')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center shadow-sm truncate"><i data-lucide="printer" class="w-4 h-4 mb-0.5"></i> ใบเสร็จ</button>
+                            <button onclick="window.printDeliveryTicket('${order.id}')" ${!isTicketPrintable ? 'disabled class="flex-1 bg-slate-100 text-slate-400 text-[10px] sm:text-xs font-bold py-2 rounded-xl flex flex-col items-center justify-center border border-slate-200 cursor-not-allowed truncate"' : 'class="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center shadow-sm truncate"'}><i data-lucide="receipt" class="w-4 h-4 mb-0.5"></i> ใบส่งของ</button>
                         </div>
                     </div>
                 </div>
@@ -1580,9 +1816,7 @@
                         <option value="delivering" ${order.status === 'delivering' ? 'selected' : ''}>🚛 4. กำลังเดินทาง</option>
                         <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>✅ 5. ปิดงาน</option>
                     </select>
-                    <button onclick="window.deleteOrder('${order.id}')" class="w-10 h-10 flex items-center justify-center rounded-xl text-red-500 hover:bg-red-50 hover:border-red-200 border border-transparent transition shrink-0">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
+                    <button onclick="window.deleteOrder('${order.id}')" class="w-10 h-10 flex items-center justify-center rounded-xl text-red-500 hover:bg-red-50 hover:border-red-200 border border-transparent transition shrink-0"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                 </div>
             `;
             return card;
@@ -1595,15 +1829,12 @@
             
             if(!activeGrid || !completedTodayGrid) return;
 
-            activeGrid.innerHTML = '';
-            completedTodayGrid.innerHTML = '';
+            activeGrid.innerHTML = ''; completedTodayGrid.innerHTML = '';
 
             if(allOrdersMemory.length === 0) {
                 activeGrid.innerHTML = `<div class="col-span-full py-16 text-center bg-white rounded-3xl border border-slate-200"><div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="inbox" class="w-8 h-8 text-slate-300"></i></div><p class="text-slate-500 font-bold">ยังไม่มีคิวงานเข้าในระบบ</p></div>`;
-                completedTodayGrid.innerHTML = `<div class="col-span-full py-10 text-center bg-white rounded-3xl border border-slate-200/60 text-slate-400 text-sm font-medium">ยังไม่มีงานเสร็จสิ้นของวันนี้</div>`;
-                summaryContainer.innerHTML = ''; 
-                if(window.lucide) lucide.createIcons();
-                return;
+                completedTodayGrid.innerHTML = `<div class="col-span-full py-10 text-center bg-white rounded-2xl border border-slate-200/60 text-slate-400 text-sm font-medium">ยังไม่มีงานเสร็จสิ้นของวันนี้</div>`;
+                summaryContainer.innerHTML = ''; if(window.lucide) lucide.createIcons(); return;
             }
 
             const productionMap = {}; let totalPending = 0;
@@ -1626,155 +1857,41 @@
             summaryContainer.innerHTML = summaryHtml;
 
             const todayDateStr = new Date().toDateString();
-            let activeCount = 0;
-            let completedTodayCount = 0;
+            let activeCount = 0; let completedTodayCount = 0;
 
             allOrdersMemory.forEach(order => {
                 const isActive = ['received', 'confirmed', 'batching', 'delivering'].includes(order.status);
                 let isCompletedToday = false;
                 if (order.status === 'delivered') {
                     const orderDate = order.deliveredAt ? new Date(order.deliveredAt) : (order.createdAt ? new Date(order.createdAt) : null);
-                    if (orderDate && orderDate.toDateString() === todayDateStr) {
-                        isCompletedToday = true;
-                    }
+                    if (orderDate && orderDate.toDateString() === todayDateStr) { isCompletedToday = true; }
                 }
 
                 if (isActive) {
-                    const card = window.createOrderCardElement(order, false);
-                    activeGrid.appendChild(card);
-                    activeCount++;
+                    activeGrid.appendChild(window.createOrderCardElement(order, false)); activeCount++;
                 } else if (isCompletedToday) {
-                    const card = window.createOrderCardElement(order, false);
-                    completedTodayGrid.appendChild(card);
-                    completedTodayCount++;
+                    completedTodayGrid.appendChild(window.createOrderCardElement(order, false)); completedTodayCount++;
                 }
             });
 
-            if (activeCount === 0) {
-                activeGrid.innerHTML = `<div class="col-span-full py-12 text-center bg-white rounded-3xl border border-slate-200/80 text-slate-400 text-sm font-medium"><div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="check-square" class="w-6 h-6 text-slate-300"></i></div>ไม่มีคิวงานกำลังดำเนินการค้างอยู่</div>`;
-            }
-            if (completedTodayCount === 0) {
-                completedTodayGrid.innerHTML = `<div class="col-span-full py-12 text-center bg-white rounded-3xl border border-slate-200/80 text-slate-400 text-sm font-medium"><div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="clock-3" class="w-6 h-6 text-slate-300"></i></div>วันนี้ยังไม่มีคิวงานที่เทเสร็จสิ้นสมบูรณ์</div>`;
-            }
+            if (activeCount === 0) activeGrid.innerHTML = `<div class="col-span-full py-12 text-center bg-white rounded-3xl border border-slate-200/80 text-slate-400 text-sm font-medium"><div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="check-square" class="w-6 h-6 text-slate-300"></i></div>ไม่มีคิวงานกำลังดำเนินการค้างอยู่</div>`;
+            if (completedTodayCount === 0) completedTodayGrid.innerHTML = `<div class="col-span-full py-12 text-center bg-white rounded-3xl border border-slate-200/80 text-slate-400 text-sm font-medium"><div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="clock-3" class="w-6 h-6 text-slate-300"></i></div>วันนี้ยังไม่มีคิวงานที่เทเสร็จสิ้นสมบูรณ์</div>`;
 
             if(window.lucide) lucide.createIcons();
         };
 
-        window.updateOrderStatus = async function(id, status) {
-            try { 
-                let dataToUpdate = { status: status };
-                if (status === 'batching') dataToUpdate.batchingStartTime = Date.now();
-                if (status === 'delivering') dataToUpdate.deliveryStartTime = Date.now();
-                if (status === 'delivered') dataToUpdate.deliveredAt = Date.now();
-
-                await updateDoc(doc(db, ordersCollectionPath, id), dataToUpdate); 
-            } catch(e) { 
-                window.showModal('ผิดพลาด', 'ไม่สามารถอัปเดตสถานะได้', 'error'); 
-            }
-        };
-
-        window.saveNewDateTime = async function(id) {
-            const dateVal = document.getElementById(`editDate-${id}`).value;
-            const timeVal = document.getElementById(`editTime-${id}`).value;
-            
-            if(!dateVal || !timeVal) {
-                window.showModal('แจ้งเตือน', 'กรุณาระบุวันและเวลาที่ถูกต้อง', 'error');
-                return;
-            }
-
-            const [y, m, d] = dateVal.split('-');
-            const formattedDateTime = `${d}/${m}/${y} เวลา ${timeVal} น.`;
-
-            try {
-                await updateDoc(doc(db, ordersCollectionPath, id), { deliveryDateTime: formattedDateTime });
-                window.showModal('สำเร็จ', 'อัปเดตกำหนดวันเวลาเทคอนกรีตเรียบร้อยแล้วครับ ระบบได้ส่งการแจ้งเตือนพิกัดใหม่ไปที่คนขับและลูกค้าแล้ว', 'success');
-                document.getElementById(`dateTimeEditor-${id}`).classList.add('hidden');
-            } catch(e) {
-                window.showModal('ผิดพลาด', 'ไม่สามารถอัปเดตข้อมูลวันเวลาได้', 'error');
-            }
-        };
-
-        window.toggleEditDateTime = function(id) {
-            const editor = document.getElementById(`dateTimeEditor-${id}`);
-            if (editor) editor.classList.toggle('hidden');
-        };
-
-        window.assignTruck = async function(orderId, truckId) {
-            try {
-                if (!truckId) {
-                    await updateDoc(doc(db, ordersCollectionPath, orderId), { assignedTruck: null });
-                } else {
-                    const truck = allTrucksMemory.find(t => t.id === truckId);
-                    if (truck) {
-                        await updateDoc(doc(db, ordersCollectionPath, orderId), { 
-                            assignedTruck: {
-                                truckId: truck.id,
-                                driverName: truck.driverName,
-                                phone: truck.phone,
-                                licensePlate: truck.licensePlate
-                            }
-                        });
-                    }
-                }
-            } catch(e) {
-                console.error(e);
-                window.showModal('ผิดพลาด', 'ไม่สามารถมอบหมายรถได้', 'error');
-            }
-        };
-
-        window.deleteOrder = async function(id) {
-            window.showConfirm('ลบออเดอร์', 'คุณยืนยันที่จะลบรายการคิวงานนี้ใช่หรือไม่? (การกระทำนี้ลบถาวร)', async () => {
-                try { await deleteDoc(doc(db, ordersCollectionPath, id)); } 
-                catch(e) { window.showModal('ผิดพลาด', 'ลบออเดอร์ไม่สำเร็จ', 'error'); }
-            });
-        };
-
-        // ----------------------------------------------------
-        // Viewer Modals
-        // ----------------------------------------------------
-        window.viewSlip = function(id) {
-            const order = allOrdersMemory.find(o => o.id === id);
-            if (order && order.slipImage) {
-                document.getElementById('slipImageDisplay').src = order.slipImage;
-                document.getElementById('slipRefDisplay').innerText = "REF: " + order.orderNumber;
-                document.getElementById('slipModal').classList.remove('hidden');
-            } else {
-                window.showModal('แจ้งเตือน', 'ไม่พบรูปภาพสลิปโอนเงิน');
-            }
-        };
-
-        window.viewTaxInfo = function(id) {
-            const order = allOrdersMemory.find(o => o.id === id);
-            if (order && order.reqTaxInvoice) {
-                document.getElementById('taxCompanyName').innerText = order.companyName;
-                document.getElementById('taxIdDisplay').innerText = order.taxId;
-                document.getElementById('taxAddress').innerText = order.companyAddress;
-                document.getElementById('taxModal').classList.remove('hidden');
-            }
-        };
-
-        // 🚨 ฟังก์ชันพิมพ์ใบกำกับภาษี / ใบเสร็จรับเงิน
+        // 8. Document & Printer Viewers
         window.printDocument = function(orderId) {
             const order = allOrdersMemory.find(o => o.id === orderId);
-            if(!order) {
-                window.showModal('ข้อผิดพลาด', 'ไม่พบข้อมูลออเดอร์นี้', 'error');
-                return;
-            }
+            if(!order) { window.showModal('ข้อผิดพลาด', 'ไม่พบข้อมูลออเดอร์นี้', 'error'); return; }
 
-            const setVal = (id, val) => {
-                const el = document.getElementById(id);
-                if (el) el.innerText = val;
-            };
-
+            const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
             setVal('printDocNo', order.orderNumber);
-            const d = new Date(order.createdAt);
-            setVal('printCreateDate', d.toLocaleDateString('th-TH'));
-            
+            setVal('printCreateDate', new Date(order.createdAt).toLocaleDateString('th-TH'));
             setVal('printCustomerName', order.reqTaxInvoice ? order.companyName : order.name);
             
             const printDocTitle = document.getElementById('printDocTitle');
             const printCustomerCompanyInfo = document.getElementById('printCustomerCompanyInfo');
-            
             if(order.reqTaxInvoice) {
                 if(printDocTitle) printDocTitle.innerText = "ใบเสนอราคา / ใบกำกับภาษี";
                 if(printCustomerCompanyInfo) printCustomerCompanyInfo.innerHTML = `เลขประจำตัวผู้เสียภาษี: ${order.taxId}<br>ที่อยู่: ${order.companyAddress}`;
@@ -1804,584 +1921,102 @@
             setVal('printVat', order.vat ? order.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
             setVal('printGrandTotal', order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
 
-            setVal('invPrintHeaderBrand', "บริษัท โปรคอนกรีต ประเทศไทย จำกัด");
-            
-            // หาข้อมูลสาขาที่ผูกกับออเดอร์
-            let branchName = "สำนักงานใหญ่";
-            let branchAddress = "ไม่ระบุ";
-            let branchPhone = "-";
-            
+            let branchName = "สำนักงานใหญ่"; let branchAddress = "ไม่ระบุ"; let branchPhone = "-";
             if (order.branchId) {
                 const branch = allBranchesMemory.find(b => b.id === order.branchId);
-                if (branch) {
-                    branchName = branch.name;
-                    branchAddress = branch.address;
-                    branchPhone = branch.phone;
-                }
+                if (branch) { branchName = branch.name; branchAddress = branch.address; branchPhone = branch.phone; }
             }
             
+            setVal('invPrintHeaderBrand', "บริษัท โปรคอนกรีต ประเทศไทย จำกัด");
             setVal('invPrintBranchName', branchName);
             setVal('invPrintBranchAddress', branchAddress);
             setVal('invPrintBranchPhone', branchPhone);
 
             document.body.classList.add('print-invoice');
             document.body.classList.remove('print-report', 'print-delivery-ticket');
-
             window.print();
         };
 
-        // 🚨 ฟังก์ชันสำหรับสั่งจัดพิมพ์ "ใบจ่ายสินค้า / ใบส่งคอนกรีต"
         window.printDeliveryTicket = function(orderId) {
             const order = allOrdersMemory.find(o => o.id === orderId);
-            if(!order) {
-                window.showModal('ข้อผิดพลาด', 'ไม่พบข้อมูลออเดอร์นี้', 'error');
-                return;
-            }
+            if(!order) { window.showModal('ข้อผิดพลาด', 'ไม่พบข้อมูลออเดอร์นี้', 'error'); return; }
 
-            const setVal = (id, val) => {
-                const el = document.getElementById(id);
-                if (el) el.innerText = val;
-            };
-
+            const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
             setVal('ticketOrderNo', order.orderNumber);
             setVal('ticketPrintDate', new Date().toLocaleDateString('th-TH') + " " + new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}) + " น.");
-            
-            // ข้อมูลฝั่งผู้รับ
             setVal('ticketCustomerName', order.reqTaxInvoice ? order.companyName : order.name);
+            
             const ticketTaxInfo = document.getElementById('ticketTaxInfo');
             if (order.reqTaxInvoice && ticketTaxInfo) {
                 ticketTaxInfo.innerHTML = `เลขประจำตัวผู้เสียภาษีลูกค้า: ${order.taxId}<br>ที่อยู่บริษัท: ${order.companyAddress}`;
                 ticketTaxInfo.classList.remove('hidden');
-            } else if (ticketTaxInfo) {
-                ticketTaxInfo.classList.add('hidden');
-            }
+            } else if (ticketTaxInfo) { ticketTaxInfo.classList.add('hidden'); }
+            
             setVal('ticketCustomerPhone', order.phone);
-
-            // ข้อมูลการขนส่งและคนขับ
             setVal('ticketDriverName', order.assignedTruck ? `${order.assignedTruck.driverName}` : "ยังไม่ได้ระบุคนส่งปูน");
             setVal('ticketAddress', order.address || 'จัดส่งตามพิกัดแผนที่สั่งซื้อ');
-
-            // รายละเอียดสินค้า
             setVal('ticketStrength', order.strength);
             setVal('ticketVolume', parseFloat(order.volume || 0).toFixed(1));
             setVal('ticketGrandTotal', parseFloat(order.grandTotal || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 }));
 
-            // รายละเอียดบันทึกเวลา KPI
             const tBatch = document.getElementById('ticketBatchingTime');
-            if (tBatch) {
-                tBatch.innerText = order.batchingStartTime 
-                    ? new Date(order.batchingStartTime).toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}) + " น."
-                    : "-- : -- น. (ยังไม่ผสมปูน)";
-            }
+            if (tBatch) tBatch.innerText = order.batchingStartTime ? new Date(order.batchingStartTime).toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}) + " น." : "-- : -- น. (ยังไม่ผสมปูน)";
             const tDepart = document.getElementById('ticketDepartureTime');
-            if (tDepart) {
-                tDepart.innerText = order.deliveryStartTime 
-                    ? new Date(order.deliveryStartTime).toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}) + " น."
-                    : "-- : -- น. (ยังไม่ปล่อยรถ)";
-            }
+            if (tDepart) tDepart.innerText = order.deliveryStartTime ? new Date(order.deliveryStartTime).toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}) + " น." : "-- : -- น. (ยังไม่ปล่อยรถ)";
 
-            // ซิงค์โปรไฟล์ผู้ผลิตแบบไดนามิกลงใบส่งของ
-            setVal('ticketPrintHeaderBrand', "บริษัท โปรคอนกรีต ประเทศไทย จำกัด");
-            
-            // หาข้อมูลสาขาที่ผูกกับออเดอร์
-            let branchName = "สำนักงานใหญ่";
-            let branchAddress = "ไม่ระบุ";
-            let branchPhone = "-";
-            
+            let branchName = "สำนักงานใหญ่"; let branchAddress = "ไม่ระบุ"; let branchPhone = "-";
             if (order.branchId) {
                 const branch = allBranchesMemory.find(b => b.id === order.branchId);
-                if (branch) {
-                    branchName = branch.name;
-                    branchAddress = branch.address;
-                    branchPhone = branch.phone;
-                }
+                if (branch) { branchName = branch.name; branchAddress = branch.address; branchPhone = branch.phone; }
             }
-
+            
+            setVal('ticketPrintHeaderBrand', "บริษัท โปรคอนกรีต ประเทศไทย จำกัด");
             setVal('ticketPrintBranchName', branchName);
             setVal('ticketPrintBranchAddress', branchAddress);
             setVal('ticketPrintBranchPhone', branchPhone);
 
-            // ควบคุม Class เพื่อสั่งพิมพ์ใบจ่ายปูนเท่านั้น
             document.body.classList.add('print-delivery-ticket');
             document.body.classList.remove('print-invoice', 'print-report');
-
             window.print();
         };
 
-        // ----------------------------------------------------
-        // 📊 ระบบวิเคราะห์รายงานสถิติยอดขาย (Reports & Analytics)
-        // ----------------------------------------------------
-        
-        window.setReportPresetRange = function(range) {
-            const today = new Date();
-            let start = new Date();
+        // เริ่มต้นการดึงตัวแปรจาก Environment
+        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+            const canvasConfig = JSON.parse(__firebase_config);
+            app = initializeApp(canvasConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            ordersCollectionPath = `artifacts/${appId}/public/data/concrete_orders`;
+            trucksCollectionPath = `artifacts/${appId}/public/data/trucks`;
+            branchesCollectionPath = `artifacts/${appId}/public/data/branches`;
             
-            if (range === 'today') {
-                start = today;
-            } else if (range === 'week') {
-                start.setDate(today.getDate() - 7);
-            } else if (range === 'month') {
-                start = new Date(today.getFullYear(), today.getMonth(), 1);
-            }
-            
-            const fmt = (d) => [d.getFullYear(), ('0'+(d.getMonth()+1)).slice(-2), ('0'+d.getDate()).slice(-2)].join('-');
-            
-            document.getElementById('analyticsStartDate').value = fmt(start);
-            document.getElementById('analyticsEndDate').value = fmt(today);
-            window.generateAnalyticsReport();
-        };
-
-        window.generateAnalyticsReport = function() {
-            const startVal = document.getElementById('analyticsStartDate').value;
-            const endVal = document.getElementById('analyticsEndDate').value;
-            if(!startVal || !endVal) return;
-
-            const start = new Date(startVal).setHours(0,0,0,0);
-            const end = new Date(endVal).setHours(23,59,59,999);
-
-            const filteredOrders = allOrdersMemory.filter(o => o.createdAt >= start && o.createdAt <= end);
-
-            let totalRevenue = 0;
-            let totalVolume = 0;
-            let orderCount = filteredOrders.length;
-
-            filteredOrders.forEach(o => {
-                totalRevenue += parseFloat(o.grandTotal || 0);
-                totalVolume += parseFloat(o.volume || 0);
-            });
-
-            let avgOrderValue = orderCount > 0 ? (totalRevenue / orderCount) : 0;
-
-            document.getElementById('kpi_total_revenue').innerText = totalRevenue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-            document.getElementById('kpi_total_volume').innerText = totalVolume.toFixed(1);
-            document.getElementById('kpi_order_count').innerText = orderCount;
-            document.getElementById('kpi_avg_order_value').innerText = avgOrderValue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-
-            const dailyData = {};
-            let current = new Date(start);
-            while(current <= end) {
-                const dateStr = current.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
-                dailyData[dateStr] = { revenue: 0, volume: 0, count: 0 };
-                current.setDate(current.getDate() + 1);
-            }
-
-            filteredOrders.forEach(o => {
-                const dateKey = new Date(o.createdAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
-                if (dailyData[dateKey]) {
-                    dailyData[dateKey].revenue += parseFloat(o.grandTotal || 0);
-                    dailyData[dateKey].volume += parseFloat(o.volume || 0);
-                    dailyData[dateKey].count += 1;
-                }
-            });
-
-            const labels = Object.keys(dailyData);
-            const revenues = labels.map(l => dailyData[l].revenue);
-            const volumes = labels.map(l => dailyData[l].volume);
-
-            window.renderChart(labels, revenues, volumes);
-
-            const tableBody = document.getElementById('reportTableBody');
-            tableBody.innerHTML = '';
-
-            labels.forEach(dateStr => {
-                const data = dailyData[dateStr];
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-slate-50/50 transition border-b border-slate-100';
-                row.innerHTML = `
-                    <td class="p-4 font-bold text-slate-700">${dateStr}</td>
-                    <td class="p-4 text-center font-bold text-slate-500">${data.count}</td>
-                    <td class="p-4 text-right font-black text-slate-800">${data.volume.toFixed(1)} คิว</td>
-                    <td class="p-4 text-right font-black text-emerald-600">฿${data.revenue.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-
-            const customerGroups = {};
-            filteredOrders.forEach(o => {
-                const key = o.name + "_" + (o.phone || "");
-                if (!customerGroups[key]) {
-                    customerGroups[key] = {
-                        name: o.name,
-                        phone: o.phone,
-                        companyName: o.companyName || "",
-                        reqTaxInvoice: o.reqTaxInvoice || false,
-                        totalSpent: 0,
-                        totalVolume: 0,
-                        count: 0
-                    };
-                }
-                customerGroups[key].totalSpent += parseFloat(o.grandTotal || 0);
-                customerGroups[key].totalVolume += parseFloat(o.volume || 0);
-                customerGroups[key].count += 1;
-            });
-
-            const topCustomers = Object.values(customerGroups)
-                .sort((a, b) => b.totalSpent - a.totalSpent)
-                .slice(0, 10);
-
-            const topCustBody = document.getElementById('topCustomersTableBody');
-            topCustBody.innerHTML = '';
-
-            if (topCustomers.length === 0) {
-                topCustBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีข้อมูลยอดซื้อสะสมของลูกค้าในช่วงเวลานี้</td></tr>`;
-            } else {
-                topCustomers.forEach((cust, index) => {
-                    const displayName = cust.companyName ? `${cust.companyName} (${cust.name})` : cust.name;
-                    const row = document.createElement('tr');
-                    row.className = 'hover:bg-slate-50/50 transition border-b border-slate-100 text-xs sm:text-sm';
-                    row.innerHTML = `
-                        <td class="p-4 font-semibold text-slate-700 flex items-center">
-                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mr-2.5 border border-emerald-100">${index + 1}</span>
-                            <span class="truncate max-w-[150px] sm:max-w-xs" title="${displayName}">${displayName}</span>
-                        </td>
-                        <td class="p-4 text-center font-bold text-slate-500">${cust.count} บิล</td>
-                        <td class="p-4 text-right font-black text-slate-800">${cust.totalVolume.toFixed(1)} คิว</td>
-                        <td class="p-4 text-right font-black text-emerald-600">฿${cust.totalSpent.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>
-                    `;
-                    topCustBody.appendChild(row);
-                });
-            }
-
-            const driverStats = {};
-            filteredOrders.forEach(o => {
-                if (o.status === 'delivered' && o.assignedTruck && o.assignedTruck.driverName) {
-                    const driverKey = o.assignedTruck.driverName;
-                    if (!driverStats[driverKey]) {
-                        driverStats[driverKey] = {
-                            name: o.assignedTruck.driverName,
-                            plate: o.assignedTruck.licensePlate || "",
-                            trips: 0,
-                            totalSecs: 0,
-                            passedKpi: 0 // จำนวนเที่ยวที่เวลา <= 120 นาที
-                        };
+            const initCanvasAuth = async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
                     }
-                    
-                    const startTime = o.deliveryStartTime || o.createdAt;
-                    const endTime = o.deliveredAt || o.lastGpsUpdate || (o.createdAt + 1800000);
-                    const elapsedSec = Math.max(0, Math.floor((endTime - startTime) / 1000));
-                    
-                    driverStats[driverKey].trips += 1;
-                    driverStats[driverKey].totalSecs += elapsedSec;
-                    
-                    if (elapsedSec <= 7200) { // 120 นาที = 7200 วินาที
-                        driverStats[driverKey].passedKpi += 1;
-                    }
+                } catch (e) { console.error(e); }
+            };
+            initCanvasAuth();
+        } else {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            signInAnonymously(auth).catch((error) => { isOfflineMode = true; });
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) { 
+                currentUser = user; 
+                if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                    window.setupDatabaseListener(); 
+                    window.setupPriceSettingsListener();
                 }
-            });
-
-            const topDrivers = Object.values(driverStats).sort((a, b) => {
-                if (b.trips === a.trips) {
-                    return (b.passedKpi / b.trips) - (a.passedKpi / a.trips);
-                }
-                return b.trips - a.trips;
-            });
-
-            const driverKpiBody = document.getElementById('driverKpiTableBody');
-            driverKpiBody.innerHTML = '';
-            
-            if (topDrivers.length === 0) {
-                driverKpiBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีประวัติการปิดงานจัดส่งในช่วงเวลานี้</td></tr>`;
-            } else {
-                topDrivers.forEach((driver, index) => {
-                    const avgSecs = driver.trips > 0 ? driver.totalSecs / driver.trips : 0;
-                    const avgMins = Math.floor(avgSecs / 60);
-                    const kpiPassRate = Math.round((driver.passedKpi / driver.trips) * 100);
-                    
-                    const row = document.createElement('tr');
-                    row.className = 'hover:bg-slate-50/50 transition border-b border-slate-100';
-                    row.innerHTML = `
-                        <td class="p-4 font-bold text-slate-700">
-                            ${index + 1}. ${driver.name}
-                            <div class="text-[10px] text-slate-400 font-medium">${driver.plate}</div>
-                        </td>
-                        <td class="p-4 text-center font-black text-slate-800">${driver.trips}</td>
-                        <td class="p-4 text-center font-bold ${avgMins <= 120 ? 'text-emerald-600' : 'text-red-500'}">${avgMins} นาที</td>
-                        <td class="p-4 text-center">
-                            <span class="px-2 py-1 rounded-md text-[11px] font-bold ${kpiPassRate >= 80 ? 'bg-emerald-100 text-emerald-700' : (kpiPassRate >= 50 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700')}">
-                                ${kpiPassRate}%
-                            </span>
-                        </td>
-                    `;
-                    driverKpiBody.appendChild(row);
-                });
-            }
-        };
-
-        window.renderChart = function(labels, revenues, volumes) {
-            const ctx = document.getElementById('salesChart');
-            if (!ctx) return;
-
-            if (salesChartInstance) {
-                salesChartInstance.destroy();
-            }
-
-            salesChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'ยอดขายรวม (บาท)',
-                            data: revenues,
-                            backgroundColor: 'rgba(16, 185, 129, 0.2)', // Emerald bg
-                            borderColor: '#10b981', // Emerald border
-                            borderWidth: 2,
-                            borderRadius: 6,
-                            yAxisID: 'y_rev',
-                            type: 'bar'
-                        },
-                        {
-                            label: 'ปริมาณปูนรวม (คิว)',
-                            data: volumes,
-                            borderColor: '#0f172a', // Dark Slate
-                            backgroundColor: '#0f172a',
-                            borderWidth: 3,
-                            pointRadius: 4,
-                            tension: 0.3,
-                            yAxisID: 'y_vol',
-                            type: 'line'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y_rev: {
-                            type: 'linear',
-                            position: 'left',
-                            title: { display: true, text: 'ยอดขายรวม (บาท)', font: { family: 'Prompt', weight: 'bold' } },
-                            ticks: { font: { family: 'Prompt' } }
-                        },
-                        y_vol: {
-                            type: 'linear',
-                            position: 'right',
-                            title: { display: true, text: 'สถิติน้ำปูนรวม (คิว)', font: { family: 'Prompt', weight: 'bold' } },
-                            grid: { drawOnChartArea: false },
-                            ticks: { font: { family: 'Prompt' } }
-                        },
-                        x: {
-                            ticks: { font: { family: 'Prompt' } }
-                        }
-                    },
-                    plugins: {
-                        legend: { labels: { font: { family: 'Prompt', weight: 'semibold' } } }
-                    }
-                }
-            });
-        };
-
-        window.printSalesReport = function() {
-            const startVal = document.getElementById('analyticsStartDate').value;
-            const endVal = document.getElementById('analyticsEndDate').value;
-            if(!startVal || !endVal) return;
-
-            const start = new Date(startVal).setHours(0,0,0,0);
-            const end = new Date(endVal).setHours(23,59,59,999);
-
-            const filteredOrders = allOrdersMemory.filter(o => o.createdAt >= start && o.createdAt <= end);
-
-            let totalRevenue = 0;
-            let totalVolume = 0;
-            let orderCount = filteredOrders.length;
-
-            filteredOrders.forEach(o => {
-                totalRevenue += parseFloat(o.grandTotal || 0);
-                totalVolume += parseFloat(o.volume || 0);
-            });
-
-            let avgOrderValue = orderCount > 0 ? (totalRevenue / orderCount) : 0;
-
-            const fmtTh = (d) => new Date(d).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-            document.getElementById('printReportRange').innerText = `${fmtTh(start)} - ${fmtTh(end)}`;
-            document.getElementById('printReportDate').innerText = new Date().toLocaleDateString('th-TH');
-
-            document.getElementById('print_kpi_revenue').innerText = totalRevenue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-            document.getElementById('print_kpi_volume').innerText = totalVolume.toFixed(1);
-            document.getElementById('print_kpi_count').innerText = orderCount;
-            document.getElementById('print_kpi_avg').innerText = avgOrderValue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-
-            const printTableBody = document.getElementById('printReportTableBody');
-            printTableBody.innerHTML = '';
-
-            const dailyData = {};
-            let current = new Date(start);
-            while(current <= end) {
-                const dateStr = current.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
-                dailyData[dateStr] = { revenue: 0, volume: 0, count: 0 };
-                current.setDate(current.getDate() + 1);
-            }
-
-            filteredOrders.forEach(o => {
-                const dateKey = new Date(o.createdAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
-                if (dailyData[dateKey]) {
-                    dailyData[dateKey].revenue += parseFloat(o.grandTotal || 0);
-                    dailyData[dateKey].volume += parseFloat(o.volume || 0);
-                    dailyData[dateKey].count += 1;
-                }
-            });
-
-            Object.keys(dailyData).forEach(dateStr => {
-                const data = dailyData[dateStr];
-                const row = document.createElement('tr');
-                row.className = 'border-b border-slate-200';
-                row.innerHTML = `
-                    <td class="p-2 font-bold">${dateStr}</td>
-                    <td class="p-2 text-center">${data.count}</td>
-                    <td class="p-2 text-right">${data.volume.toFixed(1)} คิว</td>
-                    <td class="p-2 text-right font-bold">฿${data.revenue.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>
-                `;
-                printTableBody.appendChild(row);
-            });
-
-            const customerGroups = {};
-            filteredOrders.forEach(o => {
-                const key = o.name + "_" + (o.phone || "");
-                if (!customerGroups[key]) {
-                    customerGroups[key] = {
-                        name: o.name,
-                        phone: o.phone,
-                        companyName: o.companyName || "",
-                        reqTaxInvoice: o.reqTaxInvoice || false,
-                        totalSpent: 0,
-                        totalVolume: 0,
-                        count: 0
-                    };
-                }
-                customerGroups[key].totalSpent += parseFloat(o.grandTotal || 0);
-                customerGroups[key].totalVolume += parseFloat(o.volume || 0);
-                customerGroups[key].count += 1;
-            });
-
-            const topCustomers = Object.values(customerGroups)
-                .sort((a, b) => b.totalSpent - a.totalSpent)
-                .slice(0, 10);
-
-            const printTopCustBody = document.getElementById('printTopCustomersTableBody');
-            printTopCustBody.innerHTML = '';
-
-            if (topCustomers.length === 0) {
-                printTopCustBody.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-slate-400">ไม่มีข้อมูลในช่วงเวลานี้</td></tr>`;
-            } else {
-                topCustomers.forEach((cust, index) => {
-                    const displayName = cust.companyName ? `${cust.companyName} (${cust.name})` : cust.name;
-                    const row = document.createElement('tr');
-                    row.className = 'border-b border-slate-200';
-                    row.innerHTML = `
-                        <td class="p-2 font-bold">${index + 1}. ${displayName}</td>
-                        <td class="p-2 text-center">${cust.count} บิล</td>
-                        <td class="p-2 text-right">${cust.totalVolume.toFixed(1)} คิว</td>
-                        <td class="p-2 text-right font-bold">฿${cust.totalSpent.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>
-                    `;
-                    printTopCustBody.appendChild(row);
-                });
-            }
-
-            const driverStats = {};
-            filteredOrders.forEach(o => {
-                if (o.status === 'delivered' && o.assignedTruck && o.assignedTruck.driverName) {
-                    const driverKey = o.assignedTruck.driverName;
-                    if (!driverStats[driverKey]) {
-                        driverStats[driverKey] = {
-                            name: o.assignedTruck.driverName,
-                            plate: o.assignedTruck.licensePlate || "",
-                            trips: 0,
-                            totalSecs: 0,
-                            passedKpi: 0 
-                        };
-                    }
-                    const startTime = o.deliveryStartTime || o.createdAt;
-                    const endTime = o.deliveredAt || o.lastGpsUpdate || (o.createdAt + 1800000);
-                    const elapsedSec = Math.max(0, Math.floor((endTime - startTime) / 1000));
-                    
-                    driverStats[driverKey].trips += 1;
-                    driverStats[driverKey].totalSecs += elapsedSec;
-                    if (elapsedSec <= 7200) driverStats[driverKey].passedKpi += 1;
-                }
-            });
-
-            const topDrivers = Object.values(driverStats).sort((a, b) => b.trips - a.trips);
-            const printDriverKpiBody = document.getElementById('printDriverKpiTableBody');
-            printDriverKpiBody.innerHTML = '';
-            
-            if (topDrivers.length === 0) {
-                printDriverKpiBody.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-slate-400">ไม่มีข้อมูลพนักงานในช่วงเวลานี้</td></tr>`;
-            } else {
-                topDrivers.forEach((driver) => {
-                    const avgSecs = driver.trips > 0 ? driver.totalSecs / driver.trips : 0;
-                    const avgMins = Math.floor(avgSecs / 60);
-                    const kpiPassRate = Math.round((driver.passedKpi / driver.trips) * 100);
-                    
-                    const row = document.createElement('tr');
-                    row.className = 'border-b border-slate-200';
-                    row.innerHTML = `
-                        <td class="p-2 font-bold">${driver.name}</td>
-                        <td class="p-2 text-center">${driver.trips}</td>
-                        <td class="p-2 text-center font-bold ${avgMins <= 120 ? 'text-emerald-600' : 'text-red-500'}">${avgMins} นาที</td>
-                        <td class="p-2 text-center font-bold ${kpiPassRate >= 80 ? 'text-emerald-600' : (kpiPassRate >= 50 ? 'text-amber-600' : 'text-red-600')}">${kpiPassRate}%</td>
-                    `;
-                    printDriverKpiBody.appendChild(row);
-                });
-            }
-
-            document.body.classList.add('print-report');
-            document.body.classList.remove('print-invoice', 'print-delivery-ticket');
-
-            window.print();
-        };
-
-        window.addEventListener('afterprint', () => {
-            document.body.classList.remove('print-invoice', 'print-report', 'print-delivery-ticket');
+            } 
         });
-
-        // ----------------------------------------------------
-        // ค้นหาประวัติรายไซต์งานของลูกค้าเดิม
-        // ----------------------------------------------------
-        window.generateCustomerReport = function() {
-            const name = document.getElementById('reportSearchName').value.trim().toLowerCase();
-            const res = document.getElementById('customerReportResult');
-            if (!name) return window.showModal("แจ้งเตือน", "กรุณาพิมพ์ชื่อผู้รับเหมา/เบอร์ติดต่อ");
-
-            const orders = allOrdersMemory.filter(o => o.name.toLowerCase().includes(name) || o.phone.includes(name) || (o.companyName && o.companyName.toLowerCase().includes(name)));
-            if (orders.length === 0) { 
-                res.innerHTML = `<div class="col-span-3 text-center text-slate-500 py-6 font-medium">ไม่พบประวัติการสั่งซื้อของ "${name}"</div>`; 
-                res.classList.remove('hidden'); 
-                return; 
-            }
-
-            let stats = { all: { c: 0, w: 0, v: 0 } };
-            let latestOrder = orders[0];
-
-            orders.forEach(o => {
-                const w = parseFloat(o.volume) || 0;
-                const v = parseFloat(o.grandTotal) || 0;
-                stats.all.c++; 
-                stats.all.w += w;
-                stats.all.v += v;
-            });
-
-            res.innerHTML = `
-                <div class="col-span-1 sm:col-span-3 pb-3 border-b border-slate-200 mb-2 flex items-center justify-between">
-                    <div>
-                        <h4 class="font-bold text-slate-900 text-lg">${latestOrder.reqTaxInvoice ? latestOrder.companyName : latestOrder.name}</h4>
-                        <p class="text-xs text-slate-500">ประวัติการเทปูนสะสมทั้งหมด</p>
-                    </div>
-                </div>
-                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center shadow-sm">
-                    <div class="text-xs text-slate-500 font-bold mb-1">จำนวนครั้งที่สั่ง</div>
-                    <div class="text-2xl font-black text-slate-800">${stats.all.c} <span class="text-sm font-medium">ครั้ง</span></div>
-                </div>
-                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 text-center shadow-sm">
-                    <div class="text-xs text-emerald-600 font-bold mb-1">ปริมาณปูนรวม</div>
-                    <div class="text-2xl font-black text-emerald-700">${stats.all.w.toFixed(1)} <span class="text-sm font-medium">คิว</span></div>
-                </div>
-                <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 text-center shadow-sm">
-                    <div class="text-xs text-slate-400 font-bold mb-1">ยอดใช้จ่ายสะสม</div>
-                    <div class="text-2xl font-black text-white">฿${stats.all.v.toLocaleString('th-TH', { minimumFractionDigits: 0 })}</div>
-                </div>
-            `;
-            res.classList.remove('hidden');
-        };
 
     </script>
 </body>
