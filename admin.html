@@ -68,6 +68,9 @@
 
     <div id="app-container" class="print:hidden flex flex-col min-h-screen">
 
+        <!-- ========================================== -->
+        <!-- 🔐 หน้าเข้าสู่ระบบแอดมิน -->
+        <!-- ========================================== -->
         <div id="adminLoginBox" class="flex flex-col items-center justify-center min-h-screen px-4 bg-slate-50 relative overflow-hidden">
             <div class="absolute inset-0 bg-emerald-500/5 blur-[100px] z-0"></div>
             <div class="bg-white p-8 md:p-10 rounded-[2rem] shadow-xl shadow-slate-200/50 w-full max-w-sm text-center border border-slate-100 relative z-10">
@@ -87,7 +90,7 @@
         </div>
 
         <div id="adminDashboardContent" class="hidden flex-1 flex flex-col">
-            <header class="glass-header text-white sticky top-0 z-50 shadow-md">
+            <header class="glass-header text-white sticky top-0 z-40 shadow-md">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-inner border border-emerald-400/50">
@@ -134,7 +137,7 @@
                                 <i data-lucide="history" class="w-5 h-5"></i>
                             </div>
                             <div>
-                                <h3 class="font-bold text-slate-800 text-sm">ค้นหาประวัติการจอง</h3>
+                                <h3 class="font-bold text-slate-800 text-sm">ค้นหาประวัติการจองและบิลเก่า</h3>
                                 <p class="text-xs text-slate-500">พิมพ์เบอร์โทรศัพท์ลูกค้าเพื่อดึงข้อมูลย้อนหลัง</p>
                             </div>
                         </div>
@@ -174,7 +177,7 @@
                     </div>
                 </div>
 
-                <!-- TAB 1.5: รถและคนขับ (ระบุสาขา) -->
+                <!-- TAB 1.5: รถและคนขับ -->
                 <div id="adminTrucksView" class="tab-content">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="bg-white rounded-[2rem] p-6 border border-slate-200 shadow-sm h-fit">
@@ -187,9 +190,8 @@
                             <form id="addTruckForm" onsubmit="window.saveTruck(event)" class="space-y-4">
                                 <div>
                                     <label class="text-[10px] font-bold text-slate-500 mb-1.5 block uppercase tracking-wide">สาขาที่สังกัด <span class="text-red-500">*</span></label>
-                                    <select id="truckBranchId" required class="modern-input w-full p-3.5 rounded-xl text-sm font-bold text-slate-800">
+                                    <select id="truckBranchId" required class="modern-input w-full p-3.5 rounded-xl text-sm font-bold text-slate-800" style="appearance: auto;">
                                         <option value="">-- เลือกสาขา --</option>
-                                        <!-- Populate by JS -->
                                     </select>
                                 </div>
                                 <div>
@@ -228,21 +230,19 @@
                                             <th class="p-4 font-bold text-center">จัดการ</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="trucksTableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
-                                        <!-- Javascript Populated -->
-                                    </tbody>
+                                    <tbody id="trucksTableBody" class="divide-y divide-slate-100 font-medium text-slate-700"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- TAB 2: ตั้งค่าระบบ (ราคา + จัดการสาขา) -->
+                <!-- TAB 2: ตั้งค่าระบบ (ราคาและสาขา) -->
                 <div id="adminSettingsView" class="tab-content">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="lg:col-span-2 space-y-6">
                             
-                            <!-- ตั้งค่าราคากลางคอนกรีต -->
+                            <!-- ตั้งค่าราคากลาง -->
                             <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200 shadow-sm">
                                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-slate-100 pb-4 mb-5 gap-4">
                                     <div>
@@ -357,15 +357,13 @@
                                                 <th class="p-3 font-bold text-center">จัดการ</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="branchesTableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
-                                            <!-- JS Populated -->
-                                        </tbody>
+                                        <tbody id="branchesTableBody" class="divide-y divide-slate-100 font-medium text-slate-700"></tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Sidebar Summary in Settings (Optional) -->
+                        <!-- Sidebar Summary -->
                         <div class="hidden lg:block">
                             <div class="bg-emerald-50 rounded-3xl p-6 border border-emerald-100 shadow-sm sticky top-24">
                                 <h3 class="font-black text-emerald-800 mb-2">ระบบ Multi-Branch</h3>
@@ -377,7 +375,6 @@
 
                 <!-- TAB 3: รายงานสรุปยอดขาย -->
                 <div id="adminReportView" class="tab-content space-y-6">
-                    <!-- Filter -->
                     <div class="bg-white p-5 md:p-6 rounded-[2rem] border border-slate-200 shadow-sm">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                             <div>
@@ -406,7 +403,6 @@
                         </div>
                     </div>
 
-                    <!-- KPIs -->
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                         <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-center">
                             <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">ยอดขายรวมสุทธิ</p>
@@ -426,121 +422,55 @@
                         </div>
                     </div>
 
-                    <!-- Chart -->
                     <div class="bg-white p-5 md:p-6 rounded-[2rem] border border-slate-200 shadow-sm">
                         <div class="relative w-full h-[300px] md:h-[350px]"><canvas id="salesChart"></canvas></div>
                     </div>
                     
-                    <!-- ส่วนตารางรายงาน 3 ตาราง -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm flex flex-col lg:col-span-1 overflow-hidden">
-                            <div class="p-5 border-b border-slate-100 bg-slate-50/50">
-                                <h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm">
-                                    <i data-lucide="table" class="w-4 h-4 text-emerald-600"></i> แจกแจงรายวัน
-                                </h3>
-                            </div>
-                            <div class="overflow-x-auto hide-scrollbar flex-1">
-                                <table class="w-full text-sm min-w-[350px]">
-                                    <thead class="bg-slate-50 text-[10px] text-slate-500 uppercase border-b border-slate-100">
-                                        <tr><th class="p-3 text-left">วันที่</th><th class="p-3 text-center">บิล</th><th class="p-3 text-right">คิว</th><th class="p-3 text-right">ยอดรวม (฿)</th></tr>
-                                    </thead>
-                                    <tbody id="reportTableBody" class="divide-y divide-slate-100"></tbody>
-                                </table>
-                            </div>
+                            <div class="p-5 border-b border-slate-100 bg-slate-50/50"><h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm"><i data-lucide="table" class="w-4 h-4 text-emerald-600"></i> แจกแจงรายวัน</h3></div>
+                            <div class="overflow-x-auto hide-scrollbar flex-1"><table class="w-full text-sm min-w-[350px]"><thead class="bg-slate-50 text-[10px] text-slate-500 uppercase border-b border-slate-100"><tr><th class="p-3 text-left">วันที่</th><th class="p-3 text-center">บิล</th><th class="p-3 text-right">คิว</th><th class="p-3 text-right">ยอดรวม (฿)</th></tr></thead><tbody id="reportTableBody" class="divide-y divide-slate-100"></tbody></table></div>
                         </div>
                         <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm flex flex-col lg:col-span-1 overflow-hidden">
-                            <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-                                <h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm">
-                                    <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> 10 อันดับลูกค้า
-                                </h3>
-                            </div>
-                            <div class="overflow-x-auto hide-scrollbar flex-1">
-                                <table class="w-full text-sm min-w-[350px]">
-                                    <thead class="bg-slate-50 text-[10px] text-slate-500 uppercase border-b border-slate-100">
-                                        <tr><th class="p-3 text-left">ลูกค้า</th><th class="p-3 text-center">บิล</th><th class="p-3 text-right">คิว</th><th class="p-3 text-right">ยอดสุทธิ (฿)</th></tr>
-                                    </thead>
-                                    <tbody id="topCustomersTableBody" class="divide-y divide-slate-100"></tbody>
-                                </table>
-                            </div>
+                            <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center"><h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm"><i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> 10 อันดับลูกค้า</h3></div>
+                            <div class="overflow-x-auto hide-scrollbar flex-1"><table class="w-full text-sm min-w-[350px]"><thead class="bg-slate-50 text-[10px] text-slate-500 uppercase border-b border-slate-100"><tr><th class="p-3 text-left">ลูกค้า</th><th class="p-3 text-center">บิล</th><th class="p-3 text-right">คิว</th><th class="p-3 text-right">ยอดสุทธิ (฿)</th></tr></thead><tbody id="topCustomersTableBody" class="divide-y divide-slate-100"></tbody></table></div>
                         </div>
                         <div class="bg-white rounded-[2rem] border-2 border-blue-100 shadow-sm flex flex-col lg:col-span-1 overflow-hidden">
-                            <div class="p-5 border-b border-blue-100 bg-blue-50/50 flex justify-between items-center">
-                                <h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm">
-                                    <i data-lucide="timer" class="w-4 h-4 text-blue-500"></i> ประสิทธิภาพคนขับ
-                                </h3>
-                            </div>
-                            <div class="overflow-x-auto hide-scrollbar flex-1">
-                                <table class="w-full text-sm min-w-[350px]">
-                                    <thead class="bg-slate-50 text-[10px] text-slate-500 uppercase border-b border-slate-100">
-                                        <tr>
-                                            <th class="p-3 text-left">พนักงานขับรถ</th>
-                                            <th class="p-3 text-center">รอบ</th>
-                                            <th class="p-3 text-center">เวลาเฉลี่ย</th>
-                                            <th class="p-3 text-center">KPI</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="driverKpiTableBody" class="divide-y divide-slate-100">
-                                    </tbody>
-                                </table>
-                            </div>
+                            <div class="p-5 border-b border-blue-100 bg-blue-50/50 flex justify-between items-center"><h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm"><i data-lucide="timer" class="w-4 h-4 text-blue-500"></i> ประสิทธิภาพคนขับ</h3></div>
+                            <div class="overflow-x-auto hide-scrollbar flex-1"><table class="w-full text-sm min-w-[350px]"><thead class="bg-slate-50 text-[10px] text-slate-500 uppercase border-b border-slate-100"><tr><th class="p-3 text-left">พนักงานขับรถ</th><th class="p-3 text-center">รอบ</th><th class="p-3 text-center">เวลาเฉลี่ย</th><th class="p-3 text-center">KPI</th></tr></thead><tbody id="driverKpiTableBody" class="divide-y divide-slate-100"></tbody></table></div>
                         </div>
                     </div>
                 </div>
 
             </main>
         </div>
-    </div>
+    </div> <!-- End App Container -->
 
-    <!-- Modals (Z-Index 200+) -->
+    <!-- Modals -->
     <div id="slipModal" class="fixed inset-0 z-[200] hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 print:hidden animate-[fadeIn_0.2s_ease-out]">
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col">
-            <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50/50">
-                <h3 class="font-bold text-slate-900 flex items-center gap-2"><i data-lucide="image" class="w-5 h-5 text-emerald-600"></i> หลักฐานการโอนเงิน</h3>
-                <button onclick="document.getElementById('slipModal').classList.add('hidden')" class="text-slate-400 hover:text-red-500 bg-white hover:bg-red-50 p-2 rounded-full transition shadow-sm border border-slate-200"><i data-lucide="x" class="w-4 h-4"></i></button>
-            </div>
-            <div class="p-4 bg-slate-100 flex justify-center max-h-[65vh] overflow-y-auto">
-                <img id="slipImageDisplay" src="" alt="Slip Image" class="max-w-full h-auto rounded-xl shadow-sm border border-slate-200 object-contain">
-            </div>
-            <div class="p-4 bg-white text-center border-t border-slate-100">
-                <span id="slipRefDisplay" class="text-xs font-bold text-slate-500 font-mono tracking-widest bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200"></span>
-            </div>
+            <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50/50"><h3 class="font-bold text-slate-900 flex items-center gap-2"><i data-lucide="image" class="w-5 h-5 text-emerald-600"></i> หลักฐานการโอนเงิน</h3><button onclick="document.getElementById('slipModal').classList.add('hidden')" class="text-slate-400 hover:text-red-500 bg-white hover:bg-red-50 p-2 rounded-full transition shadow-sm border border-slate-200"><i data-lucide="x" class="w-4 h-4"></i></button></div>
+            <div class="p-4 bg-slate-100 flex justify-center max-h-[65vh] overflow-y-auto"><img id="slipImageDisplay" src="" alt="Slip Image" class="max-w-full h-auto rounded-xl shadow-sm border border-slate-200 object-contain"></div>
+            <div class="p-4 bg-white text-center border-t border-slate-100"><span id="slipRefDisplay" class="text-xs font-bold text-slate-500 font-mono tracking-widest bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200"></span></div>
         </div>
     </div>
 
     <div id="taxModal" class="fixed inset-0 z-[200] hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 print:hidden animate-[fadeIn_0.2s_ease-out]">
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
-            <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50/50">
-                <h3 class="font-bold text-blue-600 flex items-center gap-2"><i data-lucide="file-text" class="w-5 h-5"></i> ข้อมูลภาษี</h3>
-                <button onclick="document.getElementById('taxModal').classList.add('hidden')" class="text-slate-400 hover:text-red-500 bg-white hover:bg-red-50 p-2 rounded-full transition shadow-sm border border-slate-200"><i data-lucide="x" class="w-4 h-4"></i></button>
-            </div>
+            <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50/50"><h3 class="font-bold text-blue-600 flex items-center gap-2"><i data-lucide="file-text" class="w-5 h-5"></i> ข้อมูลภาษี</h3><button onclick="document.getElementById('taxModal').classList.add('hidden')" class="text-slate-400 hover:text-red-500 bg-white hover:bg-red-50 p-2 rounded-full transition shadow-sm border border-slate-200"><i data-lucide="x" class="w-4 h-4"></i></button></div>
             <div class="p-6 space-y-5 text-sm">
-                <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">นิติบุคคล</p>
-                    <p class="font-black text-slate-900 text-base" id="taxCompanyName"></p>
-                </div>
-                <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">เลขประจำตัวผู้เสียภาษี</p>
-                    <p class="font-mono bg-slate-50 p-3 rounded-xl border border-slate-200 font-bold tracking-widest text-slate-700" id="taxIdDisplay"></p>
-                </div>
-                <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">ที่อยู่จดทะเบียน</p>
-                    <p class="bg-slate-50 p-4 rounded-xl border border-slate-200 font-medium text-slate-700 leading-relaxed" id="taxAddress"></p>
-                </div>
+                <div><p class="text-[10px] font-bold text-slate-400 uppercase mb-1">นิติบุคคล</p><p class="font-black text-slate-900 text-base" id="taxCompanyName"></p></div>
+                <div><p class="text-[10px] font-bold text-slate-400 uppercase mb-1">เลขประจำตัวผู้เสียภาษี</p><p class="font-mono bg-slate-50 p-3 rounded-xl border border-slate-200 font-bold tracking-widest text-slate-700" id="taxIdDisplay"></p></div>
+                <div><p class="text-[10px] font-bold text-slate-400 uppercase mb-1">ที่อยู่จดทะเบียน</p><p class="bg-slate-50 p-4 rounded-xl border border-slate-200 font-medium text-slate-700 leading-relaxed" id="taxAddress"></p></div>
             </div>
         </div>
     </div>
 
     <div id="globalModal" class="fixed inset-0 z-[210] hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 print:hidden animate-[fadeIn_0.2s_ease-out]">
         <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 text-center">
-            <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center mx-auto mb-5">
-                <i id="modalIcon" data-lucide="info" class="w-8 h-8"></i>
-            </div>
-            <h3 id="modalTitle" class="text-xl font-black mb-2 text-slate-900">Title</h3>
-            <p id="modalMessage" class="text-sm font-medium text-slate-500 mb-6 leading-relaxed">Msg</p>
-            <div class="flex gap-3">
-                <button id="modalCancelBtn" class="hidden flex-1 py-3.5 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-xl font-bold transition active:scale-95">ยกเลิก</button>
-                <button id="modalOkBtn" class="flex-1 py-3.5 bg-slate-900 text-white rounded-xl font-black hover:bg-slate-800 shadow-md transition active:scale-95">ตกลง</button>
-            </div>
+            <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center mx-auto mb-5"><i id="modalIcon" data-lucide="info" class="w-8 h-8"></i></div>
+            <h3 id="modalTitle" class="text-xl font-black mb-2 text-slate-900">Title</h3><p id="modalMessage" class="text-sm font-medium text-slate-500 mb-6 leading-relaxed">Msg</p>
+            <div class="flex gap-3"><button id="modalCancelBtn" class="hidden flex-1 py-3.5 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-xl font-bold transition active:scale-95">ยกเลิก</button><button id="modalOkBtn" class="flex-1 py-3.5 bg-slate-900 text-white rounded-xl font-black hover:bg-slate-800 shadow-md transition active:scale-95">ตกลง</button></div>
         </div>
     </div>
 
@@ -548,11 +478,10 @@
     <!-- 📄 เอกสาร A4 (ซ่อนไว้เสมอ จะแสดงเฉพาะตอนสั่ง Print) -->
     <!-- ========================================== -->
     
-    <!-- 1. สำหรับพิมพ์ใบเสนอราคา / ใบกำกับภาษีทีละบิล -->
     <div id="printable-document" class="hidden absolute bg-white text-black p-8 text-sm">
         <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
             <div>
-                <h1 class="text-2xl font-black text-slate-900 mb-1">บริษัท โปรคอนกรีต ประเทศไทย จำกัด</h1>
+                <h1 class="text-2xl font-black text-slate-900 mb-1" id="invPrintHeaderBrand">PRO CONCRETE ECO</h1>
                 <p class="text-xs text-slate-600 font-bold">สาขา: <span id="invPrintBranchName">...</span></p>
                 <p class="text-xs text-slate-600" id="invPrintBranchAddress">...</p>
                 <p class="text-xs text-slate-600">โทร. <span id="invPrintBranchPhone">...</span> | เลขประจำตัวผู้เสียภาษี: 0105559001234</p>
@@ -786,18 +715,17 @@
         let app, auth, db;
         let ordersCollectionPath = 'concrete_orders'; 
         let trucksCollectionPath = 'trucks'; 
-        let branchesCollectionPath = 'branches'; // New
+        let branchesCollectionPath = 'branches'; 
 
         let currentUser = null;
         let allOrdersMemory = []; 
         let allTrucksMemory = [];
-        let allBranchesMemory = []; // New
+        let allBranchesMemory = []; 
         let historySearchResults = []; 
         let isOfflineMode = false; 
         let salesChartInstance = null;
-        let branchQrBase64 = ""; // Variable for new branch QR
+        let branchQrBase64 = ""; 
 
-        // ราคา (Global Setting)
         let priceSettings = {
             price_180: 1650, price_210: 1720, price_240: 1800, price_280: 1900, price_300: 1980,
             price_320: 2050, price_350: 2150, price_380: 2250, price_400: 2350, shipping_fee: 500
@@ -869,9 +797,9 @@
             onSnapshot(collection(db, branchesCollectionPath), (snapshot) => {
                 allBranchesMemory = [];
                 snapshot.forEach(doc => allBranchesMemory.push({id: doc.id, ...doc.data()}));
-                if (document.getElementById('adminSettingsView').classList.contains('active')) renderBranchesGrid();
-                populateBranchSelectInTruckForm();
-                if (document.getElementById('adminListView').classList.contains('active')) renderOrdersGrid();
+                if (document.getElementById('adminSettingsView').classList.contains('active')) window.renderBranchesGrid();
+                if (window.populateBranchSelectInTruckForm) window.populateBranchSelectInTruckForm();
+                if (document.getElementById('adminListView').classList.contains('active')) window.renderOrdersGrid();
             }, (error) => {
                 console.error("Branches subscription failed:", error);
             });
@@ -880,8 +808,8 @@
             onSnapshot(collection(db, trucksCollectionPath), (snapshot) => {
                 allTrucksMemory = [];
                 snapshot.forEach(doc => allTrucksMemory.push({id: doc.id, ...doc.data()}));
-                if (document.getElementById('adminTrucksView').classList.contains('active')) renderTrucksGrid();
-                if (document.getElementById('adminListView').classList.contains('active')) renderOrdersGrid();
+                if (document.getElementById('adminTrucksView').classList.contains('active')) window.renderTrucksGrid();
+                if (document.getElementById('adminListView').classList.contains('active')) window.renderOrdersGrid();
             }, (error) => {
                 console.error("Trucks subscription failed:", error);
             });
@@ -892,7 +820,7 @@
                 snapshot.forEach(doc => { allOrdersMemory.push({ id: doc.id, ...doc.data() }); });
                 allOrdersMemory.sort((a, b) => b.createdAt - a.createdAt);
 
-                if (document.getElementById('adminListView').classList.contains('active')) renderOrdersGrid();
+                if (document.getElementById('adminListView').classList.contains('active')) window.renderOrdersGrid();
                 if (document.getElementById('adminReportView').classList.contains('active')) window.generateAnalyticsReport();
             }, (error) => {
                 console.error("Orders subscription failed:", error);
@@ -961,8 +889,51 @@
             }
             if(window.lucide) lucide.createIcons();
         };
+        
+        // Auto check on load
         window.addEventListener('load', window.checkAdminAuth);
 
+        // Firebase Initialization
+        if (typeof __firebase_config !== 'undefined') {
+            const canvasConfig = JSON.parse(__firebase_config);
+            app = initializeApp(canvasConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            ordersCollectionPath = `artifacts/${appId}/public/data/concrete_orders`;
+            trucksCollectionPath = `artifacts/${appId}/public/data/trucks`;
+            branchesCollectionPath = `artifacts/${appId}/public/data/branches`;
+            
+            const initCanvasAuth = async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (e) { console.error(e); }
+            };
+            initCanvasAuth();
+        } else {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            signInAnonymously(auth).catch((error) => { isOfflineMode = true; });
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) { 
+                currentUser = user; 
+                if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                    setupDatabaseListener(); 
+                    setupPriceSettingsListener();
+                }
+            } 
+        });
+
+        // ----------------------------------------------------
+        // Tabs Navigation
+        // ----------------------------------------------------
         window.switchAdminTab = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -991,12 +962,12 @@
             }
 
             if (tabId === 'list') {
-                renderOrdersGrid();
+                window.renderOrdersGrid();
             } else if (tabId === 'trucks') {
-                renderTrucksGrid();
-                populateBranchSelectInTruckForm();
+                window.renderTrucksGrid();
+                window.populateBranchSelectInTruckForm();
             } else if (tabId === 'settings') {
-                renderBranchesGrid();
+                window.renderBranchesGrid();
             } else if (tabId === 'report') {
                 window.setReportPresetRange('month');
             }
@@ -1077,7 +1048,7 @@
             });
         };
 
-        function renderBranchesGrid() {
+        window.renderBranchesGrid = function() {
             const tbody = document.getElementById('branchesTableBody');
             if(!tbody) return;
             tbody.innerHTML = '';
@@ -1105,9 +1076,9 @@
                 `;
                 tbody.appendChild(tr);
             });
-        }
+        };
 
-        function populateBranchSelectInTruckForm() {
+        window.populateBranchSelectInTruckForm = function() {
             const select = document.getElementById('truckBranchId');
             if (!select) return;
             
@@ -1115,7 +1086,7 @@
             allBranchesMemory.forEach(b => {
                 select.innerHTML += `<option value="${b.id}">${b.name} (${b.province})</option>`;
             });
-        }
+        };
 
         // ----------------------------------------------------
         // จัดการรถโม่และคนขับ (Trucks Management)
@@ -1157,7 +1128,7 @@
             });
         };
 
-        function renderTrucksGrid() {
+        window.renderTrucksGrid = function() {
             const tbody = document.getElementById('trucksTableBody');
             if(!tbody) return;
             tbody.innerHTML = '';
@@ -1187,7 +1158,7 @@
                 `;
                 tbody.appendChild(tr);
             });
-        }
+        };
 
         // ----------------------------------------------------
         // ราคา (Price Settings)
@@ -1198,7 +1169,6 @@
             const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'prices');
 
             try {
-                // ดึงข้อมูลเดิมมา Merge เพื่อไม่ให้ข้อมูลอื่นตกหล่น
                 const docSnap = await getDoc(settingsDocRef);
                 const existingData = docSnap.exists() ? docSnap.data() : {};
 
@@ -1227,7 +1197,7 @@
         };
 
         // ----------------------------------------------------
-        // คิวงาน (Orders & Search)
+        // ค้นหาคิวงาน
         // ----------------------------------------------------
         window.searchOrderHistory = function() {
             const phoneInput = document.getElementById('orderSearchPhone');
@@ -1253,7 +1223,7 @@
                 resultsGrid.innerHTML = `<div class="col-span-full py-10 text-center bg-white rounded-2xl border border-slate-200/80 text-slate-500 font-medium"><i data-lucide="inbox" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i> ไม่พบประวัติออเดอร์เก่าที่มีเบอร์โทร "${phone}"</div>`;
             } else {
                 historySearchResults.forEach(order => {
-                    const card = createOrderCardElement(order, true);
+                    const card = window.createOrderCardElement(order, true);
                     resultsGrid.appendChild(card);
                 });
             }
@@ -1270,13 +1240,11 @@
             const clearBtn = document.getElementById('btnClearSearch');
             if (clearBtn) clearBtn.classList.add('hidden');
             
-            renderOrdersGrid();
+            window.renderOrdersGrid();
         };
 
-        // ฟังก์ชันอัปเดตสาขาในออเดอร์
         window.updateOrderBranch = async function(orderId, branchId) {
             try {
-                // อัปเดตข้อมูลสาขา และรีเซ็ตข้อมูลคนขับ (เพราะอาจจะเป็นคนขับข้ามสาขา)
                 await updateDoc(doc(db, ordersCollectionPath, orderId), { 
                     branchId: branchId,
                     assignedTruck: null 
@@ -1287,8 +1255,8 @@
             }
         };
 
-        // 📝 CARD GENERATOR (RESPONSIVE + BRANCH SELECTOR)
-        function createOrderCardElement(order, isHistorySearch = false) {
+        // 📝 CARD GENERATOR
+        window.createOrderCardElement = function(order, isHistorySearch = false) {
             const statusColors = {
                 'received': 'bg-amber-100 text-amber-800 border-amber-300',
                 'confirmed': 'bg-teal-50 text-teal-800 border-teal-200',
@@ -1329,7 +1297,7 @@
                         defaultTime = parts[1].replace(' น.', '').trim();
                     }
                 }
-            } catch (e) { console.error("DateTime parse failed:", e); }
+            } catch (e) {}
 
             let batchingTimeText = "";
             if (order.batchingStartTime) {
@@ -1366,11 +1334,10 @@
                     </div>
                     
                     <div class="mt-1.5 mb-3 text-xs font-bold text-emerald-700 bg-emerald-50/80 border border-emerald-200 px-3 py-1.5 rounded-xl flex justify-between items-center">
-                        <span class="text-emerald-600">ยอดเงินสุทธิ:</span>
+                        <span class="text-emerald-600">ยอดสุทธิ:</span>
                         <span class="text-sm">฿${parseFloat(order.grandTotal || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 })}</span>
                     </div>
 
-                    <!-- ส่วนมอบหมายสาขาที่รับผิดชอบออเดอร์ (แอดมินเลือก) -->
                     <div class="mb-3">
                         <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 flex items-center gap-1"><i data-lucide="network" class="w-3 h-3 text-blue-500"></i> โอนงานให้สาขา</label>
                         <select onchange="window.updateOrderBranch('${order.id}', this.value)" class="modern-select w-full text-xs font-bold text-blue-700 rounded-lg border border-blue-200 focus:ring-blue-500 focus:border-blue-500 p-2 outline-none bg-blue-50/30">
@@ -1412,7 +1379,6 @@
                         ${batchingTimeText}
                     </div>
 
-                    <!-- ส่วนมอบหมายพนักงานขับรถโม่ (Filter ตามสาขาที่ถูกเลือก) -->
                     <div class="mt-auto mb-4 bg-slate-50 border border-slate-200 p-3 rounded-2xl">
                         <label class="text-[10px] font-bold text-slate-500 uppercase mb-2 flex items-center gap-1"><i data-lucide="truck" class="w-3 h-3"></i> มอบหมายพนักงานส่ง</label>
                         <select onchange="window.assignTruck('${order.id}', this.value)" class="modern-select w-full text-xs font-bold text-slate-700 rounded-xl border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 p-2.5 outline-none bg-white">
@@ -1422,9 +1388,8 @@
                         ${assignedBranchId ? `<p class="text-[9px] text-emerald-600 mt-1.5 text-right font-medium">แสดงเฉพาะรถในสาขาที่เลือก</p>` : ''}
                     </div>
 
-                    <!-- Action Buttons Row -->
+                    <!-- Action Buttons -->
                     <div class="grid grid-cols-2 gap-2 mt-auto">
-                        <!-- Left Group: Evidence & Tax -->
                         <div class="flex gap-1 min-w-0">
                             ${(!isCash && !isCredit && order.slipImage && order.slipImage.length > 0) ? `
                                 <button onclick="window.viewSlip('${order.id}')" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center border border-emerald-200 truncate">
@@ -1438,8 +1403,6 @@
                                 </button>
                             ` : ''}
                         </div>
-                        
-                        <!-- Right Group: Print Docs -->
                         <div class="flex gap-1 min-w-0">
                             <button onclick="window.printDocument('${order.id}')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center shadow-sm truncate">
                                 <i data-lucide="printer" class="w-4 h-4 mb-0.5"></i> ใบเสร็จ
@@ -1453,11 +1416,11 @@
                 
                 <div class="p-3 sm:p-4 bg-slate-50 flex gap-2 items-center">
                     <select onchange="window.updateOrderStatus('${order.id}', this.value)" class="modern-select flex-1 text-[11px] sm:text-xs font-bold rounded-xl border focus:ring-emerald-500 focus:border-emerald-500 p-2.5 outline-none cursor-pointer truncate ${statusColors[order.status]}">
-                        <option value="received" ${order.status === 'received' ? 'selected' : ''}>📝 1. รอตรวจสอบ / อนุมัติ</option>
-                        <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>📅 2. ยืนยันคิวส่งมอบแล้ว</option>
+                        <option value="received" ${order.status === 'received' ? 'selected' : ''}>📝 1. รอตรวจสอบ</option>
+                        <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>📅 2. ยืนยันคิวแล้ว</option>
                         <option value="batching" ${order.status === 'batching' ? 'selected' : ''}>⚙️ 3. สั่งผสมปูน</option>
-                        <option value="delivering" ${order.status === 'delivering' ? 'selected' : ''}>🚛 4. รถโม่กำลังเดินทาง</option>
-                        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>✅ 5. เทเสร็จสิ้น (ปิดงาน)</option>
+                        <option value="delivering" ${order.status === 'delivering' ? 'selected' : ''}>🚛 4. กำลังเดินทาง</option>
+                        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>✅ 5. ปิดงาน</option>
                     </select>
                     <button onclick="window.deleteOrder('${order.id}')" class="w-10 h-10 flex items-center justify-center rounded-xl text-red-500 hover:bg-red-50 hover:border-red-200 border border-transparent transition shrink-0">
                         <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -1465,9 +1428,9 @@
                 </div>
             `;
             return card;
-        }
+        };
 
-        function renderOrdersGrid() {
+        window.renderOrdersGrid = function() {
             const activeGrid = document.getElementById('activeOrdersGrid');
             const completedTodayGrid = document.getElementById('completedTodayGrid');
             const summaryContainer = document.getElementById('productionSummary');
@@ -1519,11 +1482,11 @@
                 }
 
                 if (isActive) {
-                    const card = createOrderCardElement(order, false);
+                    const card = window.createOrderCardElement(order, false);
                     activeGrid.appendChild(card);
                     activeCount++;
                 } else if (isCompletedToday) {
-                    const card = createOrderCardElement(order, false);
+                    const card = window.createOrderCardElement(order, false);
                     completedTodayGrid.appendChild(card);
                     completedTodayCount++;
                 }
@@ -1537,7 +1500,7 @@
             }
 
             if(window.lucide) lucide.createIcons();
-        }
+        };
 
         window.updateOrderStatus = async function(id, status) {
             try { 
@@ -1632,11 +1595,11 @@
             }
         };
 
-        // 🚨 ฟังก์ชันแปลงข้อมูลเพื่อพิมพ์ใบแจ้งหนี้ / ใบกำกับภาษี PDF ดิบขนาดกะทัดรัด
+        // 🚨 ฟังก์ชันพิมพ์ใบกำกับภาษี / ใบเสร็จรับเงิน
         window.printDocument = function(orderId) {
             const order = allOrdersMemory.find(o => o.id === orderId);
             if(!order) {
-                window.showModal('ข้อผิดพลาด', 'ไม่พบข้อมูลออเดอร์นี้');
+                window.showModal('ข้อผิดพลาด', 'ไม่พบข้อมูลออเดอร์นี้', 'error');
                 return;
             }
 
@@ -1683,13 +1646,16 @@
             setVal('printVat', order.vat ? order.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
             setVal('printGrandTotal', order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
 
-            // ใช้ชื่อบริษัทหลัก
-            setVal('invPrintHeaderBrand', "บริษัท โปรคอนกรีต ประเทศไทย จำกัด");
-            
+            setVal('invPrintHeaderBrand', priceSettings.company_name || "PRO CONCRETE ECO");
+            setVal('invPrintHeaderFullname', priceSettings.company_fullname || "บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)");
+            setVal('invPrintHeaderAddress', priceSettings.company_address || "123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110");
+            setVal('invPrintHeaderPhone', `${priceSettings.company_phone || "02-123-4567"} / ${priceSettings.company_mobile || ""}`);
+            setVal('invPrintHeaderTaxId', priceSettings.company_tax_id || "0105559001234");
+
             // หาข้อมูลสาขาที่ผูกกับออเดอร์
-            let branchName = "สำนักงานใหญ่";
-            let branchAddress = "ไม่ระบุ";
-            let branchPhone = "-";
+            let branchName = "";
+            let branchAddress = "";
+            let branchPhone = "";
             
             if (order.branchId) {
                 const branch = allBranchesMemory.find(b => b.id === order.branchId);
@@ -1710,11 +1676,11 @@
             window.print();
         };
 
-        // 🚨 ฟังก์ชันสำหรับสั่งจัดพิมพ์ "ใบจ่ายสินค้า / ใบส่งคอนกรีต" เพื่อมอบพนักงานขับรถส่งลูกค้าเซ็นต์
+        // 🚨 ฟังก์ชันสำหรับสั่งจัดพิมพ์ "ใบจ่ายสินค้า / ใบส่งคอนกรีต"
         window.printDeliveryTicket = function(orderId) {
             const order = allOrdersMemory.find(o => o.id === orderId);
             if(!order) {
-                window.showModal('ข้อผิดพลาด', 'ไม่พบข้อมูลออเดอร์นี้');
+                window.showModal('ข้อผิดพลาด', 'ไม่พบข้อมูลออเดอร์นี้', 'error');
                 return;
             }
 
@@ -1761,7 +1727,11 @@
             }
 
             // ซิงค์โปรไฟล์ผู้ผลิตแบบไดนามิกลงใบส่งของ
-            setVal('ticketPrintHeaderBrand', "บริษัท โปรคอนกรีต ประเทศไทย จำกัด");
+            setVal('ticketPrintHeaderBrand', priceSettings.company_name || "PRO CONCRETE ECO");
+            setVal('ticketPrintHeaderFullname', priceSettings.company_fullname || "บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)");
+            setVal('ticketPrintHeaderAddress', priceSettings.company_address || "123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110");
+            setVal('ticketPrintHeaderPhone', `${priceSettings.company_phone || "02-123-4567"} / ${priceSettings.company_mobile || ""}`);
+            setVal('ticketPrintHeaderTaxId', priceSettings.company_tax_id || "0105559001234");
             
             // หาข้อมูลสาขาที่ผูกกับออเดอร์
             let branchName = "สำนักงานใหญ่";
@@ -1792,7 +1762,6 @@
         // 📊 ระบบวิเคราะห์รายงานสถิติยอดขาย (Reports & Analytics)
         // ----------------------------------------------------
         
-        // ช่วยตั้งค่าวันที่รายงานแบบช่วงเวลาสำเร็จรูป
         window.setReportPresetRange = function(range) {
             const today = new Date();
             let start = new Date();
@@ -1812,7 +1781,6 @@
             window.generateAnalyticsReport();
         };
 
-        // ฟังก์ชันประมวลผลสรุปยอดขายจากข้อมูลในหน่วยความจำ
         window.generateAnalyticsReport = function() {
             const startVal = document.getElementById('analyticsStartDate').value;
             const endVal = document.getElementById('analyticsEndDate').value;
@@ -1821,10 +1789,8 @@
             const start = new Date(startVal).setHours(0,0,0,0);
             const end = new Date(endVal).setHours(23,59,59,999);
 
-            // คัดกรองออเดอร์เฉพาะที่อยู่ในช่วงเวลาที่กำหนด
             const filteredOrders = allOrdersMemory.filter(o => o.createdAt >= start && o.createdAt <= end);
 
-            // เริ่มคำนวณ KPIs หลัก
             let totalRevenue = 0;
             let totalVolume = 0;
             let orderCount = filteredOrders.length;
@@ -1836,13 +1802,11 @@
 
             let avgOrderValue = orderCount > 0 ? (totalRevenue / orderCount) : 0;
 
-            // อัปเดตข้อมูลขึ้นการ์ด KPIs หน้าแผงควบคุม
             document.getElementById('kpi_total_revenue').innerText = totalRevenue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
             document.getElementById('kpi_total_volume').innerText = totalVolume.toFixed(1);
             document.getElementById('kpi_order_count').innerText = orderCount;
             document.getElementById('kpi_avg_order_value').innerText = avgOrderValue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
 
-            // 🏷️ เตรียมรวบรวมข้อมูลแจกแจงแบบรายวันเพื่อป้อนให้ชาร์ตและตารางสรุป
             const dailyData = {};
             let current = new Date(start);
             while(current <= end) {
@@ -1851,7 +1815,6 @@
                 current.setDate(current.getDate() + 1);
             }
 
-            // จัดกลุ่มยอดขายลงในแต่ละวัน
             filteredOrders.forEach(o => {
                 const dateKey = new Date(o.createdAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
                 if (dailyData[dateKey]) {
@@ -1865,10 +1828,8 @@
             const revenues = labels.map(l => dailyData[l].revenue);
             const volumes = labels.map(l => dailyData[l].volume);
 
-            // วาดกราฟเปรียบเทียบยอดขายและคิว (Chart.js)
-            renderChart(labels, revenues, volumes);
+            window.renderChart(labels, revenues, volumes);
 
-            // เขียนรายการลงในตารางรายงานสรุปรายวัน
             const tableBody = document.getElementById('reportTableBody');
             tableBody.innerHTML = '';
 
@@ -1885,7 +1846,6 @@
                 tableBody.appendChild(row);
             });
 
-            // 🏆 จัดอันดับลูกค้าที่มียอดสั่งซื้อสูงสุด 10 อันดับแรก
             const customerGroups = {};
             filteredOrders.forEach(o => {
                 const key = o.name + "_" + (o.phone || "");
@@ -1932,7 +1892,6 @@
                 });
             }
 
-            // 🚛 สรุปประสิทธิภาพคนขับรถโม่ (Driver KPI)
             const driverStats = {};
             filteredOrders.forEach(o => {
                 if (o.status === 'delivered' && o.assignedTruck && o.assignedTruck.driverName) {
@@ -1940,7 +1899,7 @@
                     if (!driverStats[driverKey]) {
                         driverStats[driverKey] = {
                             name: o.assignedTruck.driverName,
-                            plate: o.assignedTruck.licensePlate,
+                            plate: o.assignedTruck.licensePlate || "",
                             trips: 0,
                             totalSecs: 0,
                             passedKpi: 0 // จำนวนเที่ยวที่เวลา <= 120 นาที
@@ -1960,7 +1919,6 @@
                 }
             });
 
-            // เรียงลำดับจากจำนวนรอบที่เยอะสุด และเปอร์เซ็นต์ KPI สูงสุด
             const topDrivers = Object.values(driverStats).sort((a, b) => {
                 if (b.trips === a.trips) {
                     return (b.passedKpi / b.trips) - (a.passedKpi / a.trips);
@@ -1984,6 +1942,7 @@
                     row.innerHTML = `
                         <td class="p-4 font-bold text-slate-700">
                             ${index + 1}. ${driver.name}
+                            <div class="text-[10px] text-slate-400 font-medium">${driver.plate}</div>
                         </td>
                         <td class="p-4 text-center font-black text-slate-800">${driver.trips}</td>
                         <td class="p-4 text-center font-bold ${avgMins <= 120 ? 'text-emerald-600' : 'text-red-500'}">${avgMins} นาที</td>
@@ -1998,12 +1957,10 @@
             }
         };
 
-        // ฟังก์ชันวาดกราฟสถิติ
-        function renderChart(labels, revenues, volumes) {
+        window.renderChart = function(labels, revenues, volumes) {
             const ctx = document.getElementById('salesChart');
             if (!ctx) return;
 
-            // ตรวจสอบและทำลายชาร์ตตัวเก่าทิ้งเพื่อป้องกันไม่ให้บั๊กแสดงซ้อนทับกันเวลาลากเมาส์ผ่าน
             if (salesChartInstance) {
                 salesChartInstance.destroy();
             }
@@ -2062,9 +2019,8 @@
                     }
                 }
             });
-        }
+        };
 
-        // 🖨️ ฟังก์ชันจัดเรียงฟอร์แมตเพื่อพิมพ์รายงานสรุปยอดขาย (Print Sales Report to PDF)
         window.printSalesReport = function() {
             const startVal = document.getElementById('analyticsStartDate').value;
             const endVal = document.getElementById('analyticsEndDate').value;
@@ -2086,7 +2042,6 @@
 
             let avgOrderValue = orderCount > 0 ? (totalRevenue / orderCount) : 0;
 
-            // นำข้อมูลไปใส่ในหน้าเอกสารเปลือยรายงาน
             const fmtTh = (d) => new Date(d).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
             document.getElementById('printReportRange').innerText = `${fmtTh(start)} - ${fmtTh(end)}`;
             document.getElementById('printReportDate').innerText = new Date().toLocaleDateString('th-TH');
@@ -2096,7 +2051,6 @@
             document.getElementById('print_kpi_count').innerText = orderCount;
             document.getElementById('print_kpi_avg').innerText = avgOrderValue.toLocaleString('th-TH', { minimumFractionDigits: 2 });
 
-            // คัดลอกตารางมาแสดง (รายละเอียดแจกแจงรายวัน)
             const printTableBody = document.getElementById('printReportTableBody');
             printTableBody.innerHTML = '';
 
@@ -2130,7 +2084,6 @@
                 printTableBody.appendChild(row);
             });
 
-            // คัดลอกตาราง 10 อันดับลูกค้าสูงสุดมาพิมพ์เอกสาร
             const customerGroups = {};
             filteredOrders.forEach(o => {
                 const key = o.name + "_" + (o.phone || "");
@@ -2174,7 +2127,6 @@
                 });
             }
 
-            // คัดลอกตารางพนักงานขับรถลงในหน้าพิมพ์เอกสาร
             const driverStats = {};
             filteredOrders.forEach(o => {
                 if (o.status === 'delivered' && o.assignedTruck && o.assignedTruck.driverName) {
@@ -2182,6 +2134,7 @@
                     if (!driverStats[driverKey]) {
                         driverStats[driverKey] = {
                             name: o.assignedTruck.driverName,
+                            plate: o.assignedTruck.licensePlate || "",
                             trips: 0,
                             totalSecs: 0,
                             passedKpi: 0 
@@ -2221,17 +2174,69 @@
                 });
             }
 
-            // ใช้คลาสควบคุมบน body สำหรับการพิมพ์เฉพาะสรุปรายงานยอดขาย
+            const brandHeader = document.getElementById('reportPrintHeaderBrand');
+            if (brandHeader) {
+                brandHeader.innerText = priceSettings.company_name || "PRO CONCRETE ECO";
+            }
+
             document.body.classList.add('print-report');
             document.body.classList.remove('print-invoice', 'print-delivery-ticket');
 
             window.print();
         };
 
-        // สลับคลาสควบคุมกลับทันทีหลังสั่งพิมพ์เสร็จสิ้นหรือยกเลิก เพื่อป้องกันการแสดงผลทับซ้อน
         window.addEventListener('afterprint', () => {
             document.body.classList.remove('print-invoice', 'print-report', 'print-delivery-ticket');
         });
+
+        // ----------------------------------------------------
+        // ค้นหาประวัติรายไซต์งานของลูกค้าเดิม
+        // ----------------------------------------------------
+        window.generateCustomerReport = function() {
+            const name = document.getElementById('reportSearchName').value.trim().toLowerCase();
+            const res = document.getElementById('customerReportResult');
+            if (!name) return window.showModal("แจ้งเตือน", "กรุณาพิมพ์ชื่อผู้รับเหมา/เบอร์ติดต่อ");
+
+            const orders = allOrdersMemory.filter(o => o.name.toLowerCase().includes(name) || o.phone.includes(name) || (o.companyName && o.companyName.toLowerCase().includes(name)));
+            if (orders.length === 0) { 
+                res.innerHTML = `<div class="col-span-3 text-center text-slate-500 py-6 font-medium">ไม่พบประวัติการสั่งซื้อของ "${name}"</div>`; 
+                res.classList.remove('hidden'); 
+                return; 
+            }
+
+            let stats = { all: { c: 0, w: 0, v: 0 } };
+            let latestOrder = orders[0];
+
+            orders.forEach(o => {
+                const w = parseFloat(o.volume) || 0;
+                const v = parseFloat(o.grandTotal) || 0;
+                stats.all.c++; 
+                stats.all.w += w;
+                stats.all.v += v;
+            });
+
+            res.innerHTML = `
+                <div class="col-span-1 sm:col-span-3 pb-3 border-b border-slate-200 mb-2 flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-lg">${latestOrder.reqTaxInvoice ? latestOrder.companyName : latestOrder.name}</h4>
+                        <p class="text-xs text-slate-500">ประวัติการเทปูนสะสมทั้งหมด</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-xs text-slate-500 font-bold mb-1">จำนวนครั้งที่สั่ง</div>
+                    <div class="text-2xl font-black text-slate-800">${stats.all.c} <span class="text-sm font-medium">ครั้ง</span></div>
+                </div>
+                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 text-center shadow-sm">
+                    <div class="text-xs text-emerald-600 font-bold mb-1">ปริมาณปูนรวม</div>
+                    <div class="text-2xl font-black text-emerald-700">${stats.all.w.toFixed(1)} <span class="text-sm font-medium">คิว</span></div>
+                </div>
+                <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 text-center shadow-sm">
+                    <div class="text-xs text-slate-400 font-bold mb-1">ยอดใช้จ่ายสะสม</div>
+                    <div class="text-2xl font-black text-white">฿${stats.all.v.toLocaleString('th-TH', { minimumFractionDigits: 0 })}</div>
+                </div>
+            `;
+            res.classList.remove('hidden');
+        };
 
     </script>
 </body>
