@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ระบบสั่งคอนกรีตผสมเสร็จ - ProConcrete Eco</title>
     
+    <!-- 💡 สคริปต์บังคับเปิดผ่าน External Browser (Safari/Chrome) หากเปิดจากแอป LINE -->
+    <script>
+        if (navigator.userAgent.indexOf("Line") > -1) {
+            if (window.location.href.indexOf("openExternalBrowser=1") === -1) {
+                var separator = window.location.href.indexOf("?") > -1 ? "&" : "?";
+                window.location.href = window.location.href + separator + "openExternalBrowser=1";
+            }
+        }
+    </script>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -306,14 +316,11 @@
                         </div>
                         <p class="text-xs text-slate-500 mb-5 font-medium relative z-10">โปรดเลือกสาขาเพื่อคำนวณระยะทางจัดส่ง และแสดงบัญชีรับเงินโอนที่ถูกต้องประจำสาขา</p>
 
-                        <!-- 💡 แก้ไข Dropdown เป็น Native UI ล้วนๆ ป้องกัน LINE Browser บล็อกการกด -->
                         <div class="relative z-10">
-                            <label class="flex flex-col gap-1.5">
-                                <span class="text-xs font-semibold text-slate-500 flex items-center gap-1"><i data-lucide="map" class="w-4 h-4"></i> สาขาให้บริการ (Branch)</span>
-                                <select id="selectedBranch" required class="w-full p-4 rounded-xl bg-white border-2 border-blue-200 text-base font-bold text-blue-900 focus:border-blue-500 outline-none transition-all block cursor-pointer" style="appearance: auto; -webkit-appearance: auto; -moz-appearance: auto;" onchange="window.handleBranchSelectionChange()">
-                                    <option value="" disabled selected>-- กดเพื่อเลือกสาขา --</option>
-                                </select>
-                            </label>
+                            <!-- ลบคลาส style appearance และใช้ modern-select ธรรมดาเพื่อความเสถียรข้ามเบราว์เซอร์ -->
+                            <select id="selectedBranch" required class="modern-input w-full p-4 rounded-xl text-base font-bold text-slate-800 transition-all cursor-pointer" onchange="window.handleBranchSelectionChange()">
+                                <option value="" disabled selected>-- กดเพื่อเลือกสาขา --</option>
+                            </select>
                         </div>
                     </div>
 
@@ -327,33 +334,31 @@
                         </div>
 
                         <div class="space-y-5">
-                            <!-- วันเวลา 💡 ปรับโค้ดให้ LINE Browser เด้ง Native Picker 100% -->
+                            <!-- วันเวลา เอา onclick ShowPicker ออกให้หมดเพื่อป้องกัน LINE บล็อกแล้วค้าง -->
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="flex flex-col gap-1.5">
                                     <label class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 uppercase tracking-wider"><i data-lucide="calendar" class="w-4 h-4 text-emerald-600"></i> วันจัดส่ง</label>
-                                    <input type="date" id="deliveryDate" name="deliveryDate" required class="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-800 focus:bg-white focus:border-emerald-500 outline-none transition-all block cursor-pointer shadow-sm" style="appearance: auto; -webkit-appearance: auto;">
+                                    <input type="date" id="deliveryDate" name="deliveryDate" required class="modern-input w-full p-3.5 rounded-xl text-sm font-bold text-slate-800">
                                 </div>
                                 <div class="flex flex-col gap-1.5">
                                     <label class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 uppercase tracking-wider"><i data-lucide="clock" class="w-4 h-4 text-emerald-600"></i> เวลาเริ่มเท</label>
-                                    <input type="time" name="deliveryTime" required class="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-800 focus:bg-white focus:border-emerald-500 outline-none transition-all block cursor-pointer shadow-sm" style="appearance: auto; -webkit-appearance: auto;">
+                                    <input type="time" name="deliveryTime" required class="modern-input w-full p-3.5 rounded-xl text-sm font-bold text-slate-800">
                                 </div>
                             </div>
 
                             <hr class="border-slate-100 my-2">
 
-                            <!-- ผู้ติดต่อ 💡 ปรับ UI แยก Label เพื่อไม่ให้ Icon บังการกด -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="flex flex-col gap-1.5">
                                     <label class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 uppercase tracking-wider"><i data-lucide="user" class="w-4 h-4 text-slate-400"></i> ชื่อผู้ติดต่อ / ไซต์งาน</label>
-                                    <input type="text" id="customerName" name="customerName" placeholder="นายช่าง / หมู่บ้าน..." required class="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-800 focus:bg-white focus:border-emerald-500 outline-none transition-all block">
+                                    <input type="text" id="customerName" name="customerName" placeholder="นายช่าง / หมู่บ้าน..." required class="modern-input w-full p-3.5 rounded-xl text-sm font-bold text-slate-800">
                                 </div>
                                 <div class="flex flex-col gap-1.5">
                                     <label class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 uppercase tracking-wider"><i data-lucide="phone" class="w-4 h-4 text-slate-400"></i> เบอร์โทรศัพท์มือถือ</label>
-                                    <input type="tel" id="customerPhone" name="customerPhone" placeholder="08xxxxxxxx" pattern="[0-9]{10}" required class="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-800 focus:bg-white focus:border-emerald-500 outline-none transition-all block">
+                                    <input type="tel" id="customerPhone" name="customerPhone" placeholder="08xxxxxxxx" pattern="[0-9]{10}" required class="modern-input w-full p-3.5 rounded-xl text-sm font-bold text-slate-800">
                                 </div>
                             </div>
 
-                            <!-- ใบกำกับภาษี -->
                             <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 mt-2 hover:border-emerald-300 transition-colors">
                                 <label class="flex items-center gap-3 cursor-pointer">
                                     <input type="checkbox" id="requestTaxInvoice" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" onchange="window.toggleTaxFields()">
@@ -375,10 +380,9 @@
                                 </div>
                             </div>
 
-                            <!-- ช่อง "รายละเอียดที่จัดส่ง" เป็น Optional -->
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 uppercase tracking-wider"><i data-lucide="map-pin" class="w-4 h-4 text-slate-400"></i> รายละเอียดสถานที่จัดส่ง <span class="text-slate-400 font-normal normal-case text-[10px]">(ไม่บังคับ)</span></label>
-                                <textarea id="deliveryAddress" name="deliveryAddress" placeholder="ระบุซอย, จุดสังเกต... (หากปักหมุดแผนที่เรียบร้อย สามารถเว้นว่างช่องนี้ได้)" rows="2" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-800 focus:bg-white focus:border-emerald-500 outline-none transition-all block resize-none"></textarea>
+                                <textarea id="deliveryAddress" name="deliveryAddress" placeholder="ระบุซอย, จุดสังเกต... (หากปักหมุดแผนที่เรียบร้อย สามารถเว้นว่างช่องนี้ได้)" rows="2" class="modern-input w-full p-4 rounded-xl text-sm font-bold text-slate-800 resize-none"></textarea>
                             </div>
                         </div>
                     </div>
@@ -393,16 +397,13 @@
                         </div>
                         <p class="text-xs text-slate-500 mb-5 font-medium">โปรดเลื่อนหมุดสีเขียวหรือใช้ปุ่มดึงตำแหน่งด้านล่างเพื่อแจ้งจุดเทจริงแก่พนักงานจัดส่ง</p>
 
-                        <!-- แผนที่แบบแอป -->
                         <div class="relative rounded-[1.5rem] overflow-hidden border-2 border-slate-200 h-[300px] shadow-inner bg-slate-100 group">
                             <div id="map" class="absolute inset-0 z-10 w-full h-full"></div>
                             
-                            <!-- ปุ่มดึงตำแหน่งปัจจุบันให้โดดเด่นน่ากดที่สุด -->
-                            <button type="button" onclick="window.getCurrentLocation()" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-[400] bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3.5 rounded-full shadow-2xl shadow-emerald-600/40 flex items-center gap-2 text-sm font-bold transition-all active:scale-95 whitespace-nowrap">
-                                <i data-lucide="navigation" class="w-5 h-5"></i> ดึงตำแหน่งปัจจุบันของฉัน
+                            <button type="button" onclick="window.getCurrentLocation()" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-[400] bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3.5 rounded-full shadow-2xl shadow-emerald-600/40 flex items-center gap-2 text-sm font-black transition-all active:scale-95 whitespace-nowrap border-2 border-white">
+                                <i data-lucide="navigation" class="w-5 h-5 fill-white/20 animate-bounce"></i> 📍 กดปุ่มนี้เพื่อดึงตำแหน่งปัจจุบันของคุณ
                             </button>
 
-                            <!-- Distance Badge -->
                             <div class="absolute top-5 left-5 z-[400] bg-white/95 backdrop-blur px-4 py-2.5 rounded-xl shadow-lg border border-slate-200/50 flex items-center gap-2 pointer-events-none">
                                 <i data-lucide="route" class="w-5 h-5 text-emerald-600"></i>
                                 <div class="flex flex-col">
@@ -414,10 +415,8 @@
                         <input type="hidden" id="gpsLinkInput" name="gpsLink" value="">
                     </div>
 
-                    <!-- Spacer for floating bar -->
                     <div class="h-16 md:h-0"></div>
 
-                    <!-- Floating Bottom Bar (App Style) -->
                     <div class="fixed bottom-0 inset-x-0 md:sticky md:bottom-6 z-40 p-4 md:p-0 pointer-events-none">
                         <div class="max-w-3xl mx-auto bg-slate-900 border border-slate-700 shadow-2xl rounded-2xl md:rounded-[2rem] p-3.5 md:p-4 flex items-center justify-between pointer-events-auto">
                             <div class="pl-3">
@@ -449,7 +448,7 @@
                     <div class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
                         <div class="relative flex-1 flex flex-col gap-1.5 text-left">
                             <label class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 uppercase tracking-wider pl-1"><i data-lucide="phone" class="w-4 h-4 text-slate-400"></i> เบอร์โทรศัพท์</label>
-                            <input type="tel" id="searchPaymentInput" placeholder="พิมพ์เบอร์โทร 10 หลัก..." maxlength="10" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-800 tracking-widest focus:bg-white focus:border-emerald-500 outline-none transition-all block">
+                            <input type="tel" id="searchPaymentInput" placeholder="พิมพ์เบอร์โทร 10 หลัก..." maxlength="10" class="modern-input w-full pl-12 pr-4 py-4 rounded-2xl text-sm font-bold text-slate-800 tracking-widest block">
                         </div>
                         <button onclick="window.searchPayment()" class="bg-slate-900 text-white font-black p-4 rounded-2xl hover:bg-slate-800 transition shadow-md w-full sm:w-32 mt-auto flex items-center justify-center gap-2 active:scale-95">
                             ค้นหา
@@ -457,9 +456,7 @@
                     </div>
                 </div>
 
-                <div id="paymentResult" class="hidden space-y-5 pb-8">
-                    <!-- ผลลัพธ์การชำระเงิน -->
-                </div>
+                <div id="paymentResult" class="hidden space-y-5 pb-8"></div>
             </div>
 
             <!-- ========================================== -->
@@ -476,7 +473,7 @@
                     <div class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
                         <div class="relative flex-1 flex flex-col gap-1.5 text-left">
                             <label class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 uppercase tracking-wider pl-1"><i data-lucide="phone" class="w-4 h-4 text-slate-400"></i> เบอร์โทรศัพท์</label>
-                            <input type="tel" id="searchNameInput" placeholder="พิมพ์เบอร์โทร 10 หลัก..." maxlength="10" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-800 tracking-widest focus:bg-white focus:border-emerald-500 outline-none transition-all block">
+                            <input type="tel" id="searchNameInput" placeholder="พิมพ์เบอร์โทร 10 หลัก..." maxlength="10" class="modern-input w-full pl-12 pr-4 py-4 rounded-2xl text-sm font-bold text-slate-800 tracking-widest block">
                         </div>
                         <button onclick="window.searchTracking()" class="bg-slate-900 text-white font-black p-4 rounded-2xl hover:bg-slate-800 transition shadow-md w-full sm:w-32 mt-auto flex items-center justify-center gap-2 active:scale-95">
                             ค้นหา
@@ -484,9 +481,7 @@
                     </div>
                 </div>
 
-                <div id="trackingResult" class="hidden space-y-5 pb-8">
-                    <!-- ผลลัพธ์ -->
-                </div>
+                <div id="trackingResult" class="hidden space-y-5 pb-8"></div>
             </div>
 
         </main>
@@ -526,7 +521,6 @@
                     <span class="bg-slate-50 px-3 text-xs font-bold text-slate-400 absolute">หรือใช้ Email</span>
                 </div>
 
-                <!-- Email Login -->
                 <div class="space-y-3">
                     <input type="email" id="authEmail" placeholder="อีเมล (Email)" class="modern-input w-full p-3.5 rounded-xl text-sm font-medium text-slate-800">
                     <input type="password" id="authPassword" placeholder="รหัสผ่าน (Password)" class="modern-input w-full p-3.5 rounded-xl text-sm font-medium text-slate-800">
@@ -561,7 +555,6 @@
             </div>
 
             <div class="p-6 overflow-y-auto space-y-6 pt-6 bg-[#fafafa]">
-                <!-- โชว์เตือนนิติบุคคล -->
                 <div id="quoteTaxNotice" class="hidden bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2">
                     <i data-lucide="building" class="w-4 h-4"></i> มีการร้องขอใบกำกับภาษีนิติบุคคลในออเดอร์นี้
                 </div>
@@ -640,7 +633,7 @@
                         </label>
                     </div>
 
-                    <!-- 1. แบบโอนเงินผ่านธนาคาร (มีรายละเอียดธนาคารและ QR Code ดึงสดจากหลังบ้านตามสาขา) -->
+                    <!-- แบบโอนเงิน (Dynamic Branch Info) -->
                     <div id="paymentUI_transfer" class="space-y-4 pt-2">
                         <div id="bankDetailsContainer" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center gap-4 relative z-10">
                             <div class="flex-1 space-y-1 text-center sm:text-left">
@@ -653,7 +646,7 @@
                             </div>
                         </div>
 
-                        <!-- กล่องอัปโหลดสลิปสำหรับโอนเงิน -->
+                        <!-- Upload Slip -->
                         <div class="relative z-10">
                             <div class="relative border-2 border-dashed border-slate-200 bg-slate-50 rounded-2xl p-4 hover:bg-slate-100 hover:border-emerald-400 transition-all text-center">
                                 <input type="file" id="slipInput" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="window.handleSlipUpload(event)">
@@ -677,13 +670,11 @@
                         </div>
                     </div>
 
-                    <!-- 2. แบบเงินสดหน้างาน -->
                     <div id="paymentUI_cash" class="hidden bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
                         <p class="text-xs font-bold text-slate-700 flex items-center gap-1.5"><i data-lucide="info" class="w-4 h-4 text-emerald-600"></i> ชำระเงินสดหน้างาน</p>
                         <p class="text-[11px] text-slate-500 leading-relaxed">กรุณาเตรียมยอดเงินสดจำนวนยอดโอนสุทธิเพื่อชำระกับพนักงานขับรถโม่ก่อนเริ่มทำการเทคอนกรีต ณ หน้างานจริง</p>
                     </div>
 
-                    <!-- 3. แบบบัญชีเครดิต (สำหรับโครงการขนาดใหญ่) -->
                     <div id="paymentUI_credit" class="hidden space-y-3">
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2 mb-2">
                             <p class="text-xs font-bold text-slate-700 flex items-center gap-1.5"><i data-lucide="info" class="w-4 h-4 text-blue-600"></i> บัญชีเครดิตบริษัท (เครดิตเทอม)</p>
@@ -699,7 +690,6 @@
 
             </div>
 
-            <!-- Footer Actions -->
             <div class="p-4 border-t border-slate-200 bg-white flex gap-3">
                 <button onclick="window.closeQuotation()" class="flex-1 py-3.5 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition text-sm">
                     แก้ไขข้อมูล
@@ -734,73 +724,81 @@
     <!-- ========================================== -->
     <!-- 📄 เอกสาร A4 (ซ่อนไว้เสมอ จะแสดงเฉพาะตอนสั่ง Print) -->
     <!-- ========================================== -->
-    
-    <!-- 1. สำหรับพิมพ์ใบเสนอราคา / ใบกำกับภาษีทีละบิล -->
     <div id="printable-document" class="hidden absolute bg-white text-black p-8 text-sm">
-        <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
+        <div class="border-b-4 border-double border-slate-900 pb-4 mb-6 flex justify-between items-start">
             <div>
-                <h1 class="text-2xl font-black text-slate-900 mb-1" id="invPrintHeaderBrand">PRO CONCRETE ECO</h1>
+                <h1 class="text-3xl font-black tracking-tight text-slate-900 mb-1" id="invPrintHeaderBrand">PRO CONCRETE ECO</h1>
                 <p class="text-xs text-slate-700 font-bold">บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)</p>
                 <p class="text-xs text-slate-600" id="invPrintBranchName">สาขา: ...</p>
                 <p class="text-xs text-slate-600" id="invPrintBranchAddress">...</p>
-                <p class="text-xs text-slate-600">โทร. <span id="invPrintBranchPhone">...</span> | เลขประจำตัวผู้เสียภาษี: <span id="invPrintHeaderTaxId">01055xxxxxxxx</span></p>
+                <p class="text-xs text-slate-600">โทร. <span id="invPrintBranchPhone">...</span> | เลขประจำตัวผู้เสียภาษี: <span id="invPrintHeaderTaxId">0105559001234</span></p>
             </div>
             <div class="text-right">
-                <h2 id="printDocTitle" class="text-xl font-bold text-slate-800 uppercase">ใบเสนอราคา / ใบแจ้งหนี้</h2>
-                <p class="text-xs font-bold text-slate-800 mt-2">เลขที่เอกสาร: <span id="printDocNo"></span></p>
-                <p class="text-xs text-slate-600">วันที่: <span id="printCreateDate"></span></p>
+                <h2 id="printDocTitle" class="text-2xl font-black text-slate-900 uppercase">ใบเสนอราคา / ใบแจ้งหนี้</h2>
+                <div class="mt-4 text-xs space-y-1 text-slate-800 text-left bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                    <p class="font-bold">รหัส Order: <span id="printDocNo" class="font-mono text-emerald-700"></span></p>
+                    <p>วันที่พิมพ์ใบแจ้งหนี้: <span id="printCreateDate"></span></p>
+                </div>
             </div>
         </div>
         
-        <div class="flex justify-between mb-6">
-            <div class="w-1/2">
-                <p class="text-[10px] font-bold text-slate-500 mb-1 uppercase bg-slate-100 p-1">ข้อมูลลูกค้า (Customer)</p>
-                <p class="font-bold text-slate-800 text-base mt-1" id="printCustomerName">...</p>
-                <p class="text-xs text-slate-600 mt-1" id="printCustomerCompanyInfo"></p>
-                <p class="text-xs text-slate-600 mt-1">โทร: <span id="printCustomerPhone"></span></p>
+        <div class="grid grid-cols-2 gap-6 mb-6">
+            <div class="border border-slate-300 rounded-xl p-4">
+                <p class="text-[10px] font-black text-slate-500 uppercase bg-slate-100 p-1 mb-2 tracking-wide">ข้อมูลลูกค้า (Customer Details)</p>
+                <p class="font-black text-slate-800 text-base mb-1" id="printCustomerName">...</p>
+                <p class="text-xs text-slate-600" id="printCustomerCompanyInfo"></p>
+                <p class="text-xs text-slate-600 mt-1">เบอร์ติดต่อลูกค้า: <span id="printCustomerPhone" class="font-bold"></span></p>
             </div>
-            <div class="w-1/2 pl-4 text-right">
-                <p class="text-[10px] font-bold text-slate-500 mb-1 uppercase bg-slate-100 p-1">ข้อมูลการจัดส่ง (Delivery)</p>
-                <p class="font-bold text-slate-800 text-base mt-1" id="printDeliveryTime">...</p>
-                <p class="text-xs text-slate-600 mt-1" id="printAddress">...</p>
+            <div class="border border-slate-300 rounded-xl p-4">
+                <p class="text-[10px] font-black text-slate-500 uppercase bg-slate-100 p-1 mb-2 tracking-wide">สถานที่จัดส่ง (Delivery Destination)</p>
+                <p class="font-black text-slate-800 text-base mb-1" id="printDeliveryTime">...</p>
+                <p class="text-xs text-slate-600 mt-2 font-medium">ไซต์งานจัดส่ง: <span id="printAddress" class="text-slate-800 font-semibold"></span></p>
             </div>
         </div>
 
         <table class="w-full text-xs mb-6 border-collapse">
             <thead>
-                <tr class="bg-slate-100 border-y-2 border-slate-300">
-                    <th class="p-2 text-left">ลำดับ</th>
-                    <th class="p-2 text-left">รายการ (Description)</th>
-                    <th class="p-2 text-center">จำนวน (Qty)</th>
-                    <th class="p-2 text-right">ราคาหน่วย (Unit Price)</th>
-                    <th class="p-2 text-right">จำนวนเงิน (Amount)</th>
+                <tr class="bg-slate-100 border-y-2 border-slate-400">
+                    <th class="p-3 text-center w-12">ลำดับ</th>
+                    <th class="p-3 text-left">รายการวัสดุและเกรดคอนกรีตที่จัดส่ง</th>
+                    <th class="p-3 text-center w-24">กำลังอัด (KSC)</th>
+                    <th class="p-3 text-center w-24">ปริมาณ (คิว)</th>
+                    <th class="p-3 text-right w-36">ราคาหน่วย (บาท)</th>
+                    <th class="p-3 text-right w-36">จำนวนเงิน (บาท)</th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="border-b border-slate-200">
-                    <td class="p-2 text-center">1</td>
-                    <td class="p-2">คอนกรีตผสมเสร็จ (Low Carbon) กำลังอัด <span id="printStrength"></span> KSC</td>
-                    <td class="p-2 text-center"><span id="printVolume"></span> คิว</td>
-                    <td class="p-2 text-right"><span id="printUnitPrice"></span></td>
-                    <td class="p-2 text-right"><span id="printSubtotal"></span></td>
+                <tr class="border-b border-slate-300">
+                    <td class="p-3 text-center font-bold">1</td>
+                    <td class="p-3">
+                        <p class="font-black text-slate-900">คอนกรีตผสมเสร็จ ProConcrete Eco (คาร์บอนต่ำรักษ์โลก)</p>
+                        <p class="text-[10px] text-slate-500 mt-1">ผลิตและผสมภายใต้การควบคุมคุณภาพตามมาตรฐานวิศวกรรมทางโยธา</p>
+                    </td>
+                    <td class="p-3 text-center font-black text-slate-800" id="printStrength">...</td>
+                    <td class="p-3 text-center font-black text-slate-800 text-base" id="printVolume">...</td>
+                    <td class="p-3 text-right font-black text-slate-800" id="printUnitPrice">...</td>
+                    <td class="p-3 text-right font-black text-slate-800 text-base" id="printSubtotal">...</td>
                 </tr>
-                <tr id="printExtraFeeRow" class="hidden border-b border-slate-200">
-                    <td class="p-2 text-center">2</td>
-                    <td class="p-2">ค่าบริการจัดส่งรถโม่เล็ก</td>
-                    <td class="p-2 text-center">1 เที่ยว</td>
-                    <td class="p-2 text-right"><span id="printShippingFeeUnit"></span></td>
-                    <td class="p-2 text-right"><span id="printShippingFeeTotal"></span></td>
+                <tr id="printExtraFeeRow" class="hidden border-b border-slate-300">
+                    <td class="p-3 text-center font-bold">2</td>
+                    <td class="p-3">
+                        <p class="font-black text-slate-900">ค่าบริการจัดส่งรถโม่เล็กเพิ่มเติม</p>
+                    </td>
+                    <td class="p-3 text-center text-slate-500">-</td>
+                    <td class="p-3 text-center font-black text-slate-800 text-base">1 เที่ยว</td>
+                    <td class="p-3 text-right font-black text-slate-800" id="printShippingFeeUnit">...</td>
+                    <td class="p-3 text-right font-black text-slate-800 text-base" id="printShippingFeeTotal">...</td>
                 </tr>
             </tbody>
         </table>
 
         <div class="flex justify-end mt-4">
-            <div class="w-64 space-y-1 text-xs">
-                <div class="flex justify-between"><span class="text-slate-600">รวมเป็นเงิน:</span><span id="printTotalBeforeVat"></span></div>
-                <div class="flex justify-between"><span class="text-slate-600">ภาษีมูลค่าเพิ่ม (VAT 7%):</span><span id="printVat"></span></div>
-                <div class="flex justify-between font-bold text-sm pt-2 border-t border-slate-800 mt-1">
-                    <span>จำนวนเงินรวมทั้งสิ้น:</span>
-                    <span>฿ <span id="printGrandTotal"></span></span>
+            <div class="w-64 space-y-2 text-xs">
+                <div class="flex justify-between"><span class="text-slate-600 font-bold">รวมเป็นเงิน:</span><span id="printTotalBeforeVat"></span></div>
+                <div class="flex justify-between"><span class="text-slate-600 font-bold">ภาษีมูลค่าเพิ่ม (VAT 7%):</span><span id="printVat"></span></div>
+                <div class="flex justify-between font-black text-sm pt-2 border-t-2 border-slate-400 mt-2">
+                    <span class="text-slate-900">จำนวนเงินรวมทั้งสิ้น:</span>
+                    <span class="text-lg text-emerald-700">฿ <span id="printGrandTotal"></span></span>
                 </div>
             </div>
         </div>
@@ -812,7 +810,7 @@
             </div>
             <div class="text-right">
                 <p>_____________________________________</p>
-                <p class="mt-1">ผู้มีอำนาจลงนาม / ผู้อนุมัติ</p>
+                <p class="mt-1 font-bold text-slate-800">ผู้มีอำนาจลงนาม / ผู้อนุมัติ</p>
             </div>
         </div>
     </div>
