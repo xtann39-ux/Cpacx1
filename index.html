@@ -48,19 +48,7 @@
             transition: all 0.3s ease;
         }
 
-        /* 💡 แก้ปัญหา Dropdown และ Picker บน In-app Browser (เช่น LINE, Facebook) */
-        .line-compatible-input {
-            appearance: auto !important;
-            -moz-appearance: auto !important;
-            -webkit-appearance: auto !important;
-            background-color: #ffffff;
-            cursor: pointer;
-        }
-        input[type="date"].line-compatible-input, 
-        input[type="time"].line-compatible-input {
-            min-height: 50px; /* เพิ่มพื้นที่กดบนหน้าจอมือถือ */
-        }
-        
+        /* 💡 ทริคแก้ปัญหา Dropdown และ Date/Time Picker ใน LINE In-app Browser */
         select.native-select {
             background-color: #ffffff;
             border: 1px solid #cbd5e1;
@@ -70,11 +58,40 @@
             font-size: 1rem;
             font-weight: 700;
             color: #1e293b;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            cursor: pointer;
+            position: relative;
+            z-index: 20;
         }
         select.native-select:focus {
             border-color: #10b981;
             outline: none;
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        /* ขยายพื้นที่กด Picker ดั้งเดิมให้คลุมทั้งช่อง input แก้ปัญหาจิ้มไม่ติด */
+        input[type="date"], input[type="time"] {
+            position: relative;
+            z-index: 20;
+            cursor: pointer;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 30;
         }
 
         .modern-input:focus {
@@ -122,8 +139,8 @@
             <span class="text-emerald-600/35 transform -rotate-12"><i data-lucide="leaf" class="w-8 h-8 fill-emerald-500/10"></i></span>
             <span class="text-emerald-600/25 transform rotate-45 mt-10"><i data-lucide="leaf" class="w-6 h-6 fill-emerald-500/10"></i></span>
         </div>
-        
-         <!-- กลาง: โลโก้แบรนด์ และ กราฟิกต้อนรับดีไซน์ตามโมเดลภาพ -->
+
+        <!-- กลาง: โลโก้แบรนด์ และ กราฟิกต้อนรับดีไซน์ตามโมเดลภาพ -->
         <div class="flex-1 flex flex-col items-center justify-center text-center max-w-md mx-auto w-full my-6">
             <!-- โลโก้ตัว P สีเขียวเทา ตามรูปแบบต้นฉบับภาพ -->
             <div class="w-28 h-28 bg-white rounded-3xl flex items-center justify-center shadow-xl border border-emerald-100 mb-6 relative">
@@ -131,9 +148,17 @@
                     P
                 </div>
             </div>
-
+            
             <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 mb-2 leading-none">ProConcrete</h1>
             <span class="bg-emerald-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">Low Carbon Cement</span>
+            
+            <!-- ข้อความโปรยตามภาพต้นฉบับ -->
+            <div class="mt-8 space-y-2">
+                <p class="text-2xl font-bold text-emerald-800 tracking-tight">สั่งคอนกรีตง่ายและไว</p>
+                <p class="text-sm font-semibold text-slate-600">มีระบบติดตามพิกัดรถโม่เรียลไทม์</p>
+                <p class="text-[11px] font-bold text-slate-400">มาตรฐานมั่นใจทุกโครงการก่อสร้างทั่วประเทศ</p>
+            </div>
+
             <!-- กราฟิกรถโม่ปูนจำลองเสมือนรูปแบนเนอร์ -->
             <div class="w-full mt-10 relative opacity-90 hover:scale-105 transition-transform duration-300">
                 <img src="ProCongrete_Loading.png" 
@@ -142,6 +167,7 @@
                      class="w-56 h-auto mx-auto rounded-2xl shadow-lg border border-white">
             </div>
         </div>
+
         <!-- ล่าง: ส่วนยอมรับคุกกี้ และข้อตกลง PDPA Consent -->
         <div class="w-full max-w-md mx-auto bg-white/95 backdrop-blur-md p-5 rounded-3xl border border-emerald-200/50 shadow-2xl flex flex-col gap-4">
             <div class="flex gap-3">
@@ -204,8 +230,15 @@
 
         <!-- Main App Container -->
         <main class="max-w-3xl mx-auto w-full flex-1 px-4 pt-6 pb-10">
+
+            <div class="mb-6 md:mb-8 flex justify-center group relative">
+                <div class="absolute inset-0 bg-emerald-500/10 rounded-[2rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <img src="ProCongrete_banner.jpg" 
+                     onerror="this.src='https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&q=80&w=1200'"
+                     alt="ProConcrete Eco Banner" 
+                     class="w-full h-auto object-contain rounded-2xl md:rounded-[2rem] shadow-sm border border-slate-200/60 transition-all hover:shadow-lg bg-white relative z-10">
+            </div>
             
-            <!-- App-like Tabs -->
             <div class="flex bg-slate-200/60 p-1.5 rounded-2xl mb-8 border border-slate-200/50 overflow-x-auto hide-scrollbar relative z-10">
                 <button onclick="window.openTab(event, 'order-page')" class="tab-btn active flex-1 min-w-[110px] py-3 px-3 text-center font-bold rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 bg-white text-emerald-700 shadow-sm" data-state="active">
                     <i data-lucide="edit-3" class="w-4 h-4"></i> จองคิว
@@ -219,7 +252,7 @@
             </div>
 
             <!-- ========================================== -->
-            <!-- 📝 หน้าสั่งซื้อและคำนวณราคา (Order Page - จัดเรียงลำดับใหม่หมดตาม UX Flow) -->
+            <!-- 📝 หน้าสั่งซื้อและคำนวณราคา (Order Page) -->
             <!-- ========================================== -->
             <div class="tab-content active" id="order-page">
                 <form id="orderForm" onsubmit="window.handleCalculateOrder(event)" class="space-y-6">
@@ -296,14 +329,12 @@
                         </div>
                         <p class="text-xs text-slate-500 mb-6 font-medium relative z-10">รายการด้านล่างเฉพาะเกรดผลิตภัณฑ์คอนกรีตมาตรฐานที่เปิดจำหน่าย ณ วันนี้</p>
 
-                        <!-- โซนวาดเมนูปุ่มกดเลือกสินค้าคอนกรีตที่มีจำหน่าย และแสดงราคาโปรโมชั่น -->
                         <div id="concreteProductGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 relative z-10">
                             <div class="col-span-full py-8 text-center text-slate-400 font-bold bg-slate-50 rounded-2xl border border-dashed border-slate-200 animate-pulse">
                                 ⏳ กำลังรอการเชื่อมต่อข้อมูลผลิตภัณฑ์...
                             </div>
                         </div>
 
-                        <!-- ซ่อนวิทยุแบบเก่าแต่เก็บค่าผูกสคริปต์เดิมไว้ -->
                         <div id="hiddenStrengthRadios" class="hidden"></div>
 
                         <div class="mt-8 p-5 rounded-2xl bg-emerald-50/80 border border-emerald-200 flex justify-between items-center relative z-10 shadow-sm">
@@ -326,8 +357,7 @@
                         <p class="text-xs text-slate-500 mb-5 font-medium relative z-10">โปรดเลือกสาขาเพื่อคำนวณระยะทางจัดส่ง และแสดงบัญชีรับเงินโอนที่ถูกต้องประจำสาขา</p>
 
                         <div class="relative z-10">
-                            <!-- ตัวเลือกสาขาแบบ Native Select มั่นใจเปิดติดชัวร์บน LINE In-app Browser -->
-                            <select id="selectedBranch" required class="native-select shadow-sm line-compatible-input" onchange="window.handleBranchSelectionChange()">
+                            <select id="selectedBranch" required class="native-select shadow-sm" onchange="window.handleBranchSelectionChange()">
                                 <option value="" disabled selected>-- โปรดเลือกสาขา --</option>
                             </select>
                         </div>
@@ -341,20 +371,20 @@
                         </div>
 
                         <div class="space-y-5">
-                            <!-- วันเวลา -->
+                            <!-- วันเวลา (เอา onclick showPicker ออก เพื่อป้องกันบั๊กบล็อก UI บน In-app browser) -->
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="text-xs font-semibold text-slate-500 mb-1.5 block pl-1 uppercase tracking-wider">วันจัดส่ง</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-600"><i data-lucide="calendar" class="w-5 h-5"></i></div>
-                                        <input type="date" id="deliveryDate" name="deliveryDate" required class="modern-input line-compatible-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-bold text-slate-800" onclick="this.showPicker && this.showPicker();">
+                                        <input type="date" id="deliveryDate" name="deliveryDate" required class="modern-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-bold text-slate-800">
                                     </div>
                                 </div>
                                 <div>
                                     <label class="text-xs font-semibold text-slate-500 mb-1.5 block pl-1 uppercase tracking-wider">เวลาเริ่มเท</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-600"><i data-lucide="clock" class="w-5 h-5"></i></div>
-                                        <input type="time" name="deliveryTime" required class="modern-input line-compatible-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-bold text-slate-800" onclick="this.showPicker && this.showPicker();">
+                                        <input type="time" name="deliveryTime" required class="modern-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-bold text-slate-800">
                                     </div>
                                 </div>
                             </div>
@@ -409,7 +439,7 @@
                         </div>
                     </div>
 
-                    <!-- 📍 5. แผนที่ที่ต้องการจัดส่ง (พร้อมปุ่มปักหมุดตำแหน่งปัจจุบันเด่นชัด) -->
+                    <!-- 📍 5. แผนที่ที่ต้องการจัดส่ง -->
                     <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-sm shadow-inner">5</div>
@@ -529,7 +559,7 @@
                     <i data-lucide="user" class="w-8 h-8"></i>
                 </div>
                 <h3 class="text-2xl font-black text-slate-900 mb-1">เข้าสู่ระบบ</h3>
-                <p class="text-sm font-medium text-slate-500">จองคิวง่ายขึ้น และติดตามออเดอร์ได้ทันที</p>
+                <p class="text-sm font-medium text-slate-500">สมัครสมาชิกฟรีเพื่อใช้สิทธิ์สิทธิพิเศษและติดตามสถานะ</p>
             </div>
             
             <div class="p-6 space-y-5 bg-slate-50/50">
@@ -550,7 +580,6 @@
                     <span class="bg-slate-50 px-3 text-xs font-bold text-slate-400 absolute">หรือใช้ Email</span>
                 </div>
 
-                <!-- Email Login -->
                 <div class="space-y-3">
                     <input type="email" id="authEmail" placeholder="อีเมล (Email)" class="modern-input w-full p-3.5 rounded-xl text-sm font-medium text-slate-800">
                     <input type="password" id="authPassword" placeholder="รหัสผ่าน (Password)" class="modern-input w-full p-3.5 rounded-xl text-sm font-medium text-slate-800">
@@ -585,7 +614,6 @@
             </div>
 
             <div class="p-6 overflow-y-auto space-y-6 pt-6 bg-[#fafafa]">
-                <!-- โชว์เตือนนิติบุคคล -->
                 <div id="quoteTaxNotice" class="hidden bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2">
                     <i data-lucide="building" class="w-4 h-4"></i> มีการร้องขอใบกำกับภาษีนิติบุคคลในออเดอร์นี้
                 </div>
@@ -624,7 +652,6 @@
 
                 <div class="border-t-2 border-dashed border-slate-200"></div>
 
-                <!-- Totals -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-2 text-sm">
                     <div class="flex justify-between text-slate-500"><span>มูลค่าสินค้ารวม:</span><span id="quoteTotalBeforeVat">0.00</span></div>
                     <div class="flex justify-between text-slate-500"><span>ภาษีมูลค่าเพิ่ม (VAT 7%):</span><span id="quoteVat">0.00</span></div>
@@ -634,9 +661,7 @@
                     </div>
                 </div>
 
-                <!-- ===================================== -->
-                <!-- 💳 ช่องทางการชำระเงินหลัก (3 แบบตามความเหมาะสม) -->
-                <!-- ===================================== -->
+                <!-- ช่องทางการชำระเงินหลัก -->
                 <div class="bg-white rounded-3xl border border-slate-200 p-5 shadow-sm space-y-4">
                     <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">เลือกช่องทางการชำระเงิน</p>
                     
@@ -664,7 +689,7 @@
                         </label>
                     </div>
 
-                    <!-- 1. แบบโอนเงินผ่านธนาคาร (มีรายละเอียดธนาคารและ QR Code ดึงสดจากหลังบ้านตามสาขา) -->
+                    <!-- แบบโอนเงิน -->
                     <div id="paymentUI_transfer" class="space-y-4 pt-2">
                         <div id="bankDetailsContainer" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center gap-4 relative z-10">
                             <div class="flex-1 space-y-1 text-center sm:text-left">
@@ -677,7 +702,7 @@
                             </div>
                         </div>
 
-                        <!-- กล่องอัปโหลดสลิปสำหรับโอนเงิน -->
+                        <!-- Upload Slip -->
                         <div class="relative z-10">
                             <div class="relative border-2 border-dashed border-slate-200 bg-slate-50 rounded-2xl p-4 hover:bg-slate-100 hover:border-emerald-400 transition-all text-center">
                                 <input type="file" id="slipInput" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="window.handleSlipUpload(event)">
@@ -701,13 +726,11 @@
                         </div>
                     </div>
 
-                    <!-- 2. แบบเงินสดหน้างาน -->
                     <div id="paymentUI_cash" class="hidden bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
                         <p class="text-xs font-bold text-slate-700 flex items-center gap-1.5"><i data-lucide="info" class="w-4 h-4 text-emerald-600"></i> ชำระเงินสดหน้างาน</p>
                         <p class="text-[11px] text-slate-500 leading-relaxed">กรุณาเตรียมยอดเงินสดจำนวนยอดโอนสุทธิเพื่อชำระกับพนักงานขับรถโม่ก่อนเริ่มทำการเทคอนกรีต ณ หน้างานจริง</p>
                     </div>
 
-                    <!-- 3. แบบบัญชีเครดิต -->
                     <div id="paymentUI_credit" class="hidden space-y-3">
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2 mb-2">
                             <p class="text-xs font-bold text-slate-700 flex items-center gap-1.5"><i data-lucide="info" class="w-4 h-4 text-blue-600"></i> บัญชีเครดิตบริษัท (เครดิตเทอม)</p>
@@ -777,7 +800,7 @@
         
         <div class="grid grid-cols-2 gap-6 mb-6">
             <div class="border border-slate-300 rounded-xl p-4">
-                <p class="text-[10px] font-black text-slate-500 uppercase bg-slate-100 p-1 mb-2 tracking-wide">ข้อมูลผู้รับสินค้า (Customer Details)</p>
+                <p class="text-[10px] font-black text-slate-500 uppercase bg-slate-100 p-1 mb-2 tracking-wide">ข้อมูลลูกค้า (Customer Details)</p>
                 <p class="font-black text-slate-800 text-base mb-1" id="printCustomerName">...</p>
                 <p class="text-xs text-slate-600" id="printCustomerCompanyInfo"></p>
                 <p class="text-xs text-slate-600 mt-1">เบอร์ติดต่อลูกค้า: <span id="printCustomerPhone" class="font-bold"></span></p>
@@ -910,7 +933,7 @@
                 splash.classList.add('animate-[fadeOut_0.3s_ease-out]');
                 setTimeout(() => {
                     splash.classList.add('hidden');
-                    // 💡 แก้ไขบั๊กพิกัดจัดส่ง แผนที่สีเทาเมื่อโหลดครั้งแรก: บังคับคำนวณสัดส่วนแผนที่ใหม่ทันทีที่กดยืนยันเข้ามา
+                    // 💡 บังคับคำนวณสัดส่วนแผนที่ใหม่ทันทีที่กดยืนยันเข้ามา เพื่อป้องกันแผนที่เทา
                     if(map) map.invalidateSize();
                 }, 300);
             }
@@ -1979,6 +2002,7 @@
                                     ${kpiSummaryHtml}
                                 </div>
                                 
+                                <!-- 🚨 โซนแสดงแผนที่วิ่งของรถปูนเมื่อสถานะเป็น Delivering และได้รับสัญญาณ GPS เรียลไทม์จากคนขับ -->
                                 ${isDelivering ? `
                                     <div class="bg-slate-50 border-t border-slate-100 p-4 md:p-5 space-y-4">
                                         <!-- ข้อมูลคนขับและรถโม่ปูน -->
@@ -2055,6 +2079,50 @@
                     resultDiv.classList.remove('hidden');
                     lucide.createIcons();
 
+                    // สตาร์ตลูปรันการจับเวลาสะสม Real-time ทุก 1 วินาที สำหรับคำสั่งซื้อที่กำลังนำส่ง
+                    if (window.liveTimerInterval) clearInterval(window.liveTimerInterval);
+                    window.liveTimerInterval = setInterval(() => {
+                        found.forEach(order => {
+                            if (order.status === 'delivering') {
+                                const startTime = order.deliveryStartTime || order.createdAt;
+                                const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
+                                
+                                const hrs = Math.floor(elapsedSec / 3600);
+                                const mins = Math.floor((elapsedSec % 3600) / 60);
+                                const secs = elapsedSec % 60;
+                                const timeStr = `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                                
+                                const timerEl = document.getElementById(`live-timer-${order.id}`);
+                                if (timerEl) timerEl.innerText = timeStr;
+                                
+                                const totalLimitMins = 120;
+                                const elapsedMins = elapsedSec / 60;
+                                let freshness = Math.max(0, 100 - (elapsedMins / totalLimitMins * 100));
+                                
+                                const barEl = document.getElementById(`freshness-bar-${order.id}`);
+                                const textEl = document.getElementById(`freshness-text-${order.id}`);
+                                
+                                if (barEl && textEl) {
+                                    barEl.style.width = `${freshness}%`;
+                                    if (freshness > 60) {
+                                        barEl.className = "bg-emerald-500 h-full transition-all duration-1000";
+                                        textEl.innerText = `${Math.round(freshness)}% (สดใหม่ยอดเยี่ยม)`;
+                                        textEl.className = "text-emerald-600 font-bold";
+                                    } else if (freshness > 30) {
+                                        barEl.className = "bg-amber-500 h-full transition-all duration-1000";
+                                        textEl.innerText = `${Math.round(freshness)}% (ควรเร่งทำการเท)`;
+                                        textEl.className = "text-amber-600 font-bold";
+                                    } else {
+                                        barEl.className = "bg-red-500 h-full transition-all duration-1000";
+                                        textEl.innerText = `${Math.round(freshness)}% (วิกฤต คอนกรีตเริ่มเซ็ตตัว!)`;
+                                        textEl.className = "text-red-600 font-bold animate-pulse";
+                                    }
+                                }
+                            }
+                        });
+                    }, 1000);
+
+                    // สตาร์ตวาดแผนที่สำหรับรถปูนที่กำลังจัดส่งอยู่
                     found.forEach(order => {
                         if (order.status === 'delivering') {
                             setTimeout(() => { initOrUpdateLiveTrackingMap(order); }, 100);
@@ -2062,6 +2130,7 @@
                     });
                 }
             } else {
+                // 💡 Partial Update (ไม่อัปเดต DOM แต่ขยับแค่หมุดแผนที่และเวลา) ทำให้แผนที่ไม่กระตุก
                 found.forEach(order => {
                     if (order.status === 'delivering') {
                         initOrUpdateLiveTrackingMap(order);
