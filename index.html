@@ -26,7 +26,6 @@
             background-size: 24px 24px;
             -webkit-tap-highlight-color: transparent;
         }
-        /* Smooth Tab Transition */
         .tab-content { display: none; opacity: 0; transform: translateY(15px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .tab-content.active { display: block; opacity: 1; transform: translateY(0); }
         
@@ -43,19 +42,30 @@
 
         .leaflet-container { font-family: 'Prompt', sans-serif; z-index: 10; }
         
-        .modern-input, .modern-select {
+        .modern-input {
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
             transition: all 0.3s ease;
         }
-        .modern-select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 0.75rem center;
-            background-repeat: no-repeat;
-            background-size: 1.5em 1.5em;
+        
+        /* แก้ปัญหา Dropdown ไม่แสดงบน In-app Browser ด้วยการใช้ Native Select */
+        select.native-select {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 1rem;
+            border-radius: 1rem;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
         }
-        .modern-input:focus, .modern-select:focus {
+        select.native-select:focus {
+            border-color: #10b981;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .modern-input:focus {
             background-color: #ffffff;
             border-color: #10b981;
             box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
@@ -91,10 +101,8 @@
 </head>
 <body class="text-slate-800 antialiased pb-28 md:pb-12 selection:bg-emerald-100 selection:text-emerald-900 flex flex-col min-h-screen">
 
-    <!-- === ส่วนห่อหุ้มแอปทั้งหมด === -->
     <div id="app-container" class="print:hidden flex flex-col min-h-screen">
         
-        <!-- App Header (Glassmorphism) -->
         <header class="sticky top-0 z-50 w-full glass-header shadow-sm">
             <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -116,7 +124,6 @@
                         เปิดรับคิวปกติ
                     </div>
 
-                    <!-- Auth Section -->
                     <div id="unauthSection" class="block">
                         <button onclick="window.openLoginModal()" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-md active:scale-95 flex items-center gap-2">
                             <i data-lucide="user" class="w-4 h-4"></i> เข้าสู่ระบบ
@@ -134,10 +141,8 @@
             </div>
         </header>
 
-        <!-- Main App Container -->
         <main class="max-w-3xl mx-auto w-full flex-1 px-4 pt-6 pb-10">
 
-            <!-- 🎨 กราฟิกแบรนด์ด้านบน (Hero Banner) -->
             <div class="mb-6 md:mb-8 flex justify-center group relative">
                 <div class="absolute inset-0 bg-emerald-500/10 rounded-[2rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <img src="ProCongrete_banner.jpg" 
@@ -146,7 +151,6 @@
                      class="w-full h-auto object-contain rounded-2xl md:rounded-[2rem] shadow-sm border border-slate-200/60 transition-all hover:shadow-lg bg-white relative z-10">
             </div>
             
-            <!-- App-like Tabs -->
             <div class="flex bg-slate-200/60 p-1.5 rounded-2xl mb-8 border border-slate-200/50 overflow-x-auto hide-scrollbar relative z-10">
                 <button onclick="window.openTab(event, 'order-page')" class="tab-btn active flex-1 min-w-[110px] py-3 px-3 text-center font-bold rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 bg-white text-emerald-700 shadow-sm" data-state="active">
                     <i data-lucide="edit-3" class="w-4 h-4"></i> จองคิว
@@ -165,55 +169,20 @@
             <div class="tab-content active" id="order-page">
                 <form id="orderForm" onsubmit="window.handleCalculateOrder(event)" class="space-y-6">
 
-                    <!-- Section 0: คัดเลือกสาขาที่ให้บริการก่อนเป็นอันดับแรก -->
+                    <!-- ========================================== -->
+                    <!-- 1. การจัดส่งและปริมาณที่ต้องการ -->
+                    <!-- ========================================== -->
                     <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl -mr-8 -mt-8 pointer-events-none"></div>
-                        
-                        <div class="flex items-center gap-3 mb-4 relative z-10">
-                            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-black text-sm shadow-inner">📍</div>
-                            <h2 class="text-xl font-black text-slate-900 tracking-tight">เลือกสาขาใกล้ไซต์งานของท่าน</h2>
-                        </div>
-                        <p class="text-xs text-slate-500 mb-4 font-medium relative z-10">โปรดเลือกสาขาเพื่อคำนวณระยะทาง และตรวจสอบเลขบัญชีสแกนชำระเงินที่ถูกต้องของสาขา</p>
-
-                        <div class="relative z-10">
-                            <select id="selectedBranch" required class="modern-select w-full p-4 rounded-2xl text-base font-bold text-slate-800 border border-slate-200 shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
-                                <option value="">-- ดึงข้อมูลสาขา... --</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Section 1: ผลิตภัณฑ์คอนกรีตผสมเสร็จ (ดึงไดนามิกจากหลังบ้าน) -->
-                    <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-40 h-40 bg-emerald-50 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
-                        
-                        <div class="flex items-center gap-3 mb-4 relative z-10">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-2xl -mr-8 -mt-8 pointer-events-none"></div>
+                        <div class="flex items-center gap-3 mb-6 relative z-10">
                             <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-sm shadow-inner">1</div>
-                            <h2 class="text-xl font-black text-slate-900 tracking-tight">เลือกกำลังอัด (KSC)</h2>
-                        </div>
-                        <p class="text-xs text-slate-500 mb-6 font-medium relative z-10">รายการด้านล่างเฉพาะสูตรส่วนผสมที่เป็นมิตรต่อสิ่งแวดล้อม และมีพร้อมผลิตจำหน่ายจริง ณ วันนี้</p>
-
-                        <!-- โซนวาดเมนูปุ่มกดเลือกสินค้าคอนกรีตที่มีจำหน่าย และแสดงราคาโปรโมชั่นดึงดูดลูกค้า -->
-                        <div id="concreteProductGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 relative z-10">
-                            <div class="col-span-full py-8 text-center text-slate-400 font-bold bg-slate-50 rounded-2xl border border-dashed border-slate-200 animate-pulse">
-                                ⏳ กำลังรอการเชื่อมต่อและดึงข้อมูลผลิตภัณฑ์...
-                            </div>
+                            <h2 class="text-xl font-black text-slate-900 tracking-tight">การจัดส่งและปริมาณที่ต้องการ</h2>
                         </div>
 
-                        <!-- ซ่อนวิทยุแบบเก่าแต่เก็บค่าผูกสคริปต์เดิมไว้ -->
-                        <div id="hiddenStrengthRadios" class="hidden"></div>
-                    </div>
-
-                    <!-- Section 2: ข้อมูลการจัดส่ง & ปริมาณ -->
-                    <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-sm shadow-inner">2</div>
-                            <h2 class="text-xl font-black text-slate-900 tracking-tight">การจัดส่งและปริมาณ</h2>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
                             <!-- ชนิดรถ -->
                             <div class="space-y-3">
-                                <label class="text-xs font-semibold text-slate-500 mb-1 block uppercase tracking-wider">ประเภทรถโม่ที่รองรับ</label>
+                                <label class="text-xs font-semibold text-slate-500 mb-1 block uppercase tracking-wider">ประเภทรถโม่ที่รองรับพื้นที่หน้างาน</label>
                                 <label class="relative flex cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-50 focus:outline-none transition-all has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/50 has-[:checked]:ring-1 has-[:checked]:ring-emerald-500 shadow-sm">
                                     <input type="radio" name="truckType" value="รถโม่ใหญ่ (6-7 คิว)" class="peer sr-only" checked onchange="window.calculatePrices()">
                                     <div class="flex w-full items-center justify-between">
@@ -238,7 +207,7 @@
                                             </div>
                                             <div>
                                                 <p class="text-sm font-bold text-slate-900">รถโม่เล็ก (2-3 คิว)</p>
-                                                <p class="text-xs font-semibold text-emerald-600 mt-0.5">บวกเพิ่ม <span id="display_shipping_fee">500</span> บ./เที่ยว</p>
+                                                <p class="text-xs font-semibold text-slate-500 mt-0.5">บวกเพิ่ม <span id="display_shipping_fee">500</span> บ./เที่ยว</p>
                                             </div>
                                         </div>
                                         <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 opacity-0 transition-opacity peer-checked:opacity-100"></i>
@@ -264,11 +233,63 @@
                         </div>
                     </div>
 
-                    <!-- Section 3: ข้อมูลหน้างาน, นิติบุคคล, และแผนที่ -->
-                    <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                    <!-- ========================================== -->
+                    <!-- 2. เลือกกำลังอัด (KSC) -->
+                    <!-- ========================================== -->
+                    <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-40 h-40 bg-emerald-50 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+                        
+                        <div class="flex items-center gap-3 mb-4 relative z-10">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-sm shadow-inner">2</div>
+                            <h2 class="text-xl font-black text-slate-900 tracking-tight">เลือกกำลังอัด (KSC)</h2>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-6 font-medium relative z-10">รายการด้านล่างเฉพาะสูตรส่วนผสมที่พร้อมจัดส่งจำหน่าย ณ วันนี้</p>
+
+                        <!-- โซนวาดเมนูปุ่มกดเลือกสินค้าคอนกรีตที่มีจำหน่าย และแสดงราคาโปรโมชั่น -->
+                        <div id="concreteProductGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 relative z-10">
+                            <div class="col-span-full py-8 text-center text-slate-400 font-bold bg-slate-50 rounded-2xl border border-dashed border-slate-200 animate-pulse">
+                                ⏳ กำลังรอการเชื่อมต่อข้อมูลผลิตภัณฑ์...
+                            </div>
+                        </div>
+
+                        <!-- ซ่อนวิทยุแบบเก่าแต่เก็บค่าผูกสคริปต์เดิมไว้ -->
+                        <div id="hiddenStrengthRadios" class="hidden"></div>
+
+                        <div class="mt-8 p-5 rounded-2xl bg-emerald-50/80 border border-emerald-200 flex justify-between items-center relative z-10 shadow-sm">
+                            <span class="text-sm font-bold text-emerald-800 flex items-center gap-2"><i data-lucide="tag" class="w-4 h-4"></i> ราคาคอนกรีตประเมินเบื้องต้น</span>
+                            <div class="text-right">
+                                <span id="selectedPriceDisplay" class="text-2xl font-black text-emerald-600">...</span> 
+                                <span class="text-sm font-bold text-emerald-700">บ./คิว</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ========================================== -->
+                    <!-- 3. เลือกสาขา (Branch Selection) -->
+                    <!-- ========================================== -->
+                    <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl -ml-8 -mt-8 pointer-events-none"></div>
+                        
+                        <div class="flex items-center gap-3 mb-4 relative z-10">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-black text-sm shadow-inner">3</div>
+                            <h2 class="text-xl font-black text-slate-900 tracking-tight">เลือกสาขาที่ให้บริการใกล้บ้าน</h2>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-5 font-medium relative z-10">โปรดเลือกสาขาเพื่อคำนวณระยะทาง และตรวจสอบเลขบัญชีสแกนชำระเงินที่ถูกต้องของสาขานั้นๆ</p>
+
+                        <div class="relative z-10">
+                            <select id="selectedBranch" required class="native-select shadow-sm" onchange="window.handleBranchSelectionChange()">
+                                <option value="" disabled selected>-- กดเพื่อดึงรายชื่อสาขา --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- ========================================== -->
+                    <!-- 4. สถานที่ และ ใบกำกับภาษี -->
+                    <!-- ========================================== -->
+                    <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative">
                         <div class="flex items-center gap-3 mb-6">
-                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-sm shadow-inner">3</div>
-                            <h2 class="text-xl font-black text-slate-900 tracking-tight">สถานที่ และ ใบกำกับภาษี</h2>
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-sm shadow-inner">4</div>
+                            <h2 class="text-xl font-black text-slate-900 tracking-tight">ข้อมูลติดต่อ และ ใบกำกับภาษี</h2>
                         </div>
 
                         <div class="space-y-5">
@@ -302,7 +323,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="text-xs font-semibold text-slate-500 mb-1.5 block pl-1 uppercase tracking-wider">เบอร์โทรศัพท์ (ใช้ในการติดตามสินค้า)</label>
+                                    <label class="text-xs font-semibold text-slate-500 mb-1.5 block pl-1 uppercase tracking-wider">เบอร์โทรศัพท์มือถือ</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><i data-lucide="phone" class="w-5 h-5"></i></div>
                                         <input type="tel" id="customerPhone" name="customerPhone" placeholder="08xxxxxxxx" pattern="[0-9]{10}" required class="modern-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-bold text-slate-800">
@@ -310,7 +331,7 @@
                                 </div>
                             </div>
 
-                            <!-- ใบกำกับภาษี (Tax Invoice Toggle) -->
+                            <!-- ใบกำกับภาษี -->
                             <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 mt-2 hover:border-emerald-300 transition-colors">
                                 <label class="flex items-center gap-3 cursor-pointer">
                                     <input type="checkbox" id="requestTaxInvoice" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" onchange="window.toggleTaxFields()">
@@ -332,33 +353,43 @@
                                 </div>
                             </div>
 
-                            <!-- 💡 ปรับให้ช่อง "รายละเอียดที่จัดส่ง" เป็น Optional (คีย์หรือไม่คีย์ก็ได้) -->
+                            <!-- 💡 ปรับให้ช่อง "รายละเอียดที่จัดส่ง" เป็น Optional -->
                             <div>
-                                <label class="text-xs font-semibold text-slate-500 mb-1.5 block pl-1 uppercase tracking-wider">รายละเอียดสถานที่จัดส่ง <span class="text-slate-400 font-normal">(ระบุหรือไม่ระบุก็ได้)</span></label>
-                                <textarea id="deliveryAddress" name="deliveryAddress" placeholder="ซอย, เลขที่, จุดสังเกตชัดเจน... (หากปักหมุดในแผนที่แม่นยำแล้ว สามารถเว้นว่างช่องนี้ไว้ได้ครับ)" rows="2" class="modern-input w-full p-4 rounded-xl text-sm font-bold text-slate-800 resize-none"></textarea>
+                                <label class="text-xs font-semibold text-slate-500 mb-1.5 block pl-1 uppercase tracking-wider">รายละเอียดสถานที่จัดส่ง <span class="text-slate-400 font-normal text-[10px]">(ไม่บังคับ)</span></label>
+                                <textarea id="deliveryAddress" name="deliveryAddress" placeholder="ระบุซอย, จุดสังเกต... (หากปักหมุดแล้ว สามารถเว้นว่างได้)" rows="2" class="modern-input w-full p-4 rounded-xl text-sm font-bold text-slate-800 resize-none"></textarea>
                             </div>
-                            
-                            <!-- แผนที่แบบแอป -->
-                            <div class="pt-2">
-                                <label class="text-xs font-semibold text-slate-500 mb-2 block pl-1 uppercase tracking-wider">ปักหมุดพิกัดจัดส่ง</label>
-                                <div class="relative rounded-[1.5rem] overflow-hidden border-2 border-slate-200 h-[260px] shadow-inner bg-slate-100 group">
-                                    <div id="map" class="absolute inset-0 z-10"></div>
-                                    
-                                    <!-- Floating Location Button -->
-                                    <button type="button" onclick="window.getCurrentLocation()" class="absolute bottom-5 right-5 z-[400] bg-white text-slate-800 hover:text-emerald-600 hover:bg-slate-50 px-4 py-3 rounded-xl shadow-xl border border-slate-200/50 flex items-center gap-2 text-xs font-bold transition-all active:scale-95 group-hover:scale-105">
-                                        <i data-lucide="navigation" class="w-4 h-4 text-blue-600 fill-blue-500/20"></i> ตำแหน่งฉัน
-                                    </button>
-
-                                    <!-- Distance Badge -->
-                                    <div class="absolute top-5 left-5 z-[400] bg-white/95 backdrop-blur px-3.5 py-2 rounded-xl shadow-lg border border-slate-200/50 flex items-center gap-2 pointer-events-none">
-                                        <i data-lucide="route" class="w-4 h-4 text-emerald-600"></i>
-                                        <span class="text-xs font-bold text-slate-700">ระยะทาง: <span id="display_distance" class="text-emerald-600 text-sm">0.0</span> กม.</span>
-                                    </div>
-                                </div>
-                                <input type="hidden" id="gpsLinkInput" name="gpsLink" value="">
-                            </div>
-
                         </div>
+                    </div>
+
+                    <!-- ========================================== -->
+                    <!-- 5. แผนที่จัดส่ง (Map) -->
+                    <!-- ========================================== -->
+                    <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-sm shadow-inner">5</div>
+                            <h2 class="text-xl font-black text-slate-900 tracking-tight">พิกัดแผนที่จัดส่ง</h2>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-5 font-medium">กดปุ่มด้านล่างเพื่อดึงพิกัดปัจจุบันของคุณ หรือเลื่อนหมุดสีเขียวไปยังจุดก่อสร้างจริง</p>
+
+                        <!-- แผนที่แบบแอป -->
+                        <div class="relative rounded-[1.5rem] overflow-hidden border-2 border-slate-200 h-[300px] shadow-inner bg-slate-100 group">
+                            <div id="map" class="absolute inset-0 z-10 w-full h-full"></div>
+                            
+                            <!-- ปุ่มดึงตำแหน่งที่ชัดเจนขึ้น -->
+                            <button type="button" onclick="window.getCurrentLocation()" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-[400] bg-slate-900 text-white hover:bg-slate-800 px-6 py-3.5 rounded-full shadow-2xl shadow-slate-900/40 flex items-center gap-2 text-sm font-bold transition-all active:scale-95 whitespace-nowrap">
+                                <i data-lucide="navigation" class="w-5 h-5"></i> ดึงตำแหน่งปัจจุบันของฉัน
+                            </button>
+
+                            <!-- Distance Badge -->
+                            <div class="absolute top-5 left-5 z-[400] bg-white/95 backdrop-blur px-4 py-2.5 rounded-xl shadow-lg border border-slate-200/50 flex items-center gap-2 pointer-events-none">
+                                <i data-lucide="route" class="w-5 h-5 text-emerald-600"></i>
+                                <div class="flex flex-col">
+                                    <span class="text-[9px] font-bold text-slate-400 uppercase leading-none">ระยะทางจากสาขา</span>
+                                    <span class="text-sm font-black text-slate-800 leading-none mt-1"><span id="display_distance" class="text-emerald-600">0.0</span> กม.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="gpsLinkInput" name="gpsLink" value="">
                     </div>
 
                     <!-- Spacer for floating bar -->
@@ -406,9 +437,7 @@
                     </div>
                 </div>
 
-                <div id="paymentResult" class="hidden space-y-5 pb-8">
-                    <!-- ผลลัพธ์การชำระเงิน -->
-                </div>
+                <div id="paymentResult" class="hidden space-y-5 pb-8"></div>
             </div>
 
             <!-- ========================================== -->
@@ -435,9 +464,7 @@
                     </div>
                 </div>
 
-                <div id="trackingResult" class="hidden space-y-5 pb-8">
-                    <!-- ผลลัพธ์ -->
-                </div>
+                <div id="trackingResult" class="hidden space-y-5 pb-8"></div>
             </div>
 
         </main>
@@ -456,7 +483,7 @@
                     <i data-lucide="user" class="w-8 h-8"></i>
                 </div>
                 <h3 class="text-2xl font-black text-slate-900 mb-1">เข้าสู่ระบบ</h3>
-                <p class="text-sm font-medium text-slate-500">สมัครสมาชิกฟรีเพื่อใช้สิทธิ์สิทธิพิเศษและติดตามสถานะ</p>
+                <p class="text-sm font-medium text-slate-500">จองคิวง่ายขึ้น และติดตามออเดอร์ได้ทันที</p>
             </div>
             
             <div class="p-6 space-y-5 bg-slate-50/50">
@@ -477,7 +504,6 @@
                     <span class="bg-slate-50 px-3 text-xs font-bold text-slate-400 absolute">หรือใช้ Email</span>
                 </div>
 
-                <!-- Email Login -->
                 <div class="space-y-3">
                     <input type="email" id="authEmail" placeholder="อีเมล (Email)" class="modern-input w-full p-3.5 rounded-xl text-sm font-medium text-slate-800">
                     <input type="password" id="authPassword" placeholder="รหัสผ่าน (Password)" class="modern-input w-full p-3.5 rounded-xl text-sm font-medium text-slate-800">
@@ -591,7 +617,7 @@
                         </label>
                     </div>
 
-                    <!-- 1. แบบโอนเงินผ่านธนาคาร (มีรายละเอียดธนาคารและ QR Code ดึงสดจากหลังบ้านตามสาขา) -->
+                    <!-- 1. แบบโอนเงินผ่านธนาคาร -->
                     <div id="paymentUI_transfer" class="space-y-4 pt-2">
                         <div id="bankDetailsContainer" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center gap-4 relative z-10">
                             <div class="flex-1 space-y-1 text-center sm:text-left">
@@ -691,7 +717,7 @@
                 <p class="text-xs text-slate-700 font-bold">บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)</p>
                 <p class="text-xs text-slate-600" id="invPrintBranchName">สาขา: ...</p>
                 <p class="text-xs text-slate-600" id="invPrintBranchAddress">...</p>
-                <p class="text-xs text-slate-600">โทร. <span id="invPrintBranchPhone">...</span> | เลขประจำตัวผู้เสียภาษี: 0105559001234</p>
+                <p class="text-xs text-slate-600">โทร. <span id="invPrintBranchPhone">...</span> | เลขประจำตัวผู้เสียภาษี: <span id="invPrintHeaderTaxId">0105559001234</span></p>
             </div>
             <div class="text-right">
                 <h2 id="printDocTitle" class="text-2xl font-black text-slate-900 uppercase">ใบเสนอราคา / ใบแจ้งหนี้</h2>
@@ -704,7 +730,7 @@
         
         <div class="grid grid-cols-2 gap-6 mb-6">
             <div class="border border-slate-300 rounded-xl p-4">
-                <p class="text-[10px] font-black text-slate-500 uppercase bg-slate-100 p-1 mb-2 tracking-wide">ข้อมูลผู้รับสินค้า (Customer Details)</p>
+                <p class="text-[10px] font-black text-slate-500 uppercase bg-slate-100 p-1 mb-2 tracking-wide">ข้อมูลลูกค้า (Customer Details)</p>
                 <p class="font-black text-slate-800 text-base mb-1" id="printCustomerName">...</p>
                 <p class="text-xs text-slate-600" id="printCustomerCompanyInfo"></p>
                 <p class="text-xs text-slate-600 mt-1">เบอร์ติดต่อลูกค้า: <span id="printCustomerPhone" class="font-bold"></span></p>
@@ -766,7 +792,7 @@
         <div class="mt-20 pt-4 border-t border-slate-300 flex justify-between text-[10px] text-slate-500">
             <div>
                 <p>เอกสารออกโดยระบบคอมพิวเตอร์ / Computer Generated Document</p>
-                <p class="font-bold mt-1 text-slate-800">โอนชำระเงินตามบัญชีสาขาที่ระบุในระบบ</p>
+                <p class="font-bold mt-1 text-slate-800">โอนชำระเงินที่: ธ.กสิกรไทย 123-4-56789-0 (บจก. โปร คอนกรีต ประเทศไทย)</p>
             </div>
             <div class="text-right">
                 <p>_____________________________________</p>
@@ -787,7 +813,12 @@
             if (!modal) return;
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalMessage').innerText = message;
-            document.getElementById('modalCancelBtn').classList.add('hidden');
+            
+            const cancelBtn = document.getElementById('modalCancelBtn');
+            const crossBtn = document.getElementById('modalCancelCrossBtn');
+            cancelBtn.classList.add('hidden');
+            if(crossBtn) crossBtn.classList.add('hidden');
+
             const okBtn = document.getElementById('modalOkBtn');
             okBtn.onclick = () => { modal.classList.add('hidden'); if(onOk) onOk(); };
             modal.classList.remove('hidden');
@@ -798,9 +829,16 @@
             if (!modal) return;
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalMessage').innerText = message;
+            
             const cancelBtn = document.getElementById('modalCancelBtn');
+            const crossBtn = document.getElementById('modalCancelCrossBtn');
             cancelBtn.classList.remove('hidden');
+            if(crossBtn) {
+                crossBtn.classList.remove('hidden');
+                crossBtn.onclick = () => modal.classList.add('hidden');
+            }
             cancelBtn.onclick = () => modal.classList.add('hidden');
+            
             const okBtn = document.getElementById('modalOkBtn');
             okBtn.onclick = () => { modal.classList.add('hidden'); onConfirm(); };
             modal.classList.remove('hidden');
@@ -833,6 +871,7 @@
             return `CPAC${String(d.getFullYear()).slice(-2)}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
         }
 
+        // Haversine Distance
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371; 
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -844,8 +883,14 @@
         }
 
         const YOUR_LINE_ID = "@yourlineid"; 
-        const PLANT_LAT = 17.36272647627392; 
-        const PLANT_LNG = 102.76275159235519;
+        
+        // จุดศูนย์กลางเริ่มต้น (กรณีไม่ได้ดึงจากสาขา)
+        let DEFAULT_LAT = 17.36272647627392; 
+        let DEFAULT_LNG = 102.76275159235519;
+        
+        // พิกัดของสาขาที่ถูกเลือกในปัจจุบัน
+        let currentBranchLat = DEFAULT_LAT;
+        let currentBranchLng = DEFAULT_LNG;
 
         const firebaseConfig = {
             apiKey: "AIzaSyBID-uSTCksR8AlgWMEzgJWlcRWn0UD7Ks",
@@ -869,7 +914,7 @@
         window.activeTrackingMaps = {}; 
         window.lastRenderedTrackingOrders = {};
 
-        // ราคาเริ่มต้น (Fallback ในกรณีที่ยังโหลด Firebase ไม่เสร็จ)
+        // ราคาและตั้งค่าบัญชีโอนรับเงินส่วนกลาง
         let priceSettings = {
             price_180: 1650, price_210: 1720, price_240: 1800, price_280: 1900, price_300: 1980,
             price_320: 2050, price_350: 2150, price_380: 2250, price_400: 2350,
@@ -877,7 +922,16 @@
             full_price_320: 2350, full_price_350: 2450, full_price_380: 2600, full_price_400: 2750,
             active_180: true, active_210: true, active_240: true, active_280: true, active_300: true,
             active_320: true, active_350: true, active_380: true, active_400: true,
-            shipping_fee: 500
+            shipping_fee: 500,
+            bank_name: "ธนาคารกสิกรไทย",
+            bank_no: "123-4-56789-0",
+            bank_account: "บจก. โปร คอนกรีต ประเทศไทย",
+            bank_qr_image: "",
+            company_name: "PRO CONCRETE ECO",
+            company_fullname: "บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)",
+            company_address: "123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110",
+            company_phone: "02-123-4567",
+            company_tax_id: "0105559001234"
         };
 
         // =====================================
@@ -1063,8 +1117,9 @@
             const select = document.getElementById('selectedBranch');
             if(!select) return;
             
+            // เก็บค่าเก่าไว้เผื่ออัปเดต
             const currentVal = select.value;
-            select.innerHTML = '<option value="">-- โปรดเลือกสาขาที่อยู่ใกล้คุณ --</option>';
+            select.innerHTML = '<option value="" disabled selected>-- เลือกสาขาที่ให้บริการใกล้คุณ --</option>';
             
             allBranchesMemory.forEach(b => {
                 const opt = document.createElement('option');
@@ -1074,6 +1129,31 @@
                 select.appendChild(opt);
             });
         }
+
+        // 🚨 จัดการ Event เมื่อลูกค้าเปลี่ยนสาขา ให้ย้ายพิกัดศูนย์กลางแผนที่
+        window.handleBranchSelectionChange = function() {
+            const select = document.getElementById('selectedBranch');
+            if(!select) return;
+            
+            const bId = select.value;
+            const branch = allBranchesMemory.find(b => b.id === bId);
+            
+            if (branch) {
+                // หากหลังบ้านยังไม่มีการบันทึกพิกัดสาขา ให้ใช้พิกัดเริ่มต้นเป็นศูนย์กลางชั่วคราว
+                currentBranchLat = parseFloat(branch.lat) || DEFAULT_LAT;
+                currentBranchLng = parseFloat(branch.lng) || DEFAULT_LNG;
+                
+                if (map) {
+                    map.setView([currentBranchLat, currentBranchLng], 12);
+                    
+                    // สร้างระยะทางใหม่
+                    if(marker) {
+                        const pos = marker.getLatLng();
+                        updateGpsLink(pos.lat, pos.lng);
+                    }
+                }
+            }
+        };
 
         function setupDatabaseListener() {
             if (!currentUser && !isOfflineMode) return;
@@ -1154,7 +1234,7 @@
                             <!-- โซนราคากลยุทธ์ความรู้สึกคุ้มค่าจูงใจลูกค้า -->
                             <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
                                 <div class="flex items-baseline gap-1">
-                                    ${(fullPrice > promoPrice && fullPrice > 0) ? `<span class="text-xs text-slate-400 font-bold line-through">฿${fullPrice}</span>` : ''}
+                                    ${(fullPrice > promoPrice && fullPrice > 0) ? `<span class="text-xs text-slate-400 font-bold line-through">฿${fullPrice.toLocaleString('th-TH')}</span>` : ''}
                                     <span class="text-lg font-black text-emerald-600">฿${promoPrice.toLocaleString('th-TH')}</span>
                                     <span class="text-[10px] font-bold text-slate-400">/คิว</span>
                                 </div>
@@ -1220,6 +1300,73 @@
             };
         };
 
+        // =====================================
+        // แผนที่
+        // =====================================
+        window.addEventListener('load', () => {
+            const dateInput = document.getElementById('deliveryDate');
+            if (dateInput) {
+                const today = new Date(); 
+                dateInput.min = today.toISOString().split('T')[0];
+            }
+            initMap();
+            window.calculatePrices();
+        });
+
+        function initMap() {
+            const mapContainer = document.getElementById('map');
+            if(!mapContainer) return;
+            
+            map = L.map('map', {zoomControl: false, attributionControl: false}).setView([currentBranchLat, currentBranchLng], 12);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
+
+            const pinHtml = `<div class="bg-white rounded-full p-1 shadow-md border border-slate-200"><div class="bg-emerald-500 w-3 h-3 rounded-full"></div></div>`;
+            const customPin = L.divIcon({ html: pinHtml, className: '', iconSize: [24, 24], iconAnchor: [12, 12] });
+
+            marker = L.marker([currentBranchLat + 0.015, currentBranchLng + 0.015], {draggable: true, icon: customPin}).addTo(map);
+            updateGpsLink(currentBranchLat + 0.015, currentBranchLng + 0.015);
+
+            map.on('click', function(e) { 
+                marker.setLatLng(e.latlng); 
+                updateGpsLink(e.latlng.lat, e.latlng.lng); 
+            });
+            marker.on('dragend', function() { 
+                const pos = marker.getLatLng(); 
+                updateGpsLink(pos.lat, pos.lng); 
+            });
+            
+            // สำคัญ! บังคับให้แผนที่เรนเดอร์ใหม่หลังการโหลดเสร็จ
+            setTimeout(() => { map.invalidateSize(); }, 500);
+        }
+
+        function updateGpsLink(lat, lng) { 
+            const gpsEl = document.getElementById('gpsLinkInput');
+            if (gpsEl) gpsEl.value = `https://www.google.com/maps?q=${lat},${lng}`; 
+            
+            // คำนวณระยะทางจากสาขาปัจจุบัน (currentBranchLat) แทนที่ PLANT_LAT
+            const distance = calculateDistance(currentBranchLat, currentBranchLng, lat, lng);
+            const distEl = document.getElementById('display_distance');
+            if (distEl) distEl.innerText = distance.toFixed(1);
+        }
+
+        window.getCurrentLocation = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const userLat = pos.coords.latitude;
+                        const userLng = pos.coords.longitude;
+                        if(map) map.setView([userLat, userLng], 14, {animate: true});
+                        if(marker) marker.setLatLng([userLat, userLng]);
+                        updateGpsLink(userLat, userLng);
+                    },
+                    (error) => {
+                        window.showModal("ดึงพิกัดไม่สำเร็จ", "กรุณาเลื่อนหมุดบนแผนที่เพื่อระบุตำแหน่งจัดส่งแทนครับ");
+                    },
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                );
+            }
+        };
+
         // Tabs Toggle
         window.openTab = function(evt, tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -1236,7 +1383,10 @@
             activeBtn.classList.add('bg-white', 'text-emerald-700', 'shadow-sm');
             activeBtn.classList.remove('text-slate-500');
 
-            if(tabId === 'order-page' && map) setTimeout(() => { map.invalidateSize(); }, 100);
+            // 💡 สำคัญ: แก้ไขบั๊กแผนที่เทา ให้แผนที่คำนวณขนาดใหม่เสมอเมื่อเปิดแท็บ
+            if(tabId === 'order-page' && map) {
+                setTimeout(() => { map.invalidateSize(); }, 200);
+            }
             if(window.lucide) lucide.createIcons();
         };
 
@@ -1302,14 +1452,20 @@
 
             const branchId = document.getElementById('selectedBranch').value;
             if(!branchId) {
-                window.showModal('เลืออกสาขา', 'กรุณาเลือกสาขาที่ให้บริการใกล้สถานที่จัดส่งของคุณก่อนดำเนินการต่อครับ', 'error');
+                window.showModal('เลือกสาขาไม่ถูกต้อง', 'กรุณาเลือกสาขาที่ให้บริการใกล้สถานที่จัดส่งของคุณก่อนดำเนินการต่อครับ', 'error');
+                
+                // กระตุ้นให้ไปเลือกสาขา
+                const branchSelect = document.getElementById('selectedBranch');
+                branchSelect.classList.add('shake-element');
+                setTimeout(() => branchSelect.classList.remove('shake-element'), 500);
+                branchSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
 
             const name = document.getElementById('customerName').value.trim();
             const phoneInput = document.getElementById('customerPhone');
             const phone = phoneInput.value.trim();
-            const address = document.getElementById('deliveryAddress').value.trim();
+            const address = document.getElementById('deliveryAddress').value.trim(); // Optional now
             const gpsLink = document.getElementById('gpsLinkInput').value.trim(); 
 
             // ตรวจสอบความถูกต้องเบอร์โทรผู้ติดต่อ
@@ -1331,7 +1487,7 @@
 
             const priceInfo = window.calculatePrices();
             const orderNum = generateOrderNumber();
-            const markerLatLng = marker ? marker.getLatLng() : { lat: PLANT_LAT, lng: PLANT_LNG };
+            const markerLatLng = marker ? marker.getLatLng() : { lat: currentBranchLat, lng: currentBranchLng };
 
             tempOrderData = {
                 orderNumber: orderNum,
@@ -1458,10 +1614,12 @@
         window.submitPaidOrder = async function() {
             if (!tempOrderData) return;
             
+            // ตรวจสอบช่องทางการชำระเงินที่ลูกค้าเลือกจริง
             const selectPaymentEl = document.querySelector('input[name="paymentMethod"]:checked');
             const chosenMethod = selectPaymentEl ? selectPaymentEl.value : 'transfer';
             tempOrderData.paymentMethod = chosenMethod;
 
+            // ตรวจสอบการกรอกสัญญาสินเชื่อกรณีใช้เครดิต
             if (chosenMethod === 'credit') {
                 const creditCode = document.getElementById('creditContractCode').value.trim();
                 if (!creditCode) {
@@ -1471,6 +1629,7 @@
                 tempOrderData.creditContractCode = creditCode;
             }
 
+            // ตรวจสอบแนบสลิปกรณีโอนจ่ายธนาคาร
             if (chosenMethod === 'transfer' && !base64SlipImage) {
                 window.showModal("ยังไม่ได้แนบสลิป", "กรุณาแนบรูปภาพสลิปหลักฐานการโอนเงินเพื่อยืนยันคิวครับ");
                 return;
@@ -1480,6 +1639,7 @@
                 tempOrderData.slipImage = base64SlipImage;
             }
 
+            // คำนวณรหัสข้อความแสดงช่องทางการจ่ายเงินไปในบิล Line
             const methodNames = { 'transfer': 'โอนชำระธนาคาร', 'cash': 'เงินสดหน้างาน', 'credit': `เครดิตบัญชี (${tempOrderData.creditContractCode || ''})` };
             const paymentMethodText = methodNames[chosenMethod] || 'ยังไม่ได้ระบุ';
 
@@ -1510,7 +1670,7 @@
         };
 
         // ==========================================
-        // 💳 ระบบค้นหาใบเสนอราคา
+        // 💳 ระบบค้นหาใบเสนอราคา ด้วยเบอร์โทรศัพท์เท่านั้นเพื่อความปลอดภัย
         // ==========================================
         window.searchPayment = function(isUpdate = false) {
             const nameInput = document.getElementById('searchPaymentInput');
@@ -1567,85 +1727,8 @@
             }
         };
 
-        window.printDocument = function(orderId) {
-            const order = allOrdersMemory.find(o => o.id === orderId);
-            if(!order) {
-                window.showModal('ข้อผิดพลาด', 'ไม่พบข้อมูลออเดอร์นี้');
-                return;
-            }
-
-            const setVal = (id, val) => {
-                const el = document.getElementById(id);
-                if (el) el.innerText = val;
-            };
-
-            setVal('printDocNo', order.orderNumber);
-            const d = new Date(order.createdAt);
-            setVal('printCreateDate', d.toLocaleDateString('th-TH'));
-            
-            setVal('printCustomerName', order.reqTaxInvoice ? order.companyName : order.name);
-            
-            const printDocTitle = document.getElementById('printDocTitle');
-            const printCustomerCompanyInfo = document.getElementById('printCustomerCompanyInfo');
-            
-            if(order.reqTaxInvoice) {
-                if(printDocTitle) printDocTitle.innerText = "ใบเสนอราคา / ใบกำกับภาษี";
-                if(printCustomerCompanyInfo) printCustomerCompanyInfo.innerHTML = `เลขประจำตัวผู้เสียภาษี: ${order.taxId}<br>ที่อยู่: ${order.companyAddress}`;
-            } else {
-                if(printDocTitle) printDocTitle.innerText = "ใบเสนอราคา";
-                if(printCustomerCompanyInfo) printCustomerCompanyInfo.innerHTML = `ผู้ติดต่อ: ${order.name}`;
-            }
-            
-            setVal('printCustomerPhone', order.phone);
-            setVal('printDeliveryTime', order.deliveryDateTime);
-            setVal('printAddress', order.address || '-');
-            setVal('printStrength', order.strength);
-            setVal('printVolume', order.volume);
-            setVal('printUnitPrice', order.unitPrice ? order.unitPrice.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
-            setVal('printSubtotal', order.concreteCost ? order.concreteCost.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
-            
-            const extraFeeRow = document.getElementById('printExtraFeeRow');
-            if(order.shippingFee > 0) {
-                if(extraFeeRow) extraFeeRow.classList.remove('hidden');
-                setVal('printShippingFeeUnit', order.shippingFee.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
-                setVal('printShippingFeeTotal', order.shippingFee.toLocaleString('th-TH', { minimumFractionDigits: 2 }));
-            } else {
-                if(extraFeeRow) extraFeeRow.classList.add('hidden');
-            }
-
-            setVal('printTotalBeforeVat', order.totalBeforeVat ? order.totalBeforeVat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
-            setVal('printVat', order.vat ? order.vat.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
-            setVal('printGrandTotal', order.grandTotal ? order.grandTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '-');
-
-            setVal('invPrintHeaderBrand', "บริษัท โปรคอนกรีต ประเทศไทย จำกัด");
-            
-            let branchName = "สำนักงานใหญ่";
-            let branchAddress = "ไม่ระบุ";
-            let branchPhone = "-";
-            
-            if (order.branchId) {
-                const branch = allBranchesMemory.find(b => b.id === order.branchId);
-                if (branch) {
-                    branchName = branch.name;
-                    branchAddress = branch.address;
-                    branchPhone = branch.phone;
-                }
-            }
-            
-            setVal('invPrintBranchName', branchName);
-            setVal('invPrintBranchAddress', branchAddress);
-            setVal('invPrintBranchPhone', branchPhone);
-
-            document.body.classList.add('print-invoice');
-            window.print();
-        };
-
-        window.addEventListener('afterprint', () => {
-            document.body.classList.remove('print-invoice');
-        });
-
         // ==========================================
-        // 🔍 ระบบติดตามคิวงานด้วยเบอร์โทรศัพท์
+        // 🔍 ระบบติดตามคิวงานด้วยเบอร์โทรศัพท์เท่านั้นเพื่อความปลอดภัย
         // ==========================================
         window.searchTracking = function(isUpdate = false) {
             const nameInput = document.getElementById('searchNameInput');
@@ -1654,17 +1737,19 @@
             const resultDiv = document.getElementById('trackingResult');
             if(!resultDiv) return;
 
+            // ตรวจสอบความถูกต้องเบอร์โทรศัพท์ 10 หลัก
             if (!isUpdate && !validatePhoneNumber(phone, nameInput)) {
                 window.showModal('เบอร์โทรศัพท์ไม่ถูกต้อง', 'กรุณากรอกเบอร์โทรศัพท์มือถือ 10 หลักเท่านั้น เพื่อความปลอดภัยในการตรวจสอบสถานะจัดส่ง');
                 return;
             }
-            if (isUpdate && phone.length !== 10) return; 
+            if (isUpdate && phone.length !== 10) return; // ไม่แสดงผลถ้าระบบอัปเดตอัตโนมัติแล้วเบอร์ยังผิด
 
             const found = allOrdersMemory.filter(o => 
                 (o.phone && o.phone.replace(/\s+/g, '') === phone.replace(/\s+/g, '')) || 
                 (currentUser && !currentUser.isAnonymous && o.userId === currentUser.uid)
             );
 
+            // 💡 Smart DOM Updating: เช็คสถานะเพื่อป้องกันการรีเฟรชกล่องแผนที่กระตุก (DOM Wiping)
             let needsFullRender = !isUpdate;
             if (isUpdate) {
                 if (found.length !== Object.keys(window.lastRenderedTrackingOrders).length) {
@@ -1680,6 +1765,7 @@
             }
 
             if (needsFullRender) {
+                // ล้างแคชแผนที่เดิมเพื่อป้องกัน Error "Map already initialized"
                 if (window.activeTrackingMaps) {
                     for (let id in window.activeTrackingMaps) {
                         if (window.activeTrackingMaps[id] && window.activeTrackingMaps[id].map) {
@@ -1748,8 +1834,10 @@
                                     ${kpiSummaryHtml}
                                 </div>
                                 
+                                <!-- 🚨 โซนแสดงแผนที่วิ่งของรถปูนเมื่อสถานะเป็น Delivering และได้รับสัญญาณ GPS เรียลไทม์จากคนขับ -->
                                 ${isDelivering ? `
                                     <div class="bg-slate-50 border-t border-slate-100 p-4 md:p-5 space-y-4">
+                                        <!-- ข้อมูลคนขับและรถโม่ปูน -->
                                         ${order.assignedTruck ? `
                                             <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
                                                 <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0 border border-emerald-200">
@@ -1757,7 +1845,10 @@
                                                 </div>
                                                 <div class="flex-1 min-w-0">
                                                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">พนักงานขับรถโม่</p>
-                                                    <p class="text-sm font-black text-slate-900 truncate">${order.assignedTruck.driverName}</p>
+                                                    <p class="text-sm font-black text-slate-900 truncate">${order.assignedTruck.driverName} <span class="text-emerald-600 ml-1 font-bold">(${order.assignedTruck.licensePlate || ''})</span></p>
+                                                    <p class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 mt-1">
+                                                        <i data-lucide="phone" class="w-3 h-3 text-slate-400"></i> ${order.assignedTruck.phone}
+                                                    </p>
                                                 </div>
                                             </div>
                                         ` : `
@@ -1767,6 +1858,7 @@
                                             </div>
                                         `}
 
+                                        <!-- แผงจับเวลาส่งมอบและควบคุมคุณภาพ (KPI & Concrete Freshness Timer) -->
                                         <div class="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-4 space-y-3 shadow-inner">
                                             <div class="flex justify-between items-center text-xs">
                                                 <span class="font-semibold text-emerald-800 flex items-center gap-1.5">
@@ -1775,6 +1867,7 @@
                                                 <span id="live-timer-${order.id}" class="font-mono font-bold text-sm text-emerald-700 bg-white px-2.5 py-0.5 rounded border border-emerald-100">00:00:00</span>
                                             </div>
                                             
+                                            <!-- แถบวัดความสดของคอนกรีต (Concrete Freshness Bar) -->
                                             <div class="space-y-1">
                                                 <div class="flex justify-between items-center text-[10px] font-bold">
                                                     <span class="text-slate-500">ระดับความสดใหม่ของคอนกรีต</span>
@@ -1818,6 +1911,50 @@
                     resultDiv.classList.remove('hidden');
                     lucide.createIcons();
 
+                    // สตาร์ตลูปรันการจับเวลาสะสม Real-time ทุก 1 วินาที สำหรับคำสั่งซื้อที่กำลังนำส่ง
+                    if (window.liveTimerInterval) clearInterval(window.liveTimerInterval);
+                    window.liveTimerInterval = setInterval(() => {
+                        found.forEach(order => {
+                            if (order.status === 'delivering') {
+                                const startTime = order.deliveryStartTime || order.createdAt;
+                                const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
+                                
+                                const hrs = Math.floor(elapsedSec / 3600);
+                                const mins = Math.floor((elapsedSec % 3600) / 60);
+                                const secs = elapsedSec % 60;
+                                const timeStr = `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                                
+                                const timerEl = document.getElementById(`live-timer-${order.id}`);
+                                if (timerEl) timerEl.innerText = timeStr;
+                                
+                                const totalLimitMins = 120;
+                                const elapsedMins = elapsedSec / 60;
+                                let freshness = Math.max(0, 100 - (elapsedMins / totalLimitMins * 100));
+                                
+                                const barEl = document.getElementById(`freshness-bar-${order.id}`);
+                                const textEl = document.getElementById(`freshness-text-${order.id}`);
+                                
+                                if (barEl && textEl) {
+                                    barEl.style.width = `${freshness}%`;
+                                    if (freshness > 60) {
+                                        barEl.className = "bg-emerald-500 h-full transition-all duration-1000";
+                                        textEl.innerText = `${Math.round(freshness)}% (สดใหม่ยอดเยี่ยม)`;
+                                        textEl.className = "text-emerald-600 font-bold";
+                                    } else if (freshness > 30) {
+                                        barEl.className = "bg-amber-500 h-full transition-all duration-1000";
+                                        textEl.innerText = `${Math.round(freshness)}% (ควรเร่งทำการเท)`;
+                                        textEl.className = "text-amber-600 font-bold";
+                                    } else {
+                                        barEl.className = "bg-red-500 h-full transition-all duration-1000";
+                                        textEl.innerText = `${Math.round(freshness)}% (วิกฤต คอนกรีตเริ่มเซ็ตตัว!)`;
+                                        textEl.className = "text-red-600 font-bold animate-pulse";
+                                    }
+                                }
+                            }
+                        });
+                    }, 1000);
+
+                    // สตาร์ตวาดแผนที่สำหรับรถปูนที่กำลังจัดส่งอยู่
                     found.forEach(order => {
                         if (order.status === 'delivering') {
                             setTimeout(() => { initOrUpdateLiveTrackingMap(order); }, 100);
@@ -1825,54 +1962,13 @@
                     });
                 }
             } else {
+                // 💡 Partial Update (ไม่อัปเดต DOM แต่ขยับแค่หมุดแผนที่และเวลา) ทำให้แผนที่ไม่กระตุก
                 found.forEach(order => {
                     if (order.status === 'delivering') {
                         initOrUpdateLiveTrackingMap(order);
                     }
                 });
             }
-
-            if (window.liveTimerInterval) clearInterval(window.liveTimerInterval);
-            window.liveTimerInterval = setInterval(() => {
-                found.forEach(order => {
-                    if (order.status === 'delivering') {
-                        const startTime = order.deliveryStartTime || order.createdAt;
-                        const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
-                        
-                        const hrs = Math.floor(elapsedSec / 3600);
-                        const mins = Math.floor((elapsedSec % 3600) / 60);
-                        const secs = elapsedSec % 60;
-                        const timeStr = `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-                        
-                        const timerEl = document.getElementById(`live-timer-${order.id}`);
-                        if (timerEl) timerEl.innerText = timeStr;
-                        
-                        const totalLimitMins = 120;
-                        const elapsedMins = elapsedSec / 60;
-                        let freshness = Math.max(0, 100 - (elapsedMins / totalLimitMins * 100));
-                        
-                        const barEl = document.getElementById(`freshness-bar-${order.id}`);
-                        const textEl = document.getElementById(`freshness-text-${order.id}`);
-                        
-                        if (barEl && textEl) {
-                            barEl.style.width = `${freshness}%`;
-                            if (freshness > 60) {
-                                barEl.className = "bg-emerald-500 h-full transition-all duration-1000";
-                                textEl.innerText = `${Math.round(freshness)}% (สดใหม่ยอดเยี่ยม)`;
-                                textEl.className = "text-emerald-600 font-bold";
-                            } else if (freshness > 30) {
-                                barEl.className = "bg-amber-500 h-full transition-all duration-1000";
-                                textEl.innerText = `${Math.round(freshness)}% (ควรเร่งทำการเท)`;
-                                textEl.className = "text-amber-600 font-bold";
-                            } else {
-                                barEl.className = "bg-red-500 h-full transition-all duration-1000";
-                                textEl.innerText = `${Math.round(freshness)}% (วิกฤต คอนกรีตเริ่มเซ็ตตัว!)`;
-                                textEl.className = "text-red-600 font-bold animate-pulse";
-                            }
-                        }
-                    }
-                });
-            }, 1000);
         };
 
         function initOrUpdateLiveTrackingMap(order) {
@@ -1880,12 +1976,19 @@
             const mapElement = document.getElementById(mapContainerId);
             if (!mapElement) return;
 
-            const truckLat = order.currentLat || PLANT_LAT;
-            const truckLng = order.currentLng || PLANT_LNG;
+            // หากยังไม่มี GPS ให้ดึงพิกัดจากแพลนท์หลัก(สาขาของออเดอร์)เป็นตำแหน่งเริ่มต้นแทน
+            let bLat = DEFAULT_LAT; let bLng = DEFAULT_LNG;
+            if(order.branchId) {
+                const branch = allBranchesMemory.find(b => b.id === order.branchId);
+                if(branch) { bLat = parseFloat(branch.lat) || DEFAULT_LAT; bLng = parseFloat(branch.lng) || DEFAULT_LNG; }
+            }
+
+            const truckLat = order.currentLat || bLat;
+            const truckLng = order.currentLng || bLng;
             const truckLatLng = [truckLat, truckLng];
             
-            const destLat = order.customerLat || (PLANT_LAT + 0.015);
-            const destLng = order.customerLng || (PLANT_LNG + 0.015);
+            const destLat = order.customerLat || (bLat + 0.015);
+            const destLng = order.customerLng || (bLng + 0.015);
             const destLatLng = [destLat, destLng];
 
             const distance = calculateDistance(truckLat, truckLng, destLat, destLng);
@@ -1908,16 +2011,19 @@
             const destIconHtml = '<div style="background-color:white;padding:4px;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>';
             const destIcon = L.divIcon({ html: destIconHtml, iconSize: [28, 28], iconAnchor: [14, 14], className: '' });
 
+            // 🚨 ตรวจสอบความสมบูรณ์ของ Map Container เพื่อป้องกันบั๊ก
             if (window.activeTrackingMaps[order.id]) {
                 const liveMapObj = window.activeTrackingMaps[order.id];
                 try {
                     liveMapObj.truckMarker.setLatLng(truckLatLng);
                     liveMapObj.destMarker.setLatLng(destLatLng);
+                    liveMapObj.map.invalidateSize();
                     if(order.currentLat && order.currentLng) {
                         liveMapObj.map.fitBounds(L.latLngBounds([truckLatLng, destLatLng]), { padding: [30, 30], maxZoom: 15 });
                     }
                 } catch (e) {
-                    console.warn("Retrying initializing map container:", e);
+                    console.warn("Retrying initializing map container after map instance mismatch:", e);
+                    delete window.activeTrackingMaps[order.id];
                 }
             } else {
                 const container = L.DomUtil.get(mapContainerId);
