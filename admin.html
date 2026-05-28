@@ -45,27 +45,11 @@
             box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
             outline: none;
         }
-        .modern-input:disabled {
-            background-color: #f1f5f9;
-            color: #94a3b8;
-            cursor: not-allowed;
-        }
 
         .glass-header {
             background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        .shake-element {
-            animation: shake 0.5s ease-in-out;
-            border-color: #ef4444 !important;
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15) !important;
         }
 
         @media print {
@@ -310,8 +294,12 @@
                                                     <span class="font-black text-slate-700">210 KSC</span>
                                                 </label>
                                             </div>
-                                            <div class="w-full sm:flex-1 relative"><input type="number" id="setting_full_price_210" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through"></div>
-                                            <div class="w-full sm:flex-1 relative"><input type="number" id="setting_price_210" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white"></div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <input type="number" id="setting_full_price_210" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through">
+                                            </div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <input type="number" id="setting_price_210" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white">
+                                            </div>
                                         </div>
 
                                         <!-- 240 KSC -->
@@ -322,8 +310,12 @@
                                                     <span class="font-black text-slate-700">240 KSC</span>
                                                 </label>
                                             </div>
-                                            <div class="w-full sm:flex-1 relative"><input type="number" id="setting_full_price_240" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through"></div>
-                                            <div class="w-full sm:flex-1 relative"><input type="number" id="setting_price_240" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white"></div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <input type="number" id="setting_full_price_240" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-400 line-through">
+                                            </div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <input type="number" id="setting_price_240" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-200 bg-emerald-50 focus:bg-white">
+                                            </div>
                                         </div>
 
                                         <!-- 280 KSC (ยอดนิยม) -->
@@ -335,8 +327,12 @@
                                                     <span class="font-black text-emerald-800">280 KSC</span>
                                                 </label>
                                             </div>
-                                            <div class="w-full sm:flex-1 relative"><input type="number" id="setting_full_price_280" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-505 line-through bg-white"></div>
-                                            <div class="w-full sm:flex-1 relative"><input type="number" id="setting_price_280" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-400 bg-white focus:ring-1 focus:ring-emerald-500 shadow-sm"></div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <input type="number" id="setting_full_price_280" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-505 line-through bg-white">
+                                            </div>
+                                            <div class="w-full sm:flex-1 relative">
+                                                <input type="number" id="setting_price_280" class="modern-input w-full p-2.5 rounded-lg text-sm font-black text-emerald-700 border-emerald-400 bg-white focus:ring-1 focus:ring-emerald-500 shadow-sm">
+                                            </div>
                                         </div>
 
                                         <!-- 300 KSC -->
@@ -407,7 +403,7 @@
                                 </div>
                             </div>
 
-                            <!-- 🏢 จัดการสาขา และพิกัดแผนที่ -->
+                            <!-- 🏢 จัดการสาขา และบัญชีธนาคาร -->
                             <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-200 shadow-sm space-y-6">
                                 <div class="flex justify-between items-center border-b border-slate-100 pb-4">
                                     <div>
@@ -415,9 +411,9 @@
                                             <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
                                                 <i data-lucide="network" class="w-4 h-4"></i>
                                             </div>
-                                            จัดการสาขา และพิกัดศูนย์กลาง
+                                            จัดการสาขา และช่องทางรับชำระเงิน
                                         </h2>
-                                        <p class="text-[11px] text-slate-500 mt-1">ตั้งค่าพิกัดเพื่อให้ระบบลูกค้าคำนวณระยะทางจัดส่งได้ถูกต้อง</p>
+                                        <p class="text-[11px] text-slate-500 mt-1">บริษัท โปรคอนกรีต ประเทศไทย จำกัด (เพิ่มสาขาเพื่อแยกที่อยู่และบัญชีรับเงิน)</p>
                                     </div>
                                 </div>
                                 
@@ -443,20 +439,6 @@
                                         <div class="space-y-1 md:col-span-2">
                                             <label class="text-[10px] font-bold text-slate-500 uppercase">ที่อยู่ฉบับเต็ม (แสดงบนใบส่งของ)</label>
                                             <textarea id="branchAddr" required rows="2" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800 resize-none"></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="border-t border-slate-200 pt-4 mt-2">
-                                        <h4 class="text-xs font-bold text-slate-700 mb-3"><i data-lucide="map-pin" class="w-3.5 h-3.5 inline"></i> พิกัดศูนย์กลางแพลนท์ (สำหรับคำนวณแผนที่)</h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div class="space-y-1">
-                                                <label class="text-[10px] font-bold text-slate-500 uppercase">ละติจูด (Latitude)</label>
-                                                <input type="number" step="any" id="branchLat" required placeholder="เช่น 17.362726" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800">
-                                            </div>
-                                            <div class="space-y-1">
-                                                <label class="text-[10px] font-bold text-slate-500 uppercase">ลองจิจูด (Longitude)</label>
-                                                <input type="number" step="any" id="branchLng" required placeholder="เช่น 102.762751" class="modern-input w-full p-2.5 rounded-lg text-sm font-bold text-slate-800">
-                                            </div>
                                         </div>
                                     </div>
                                     
@@ -521,6 +503,7 @@
 
                 <!-- TAB 3: รายงานสรุปยอดขาย -->
                 <div id="adminReportView" class="tab-content space-y-6">
+                    <!-- Filter -->
                     <div class="bg-white p-5 md:p-6 rounded-[2rem] border border-slate-200 shadow-sm">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                             <div>
@@ -555,6 +538,7 @@
                         </div>
                     </div>
 
+                    <!-- KPIs -->
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                         <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-center">
                             <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">ยอดขายรวมสุทธิ</p>
@@ -574,16 +558,18 @@
                         </div>
                     </div>
 
+                    <!-- Chart -->
                     <div class="bg-white p-5 md:p-6 rounded-[2rem] border border-slate-200 shadow-sm">
                         <div class="relative w-full h-[300px] md:h-[350px]"><canvas id="salesChart"></canvas></div>
                     </div>
                     
+                    <!-- ส่วนตารางรายงาน 4 ตาราง -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         
                         <div class="bg-white rounded-[2rem] border-2 border-emerald-100 shadow-sm flex flex-col overflow-hidden">
                             <div class="p-5 border-b border-emerald-100 bg-emerald-50/50 flex justify-between items-center">
                                 <h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm">
-                                    <i data-lucide="medal" class="w-4 h-4 text-emerald-600 animate-bounce"></i> รายงานวิเคราะห์ยอดขายแยกตามสาขา
+                                    <i data-lucide="medal" class="w-4 h-4 text-emerald-600 animate-bounce"></i> รายงานวิเคราะห์ยอดขายแยกตามสาขา (Branch Ranking)
                                 </h3>
                             </div>
                             <div class="overflow-x-auto hide-scrollbar flex-1">
@@ -594,7 +580,7 @@
                                             <th class="p-3 text-center">จังหวัด</th>
                                             <th class="p-3 text-center">บิลทั้งหมด</th>
                                             <th class="p-3 text-right">ปูนรวม (คิว)</th>
-                                            <th class="p-3 text-right">ยอดรวม (฿)</th>
+                                            <th class="p-3 text-right">ยอดรวมรวม VAT (฿)</th>
                                         </tr>
                                     </thead>
                                     <tbody id="branchLeaderboardTableBody" class="divide-y divide-slate-100"></tbody>
@@ -615,7 +601,7 @@
                                             <th class="p-3 text-left">พนักงานขับรถ</th>
                                             <th class="p-3 text-center">รอบจัดส่ง</th>
                                             <th class="p-3 text-center">เวลาจัดส่งเฉลี่ย</th>
-                                            <th class="p-3 text-center">ตามเกณฑ์ KPI</th>
+                                            <th class="p-3 text-center">ตามเกณฑ์ KPI (120 นาที)</th>
                                         </tr>
                                     </thead>
                                     <tbody id="driverKpiTableBody" class="divide-y divide-slate-100"></tbody>
@@ -662,9 +648,7 @@
     <div id="globalModal" class="fixed inset-0 z-[210] hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 print:hidden animate-[fadeIn_0.2s_ease-out]">
         <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 text-center">
             <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center mx-auto mb-5"><i id="modalIcon" data-lucide="info" class="w-8 h-8"></i></div>
-            <h3 id="modalTitle" class="text-xl font-black mb-2 text-slate-900">Title</h3><p id="modalMessage" class="text-sm font-medium text-slate-500 mb-2 leading-relaxed">Msg</p>
-            
-            <div id="modalPinSection" class="hidden mb-6 mt-4"><input type="password" id="modalPinInput" placeholder="กรอก PIN 4 หลัก" maxlength="4" class="modern-input w-full p-3 rounded-xl text-center font-bold tracking-[0.5em] text-lg bg-slate-50 border border-slate-300 focus:bg-white focus:border-red-500"><p id="modalPinError" class="hidden text-xs text-red-500 mt-2 font-bold"><i data-lucide="alert-circle" class="w-3 h-3 inline"></i> รหัส PIN ไม่ถูกต้อง!</p></div><div id="modalSpacing" class="h-4"></div>
+            <h3 id="modalTitle" class="text-xl font-black mb-2 text-slate-900">Title</h3><p id="modalMessage" class="text-sm font-medium text-slate-500 mb-6 leading-relaxed">Msg</p>
             <div class="flex gap-3"><button id="modalCancelBtn" class="hidden flex-1 py-3.5 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-xl font-bold transition active:scale-95">ยกเลิก</button><button id="modalOkBtn" class="flex-1 py-3.5 bg-slate-900 text-white rounded-xl font-black hover:bg-slate-800 shadow-md transition active:scale-95">ตกลง</button></div>
         </div>
     </div>
@@ -753,10 +737,161 @@
         </div>
     </div>
 
+    <!-- 2. สำหรับพิมพ์สรุปรายงานยอดขายทั้งหมด -->
+    <div id="printable-report" class="hidden absolute bg-white text-black p-8 text-sm">
+        <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
+            <div>
+                <h1 class="text-2xl font-black text-slate-900 mb-1" id="reportPrintHeaderBrand">PRO CONCRETE ECO</h1>
+                <p class="text-xs text-slate-600">รายงานสรุปยอดขายแพลนท์คอนกรีต (Sales Summary Report)</p>
+                <p class="text-xs text-slate-600">วิเคราะห์สำหรับ: <span id="printReportBranchName" class="font-bold">ทุกสาขารวมกัน</span></p>
+            </div>
+            <div class="text-right">
+                <h2 class="text-lg font-bold text-slate-800 uppercase">รายงานสรุปผลการเทปูนและประเมินคนขับ</h2>
+                <p class="text-xs text-slate-600 mt-1">ช่วงเวลา: <span id="printReportRange"></span></p>
+                <p class="text-xs text-slate-600">วันที่พิมพ์: <span id="printReportDate"></span></p>
+            </div>
+        </div>
+        <div class="grid grid-cols-4 gap-4 border border-slate-300 rounded-lg p-4 mb-6 bg-slate-50">
+            <div class="text-center"><p class="text-[10px] font-bold text-slate-500 uppercase">ยอดขายรวม</p><p class="text-base font-bold text-slate-800">฿<span id="print_kpi_revenue">0.00</span></p></div>
+            <div class="text-center"><p class="text-[10px] font-bold text-slate-500 uppercase">ปูนสะสม</p><p class="text-base font-bold text-slate-800"><span id="print_kpi_volume">0.0</span> คิว</p></div>
+            <div class="text-center"><p class="text-[10px] font-bold text-slate-500 uppercase">ออเดอร์</p><p class="text-base font-bold text-slate-800"><span id="print_kpi_count">0</span> บิล</p></div>
+            <div class="text-center"><p class="text-[10px] font-bold text-slate-500 uppercase">เฉลี่ยต่อบิล</p><p class="text-base font-bold text-slate-800">฿<span id="print_kpi_avg">0.00</span></p></div>
+        </div>
+
+        <div class="flex gap-4 mb-6">
+            <div class="w-1/2">
+                <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-wide bg-slate-100 p-1">🏆 10 อันดับลูกค้าที่สั่งซื้อสูงสุด</p>
+                <table class="w-full text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 border-y border-slate-300"><th class="p-2 text-left">ลูกค้า</th><th class="p-2 text-center">บิล</th><th class="p-2 text-right">ยอดสุทธิ (บาท)</th></tr>
+                    </thead>
+                    <tbody id="printTopCustomersTableBody" class="divide-y divide-slate-200"></tbody>
+                </table>
+            </div>
+            
+            <div class="w-1/2">
+                <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-wide bg-blue-50 text-blue-700 p-1 border-l-2 border-blue-500">🚛 ประสิทธิภาพพนักงานขับรถ (Driver KPI)</p>
+                <table class="w-full text-[11px] border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 border-y border-slate-300"><th class="p-2 text-left">ชื่อคนขับ</th><th class="p-2 text-center">จำนวนรอบ</th><th class="p-2 text-center">เวลาเฉลี่ย/รอบ</th><th class="p-2 text-center">ตามเกณฑ์ KPI</th></tr>
+                    </thead>
+                    <tbody id="printDriverKpiTableBody" class="divide-y divide-slate-200"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="w-full">
+            <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-wide bg-emerald-50 text-emerald-800 p-1 border-l-2 border-emerald-500">🏢 สรุปผลงานยอดขายเปรียบเทียบในแต่ละสาขา (Branch Leaders)</p>
+            <table class="w-full text-xs border-collapse">
+                <thead>
+                    <tr class="bg-slate-100 border-y border-slate-300">
+                        <th class="p-2 text-left">อันดับ / สาขา</th>
+                        <th class="p-2 text-center">จังหวัด</th>
+                        <th class="p-2 text-center">บิลรวม</th>
+                        <th class="p-2 text-right">ปริมาณปูนรวม (คิว)</th>
+                        <th class="p-2 text-right font-bold">ยอดขายรวมสุทธิ (บาท)</th>
+                    </tr>
+                </thead>
+                <tbody id="printBranchLeaderboardTableBody" class="divide-y divide-slate-200"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 3. สำหรับพิมพ์ใบส่งคอนกรีต -->
+    <div id="printable-delivery-ticket" class="hidden absolute bg-white text-black p-8 text-sm">
+        <div class="border-b-4 border-double border-slate-900 pb-4 mb-6 flex justify-between items-start">
+            <div>
+                <h1 class="text-3xl font-black tracking-tight text-slate-900 mb-1" id="ticketPrintHeaderBrand">PRO CONCRETE ECO</h1>
+                <p class="text-xs text-slate-700 font-bold" id="ticketPrintHeaderFullname">บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)</p>
+                <p class="text-xs text-slate-600" id="ticketPrintHeaderAddress">123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110</p>
+                <p class="text-xs text-slate-600">โทร. <span id="ticketPrintHeaderPhone">02-123-4567</span> | เลขประจำตัวผู้เสียภาษี (ผู้ผลิต): <span id="ticketPrintHeaderTaxId">0105559001234</span></p>
+            </div>
+            <div class="text-right">
+                <h2 class="text-2xl font-black text-slate-900 uppercase">ใบส่งคอนกรีต</h2>
+                <span class="text-xs font-bold text-slate-500 block mt-0.5">Delivery Ticket / Goods Receipt</span>
+                <div class="mt-4 text-xs space-y-1 text-slate-800 text-left bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                    <p class="font-bold">รหัส Order: <span id="ticketOrderNo" class="font-mono text-emerald-700"></span></p>
+                    <p>วันที่พิมพ์ใบส่ง: <span id="ticketPrintDate"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6 mb-6">
+            <div class="border border-slate-300 rounded-xl p-4">
+                <p class="text-[10px] font-black text-slate-500 uppercase bg-slate-100 p-1 mb-2 tracking-wide">ข้อมูลผู้รับสินค้า (Customer Details)</p>
+                <p class="font-black text-slate-800 text-base mb-1" id="ticketCustomerName">...</p>
+                <p class="text-xs text-slate-600" id="ticketTaxInfo">...</p>
+                <p class="text-xs text-slate-600 mt-1">เบอร์ติดต่อลูกค้า: <span id="ticketCustomerPhone" class="font-bold"></span></p>
+            </div>
+            <div class="border border-slate-300 rounded-xl p-4">
+                <p class="text-[10px] font-black text-slate-500 uppercase bg-slate-100 p-1 mb-2 tracking-wide">สถานที่จัดส่งและพนักงานส่ง (Delivery Destination)</p>
+                <p class="font-black text-slate-800 text-base mb-1" id="ticketDriverName">...</p>
+                <p class="text-xs text-emerald-700 font-bold">พนักงานขับรถส่งมอบคอนกรีต</p>
+                <p class="text-xs text-slate-600 mt-2 font-medium">ไซต์งานจัดส่ง: <span id="ticketAddress" class="text-slate-800 font-semibold"></span></p>
+            </div>
+        </div>
+
+        <table class="w-full text-xs mb-6 border-collapse">
+            <thead>
+                <tr class="bg-slate-100 border-y-2 border-slate-400">
+                    <th class="p-3 text-center w-12">ลำดับ</th>
+                    <th class="p-3 text-left">รายการวัสดุและเกรดคอนกรีตที่จัดส่ง</th>
+                    <th class="p-3 text-center w-24">กำลังอัด (KSC)</th>
+                    <th class="p-3 text-center w-24">ปริมาณ (คิว)</th>
+                    <th class="p-3 text-right w-36">ยอดเงินรวมภาษี (บาท)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b border-slate-300">
+                    <td class="p-3 text-center font-bold">1</td>
+                    <td class="p-3">
+                        <p class="font-black text-slate-900">คอนกรีตผสมเสร็จ ProConcrete Eco (คาร์บอนต่ำรักษ์โลก)</p>
+                        <p class="text-[10px] text-slate-500 mt-1">ผลิตและผสมภายใต้การควบคุมคุณภาพตามมาตรฐานวิศวกรรมทางโยธา</p>
+                    </td>
+                    <td class="p-3 text-center font-black text-slate-800" id="ticketStrength">...</td>
+                    <td class="p-3 text-center font-black text-slate-800 text-base" id="ticketVolume">...</td>
+                    <td class="p-3 text-right font-black text-slate-800 text-base" id="ticketGrandTotal">...</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-8">
+            <h3 class="font-black text-xs text-slate-800 uppercase tracking-wider mb-2.5 flex items-center gap-1.5"><i data-lucide="timer" class="w-4 h-4 text-emerald-600"></i> บันทึกเวลาขนส่งและการเทคอนกรีตหน้างาน (Logistics KPI)</h3>
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                    <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">เวลาเริ่มผสมปูน (Plant Batching)</p>
+                    <p id="ticketBatchingTime" class="text-sm font-black text-slate-800">-- : -- น.</p>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                    <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">เวลาออกเดินทาง (Departure)</p>
+                    <p id="ticketDepartureTime" class="text-sm font-black text-slate-800">-- : -- น.</p>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                    <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">เวลาเทเสร็จหน้างาน (Completion)</p>
+                    <p class="text-sm font-black text-slate-400">....................... น.</p>
+                </div>
+            </div>
+            <p class="text-[9px] text-slate-400 mt-2 font-medium leading-relaxed">* หมายเหตุ: เพื่อประสิทธิภาพสูงสุด คอนกรีตรักษ์โลกควรเริ่มเทลงแบบและเทให้เสร็จสิ้นภายใน 120 นาทีหลังจากเวลาเริ่มผลิต (เวลาเริ่มผสมปูน) เพื่อให้เนื้อปูนยึดเกาะประสานได้ตามกำลังอัดที่ตกลงกัน</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-12 mt-16 text-center">
+            <div class="flex flex-col items-center">
+                <p class="text-slate-400 mb-10">.........................................................................</p>
+                <p class="text-xs font-bold text-slate-800">พนักงานขับรถส่งมอบสินค้า</p>
+                <p class="text-[10px] text-slate-500 mt-1">วันที่ ........./........./......... เวลา .........:......... น.</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <p class="text-slate-400 mb-10">.........................................................................</p>
+                <p class="text-xs font-bold text-slate-800">ผู้รับสินค้า / ผู้ควบคุมงานก่อสร้าง</p>
+                <p class="text-[10px] text-slate-500 mt-1">วันที่ ........./........./......... เวลา .........:......... น.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, setDoc, getDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const ADMIN_PASSWORD = '9999';
@@ -786,21 +921,7 @@
 
         let priceSettings = {
             price_180: 1650, price_210: 1720, price_240: 1800, price_280: 1900, price_300: 1980,
-            price_320: 2050, price_350: 2150, price_380: 2250, price_400: 2350,
-            full_price_180: 1800, full_price_210: 1900, full_price_240: 2000, full_price_280: 2150, full_price_300: 2250,
-            full_price_320: 2350, full_price_350: 2450, full_price_380: 2600, full_price_400: 2750,
-            active_180: true, active_210: true, active_240: true, active_280: true, active_300: true,
-            active_320: true, active_350: true, active_380: true, active_400: true,
-            shipping_fee: 500,
-            bank_name: "ธนาคารกสิกรไทย",
-            bank_no: "123-4-56789-0",
-            bank_account: "บจก. โปร คอนกรีต ประเทศไทย",
-            bank_qr_image: "",
-            company_name: "PRO CONCRETE ECO",
-            company_fullname: "บริษัท โปร คอนกรีต ประเทศไทย จำกัด (สำนักงานใหญ่)",
-            company_address: "123 ถนนก่อสร้าง แขวงบางปูน เขตเทปูน กรุงเทพฯ 10110",
-            company_phone: "02-123-4567",
-            company_tax_id: "0105559001234"
+            price_320: 2050, price_350: 2150, price_380: 2250, price_400: 2350, shipping_fee: 500
         };
 
         // ----------------------------------------------------
@@ -849,53 +970,6 @@
             okBtn.innerText = "ยืนยัน";
             okBtn.onclick = () => { modal.classList.add('hidden'); onConfirm(); };
             modal.classList.remove('hidden');
-        };
-
-        window.showPinConfirm = function(title, message, requiredPin, onConfirm) {
-            const modal = document.getElementById('globalModal');
-            if (!modal) return;
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalMessage').innerText = message;
-            const icon = document.getElementById('modalIcon');
-            icon.setAttribute('data-lucide', 'shield-alert');
-            icon.parentElement.className = "w-16 h-16 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-2 border border-red-100";
-            if (window.lucide) lucide.createIcons();
-
-            const pinSection = document.getElementById('modalPinSection');
-            const pinInput = document.getElementById('modalPinInput');
-            const pinError = document.getElementById('modalPinError');
-            if (pinSection) {
-                pinSection.classList.remove('hidden');
-                pinInput.value = '';
-                pinError.classList.add('hidden');
-                document.getElementById('modalSpacing').classList.remove('h-4');
-            }
-
-            const cancelBtn = document.getElementById('modalCancelBtn');
-            cancelBtn.classList.remove('hidden');
-            cancelBtn.onclick = () => {
-                modal.classList.add('hidden');
-                pinSection.classList.add('hidden');
-                document.getElementById('modalSpacing').classList.add('h-4');
-            };
-            
-            const okBtn = document.getElementById('modalOkBtn');
-            okBtn.className = "flex-1 py-3.5 bg-red-600 hover:bg-red-500 text-white rounded-xl font-black shadow-md transition active:scale-95";
-            okBtn.innerText = "ยืนยันลบข้อมูล";
-            okBtn.onclick = () => { 
-                if (pinInput.value === requiredPin) {
-                    modal.classList.add('hidden'); 
-                    pinSection.classList.add('hidden');
-                    document.getElementById('modalSpacing').classList.add('h-4');
-                    onConfirm(); 
-                } else {
-                    pinError.classList.remove('hidden');
-                    pinInput.classList.add('shake-element');
-                    setTimeout(() => pinInput.classList.remove('shake-element'), 500);
-                }
-            };
-            modal.classList.remove('hidden');
-            setTimeout(() => pinInput.focus(), 100);
         };
 
         window.loginAdmin = function() {
@@ -1062,7 +1136,7 @@
             if (topCustBody) {
                 topCustBody.innerHTML = '';
                 if (topCustomers.length === 0) {
-                    topCustBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีข้อมูลยอดซื้อสะสมของลูกค้าในช่วงเวลานี้</td></tr>`;
+                    topCustBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีข้อมูลในช่วงเวลานี้</td></tr>`;
                 } else {
                     topCustomers.forEach((cust, index) => {
                         const displayName = cust.companyName ? `${cust.companyName} (${cust.name})` : cust.name;
@@ -1304,7 +1378,7 @@
                         const activeEl = document.getElementById(`setting_active_${k}`);
                         const fullPriceEl = document.getElementById(`setting_full_price_${k}`);
                         const priceEl = document.getElementById(`setting_price_${k}`);
-                        if(activeEl) { activeEl.checked = data.hasOwnProperty(`active_${k}`) ? !!data[`active_${k}`] : true; window.toggleKscRow(k); }
+                        if(activeEl) { activeEl.checked = data[`active_${k}`] !== false; window.toggleKscRow(k); }
                         if(fullPriceEl) fullPriceEl.value = data[`full_price_${k}`] || '';
                         if(priceEl) priceEl.value = data[`price_${k}`] || '';
                     });
@@ -1360,36 +1434,24 @@
             const bankName = document.getElementById('branchBankName').value.trim();
             const bankNo = document.getElementById('branchBankNo').value.trim();
             const bankAcc = document.getElementById('branchBankAcc').value.trim();
-            
-            const latVal = document.getElementById('branchLat').value;
-            const lngVal = document.getElementById('branchLng').value;
-            const branchLat = parseFloat(latVal) || 17.36272647627392;
-            const branchLng = parseFloat(lngVal) || 102.76275159235519;
 
-            if(!branchName || !branchProv || !branchAddr || !branchPhone || !bankName || !bankNo || !latVal || !lngVal) { 
-                window.showModal('แจ้งเตือน', 'กรุณากรอกข้อมูลสาขา พิกัด และบัญชีรับเงินให้ครบถ้วน', 'error'); 
-                return; 
-            }
+            if(!branchName || !branchProv || !branchAddr || !branchPhone || !bankName || !bankNo) { window.showModal('แจ้งเตือน', 'กรุณากรอกข้อมูลสาขาและบัญชีรับเงินให้ครบถ้วน'); return; }
 
             try {
                 await addDoc(collection(db, branchesCollectionPath), {
                     name: branchName, province: branchProv, district: branchDist, address: branchAddr, phone: branchPhone,
-                    bank_name: bankName, bank_no: bankNo, bank_account: bankAcc, qr_image: branchQrBase64,
-                    lat: branchLat, lng: branchLng,
-                    createdAt: Date.now()
+                    bank_name: bankName, bank_no: bankNo, bank_account: bankAcc, qr_image: branchQrBase64, createdAt: Date.now()
                 });
                 document.getElementById('addBranchForm').reset();
                 window.removeBranchQr(null);
-                window.showModal('สำเร็จ', 'เพิ่มข้อมูลสาขาและพิกัดศูนย์กลางลงในระบบแล้ว', 'success');
+                window.showModal('สำเร็จ', 'เพิ่มข้อมูลสาขาใหม่ลงในระบบแล้ว', 'success');
             } catch (error) { window.showModal('ข้อผิดพลาด', 'ไม่สามารถบันทึกข้อมูลสาขาได้', 'error'); }
         };
 
         window.deleteBranch = async function(id) {
-            window.showPinConfirm('ยืนยันลบสาขา', 'คุณกำลังจะลบข้อมูลสาขา รถและพนักงานขับรถอาจได้รับผลกระทบ กรุณากรอกรหัสผ่าน 4 หลัก เพื่อยืนยัน:', '8888', async () => {
-                try { 
-                    await deleteDoc(doc(db, branchesCollectionPath, id)); 
-                    window.showModal('ลบสำเร็จ', 'ข้อมูลสาขาถูกลบออกจากระบบเรียบร้อยแล้ว', 'success');
-                } catch(e) { window.showModal('ผิดพลาด', 'ลบข้อมูลไม่สำเร็จ', 'error'); }
+            window.showConfirm('ลบสาขา', 'คุณยืนยันที่จะลบข้อมูลสาขานี้ออกจากระบบใช่หรือไม่? รถโม่และออเดอร์ที่ผูกกับสาขานี้อาจได้รับผลกระทบ', async () => {
+                try { await deleteDoc(doc(db, branchesCollectionPath, id)); } 
+                catch(e) { window.showModal('ผิดพลาด', 'ลบข้อมูลไม่สำเร็จ', 'error'); }
             });
         };
 
@@ -1405,8 +1467,7 @@
                 const tr = document.createElement('tr');
                 tr.className = 'border-b border-slate-100 hover:bg-slate-50/50';
                 tr.innerHTML = `
-                    <td class="p-3 font-black text-emerald-700">${b.name} <p class="text-[9px] text-slate-400 font-mono mt-0.5">GPS: ${parseFloat(b.lat).toFixed(4)}, ${parseFloat(b.lng).toFixed(4)}</p></td>
-                    <td class="p-3 text-sm text-slate-600">${b.province}</td>
+                    <td class="p-3 font-black text-emerald-700">${b.name}</td><td class="p-3 text-sm text-slate-600">${b.province}</td>
                     <td class="p-3"><p class="font-bold text-slate-800 text-xs">${b.bank_name}</p><p class="text-[10px] text-slate-500 font-mono">${b.bank_no}</p></td>
                     <td class="p-3 text-center"><button onclick="window.deleteBranch('${b.id}')" class="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-lg font-bold text-xs transition">ลบ</button></td>
                 `;
@@ -1429,7 +1490,7 @@
             const truckDriver = document.getElementById('truckDriver').value.trim();
             const truckPhone = document.getElementById('truckPhone').value.trim();
 
-            if(!branchId || !truckPlate || !truckDriver || !truckPhone) { window.showModal('แจ้งเตือน', 'กรุณากรอกข้อมูลและเลือกสาขาให้ครบถ้วน', 'error'); return; }
+            if(!branchId || !truckPlate || !truckDriver || !truckPhone) { window.showModal('แจ้งเตือน', 'กรุณากรอกข้อมูลและเลือกสาขาให้ครบถ้วน'); return; }
 
             try {
                 await addDoc(collection(db, trucksCollectionPath), { branchId, licensePlate: truckPlate, driverName: truckDriver, phone: truckPhone, createdAt: Date.now() });
@@ -1439,11 +1500,9 @@
         };
 
         window.deleteTruck = async function(id) {
-            window.showPinConfirm('ลบข้อมูลรถ', 'กรุณากรอกรหัสผ่าน 4 หลัก เพื่อยืนยันการลบรถโม่และคนขับคันนี้:', '8888', async () => {
-                try { 
-                    await deleteDoc(doc(db, trucksCollectionPath, id)); 
-                    window.showModal('ลบสำเร็จ', 'ข้อมูลพนักงานถูกลบเรียบร้อยแล้ว', 'success');
-                } catch(e) { window.showModal('ผิดพลาด', 'ลบข้อมูลไม่สำเร็จ', 'error'); }
+            window.showConfirm('ลบข้อมูลรถ', 'คุณยืนยันที่จะลบข้อมูลรถคันนี้ออกจากระบบใช่หรือไม่?', async () => {
+                try { await deleteDoc(doc(db, trucksCollectionPath, id)); } 
+                catch(e) { window.showModal('ผิดพลาด', 'ลบข้อมูลไม่สำเร็จ', 'error'); }
             });
         };
 
@@ -1525,7 +1584,7 @@
             const formattedDateTime = `${d}/${m}/${y} เวลา ${timeVal} น.`;
             try {
                 await updateDoc(doc(db, ordersCollectionPath, id), { deliveryDateTime: formattedDateTime });
-                window.showModal('สำเร็จ', 'อัปเดตกำหนดวันเวลาเทคอนกรีตเรียบร้อยแล้วครับ', 'success');
+                window.showModal('สำเร็จ', 'อัปเดตกำหนดวันเวลาเทคอนกรีตเรียบร้อยแล้วครับ ระบบได้ส่งการแจ้งเตือนพิกัดใหม่ไปที่คนขับและลูกค้าแล้ว', 'success');
                 document.getElementById(`dateTimeEditor-${id}`).classList.add('hidden');
             } catch(e) { window.showModal('ผิดพลาด', 'ไม่สามารถอัปเดตข้อมูลวันเวลาได้', 'error'); }
         };
@@ -1551,11 +1610,9 @@
         };
 
         window.deleteOrder = async function(id) {
-            window.showPinConfirm('ลบออเดอร์ลูกค้า', 'กรุณากรอกรหัสผ่าน 4 หลัก เพื่อยืนยันสิทธิ์ในการลบคิวงานนี้แบบถาวร:', '8888', async () => {
-                try { 
-                    await deleteDoc(doc(db, ordersCollectionPath, id)); 
-                    window.showModal('ลบสำเร็จ', 'ข้อมูลออเดอร์นี้ถูกทำลายอย่างถาวรแล้ว', 'success');
-                } catch(e) { window.showModal('ผิดพลาด', 'ลบออเดอร์ไม่สำเร็จ', 'error'); }
+            window.showConfirm('ลบออเดอร์', 'คุณยืนยันที่จะลบรายการคิวงานนี้ใช่หรือไม่? (การกระทำนี้ลบถาวร)', async () => {
+                try { await deleteDoc(doc(db, ordersCollectionPath, id)); } 
+                catch(e) { window.showModal('ผิดพลาด', 'ลบออเดอร์ไม่สำเร็จ', 'error'); }
             });
         };
 
@@ -1620,17 +1677,30 @@
                 'confirmed': 'bg-teal-50 text-teal-800 border-teal-200',
                 'batching': 'bg-orange-50 text-orange-700 border-orange-200',
                 'delivering': 'bg-blue-50 text-blue-700 border-blue-200',
-                'delivered': 'bg-slate-200 text-slate-500 border-slate-300' // 🔒 เปลี่ยนสีเป็นเทาเมื่อล็อก
+                'delivered': 'bg-emerald-50 text-emerald-700 border-emerald-200'
             };
 
-            const isLocked = order.status === 'delivered';
-            const cardBgColor = isLocked ? 'bg-slate-50 border-slate-300 shadow-none' : 'bg-white border-2 border-slate-200 shadow-sm hover:shadow-md';
-            const headerBarColor = isLocked ? 'bg-slate-300' : 'bg-emerald-500';
+            const cardBorderColors = {
+                'received': 'border-amber-300 shadow-amber-50',
+                'confirmed': 'border-teal-300 shadow-teal-50',
+                'batching': 'border-orange-300 shadow-orange-50',
+                'delivering': 'border-blue-300 shadow-blue-50',
+                'delivered': 'border-slate-200 opacity-90'
+            };
+
+            const headerBarColors = {
+                'received': 'bg-gradient-to-r from-amber-400 to-amber-500',
+                'confirmed': 'bg-gradient-to-r from-teal-400 to-teal-500',
+                'batching': 'bg-gradient-to-r from-orange-400 to-orange-500',
+                'delivering': 'bg-gradient-to-r from-blue-500 to-indigo-500',
+                'delivered': 'bg-gradient-to-r from-emerald-500 to-teal-500'
+            };
 
             const assignedTruckId = order.assignedTruck ? order.assignedTruck.truckId : '';
             const assignedBranchId = order.branchId || '';
 
-            let defaultDate = ""; let defaultTime = "";
+            let defaultDate = "";
+            let defaultTime = "";
             try {
                 if (order.deliveryDateTime) {
                     const parts = order.deliveryDateTime.split(' เวลา ');
@@ -1645,60 +1715,54 @@
             let batchingTimeText = "";
             if (order.batchingStartTime) {
                 const timeObj = new Date(order.batchingStartTime);
-                batchingTimeText = `<div class="text-[11px] font-bold flex items-center gap-1.5 mt-2 ${isLocked ? 'text-slate-500 bg-slate-100 border-slate-200' : 'text-orange-600 bg-orange-50 border-orange-100'} p-2 rounded-xl border"><i data-lucide="activity" class="w-4 h-4"></i> เริ่มผสม: ${timeObj.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})} น.</div>`;
+                batchingTimeText = `<div class="text-[11px] text-orange-600 font-bold flex items-center gap-1.5 mt-2 bg-orange-50 border border-orange-100 p-2 rounded-xl"><i data-lucide="activity" class="w-4 h-4"></i> เริ่มผสม: ${timeObj.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})} น.</div>`;
             }
 
             const isTicketPrintable = ['confirmed', 'batching', 'delivering', 'delivered'].includes(order.status);
-            const paymentTag = order.paymentMethod === 'cash' ? `<span class="text-[9px] ${isLocked ? 'bg-slate-200 text-slate-600' : 'bg-amber-100 text-amber-800'} px-1.5 py-0.5 rounded uppercase font-bold border ${isLocked ? 'border-slate-300' : 'border-amber-200'}">เงินสด</span>` 
-                             : (order.paymentMethod === 'credit' ? `<span class="text-[9px] ${isLocked ? 'bg-slate-200 text-slate-600' : 'bg-indigo-100 text-indigo-800'} px-1.5 py-0.5 rounded uppercase font-bold border ${isLocked ? 'border-slate-300' : 'border-indigo-200'}">เครดิต ${order.creditContractCode||''}</span>` 
-                             : `<span class="text-[9px] ${isLocked ? 'bg-slate-200 text-slate-600' : 'bg-slate-100 text-slate-600'} px-1.5 py-0.5 rounded uppercase font-bold border border-slate-200">โอนเงิน</span>`);
-
-            // 🔒 ควบคุมการระงับการแก้ไข (Read-only Elements)
-            const disableAttr = isLocked ? 'disabled' : '';
-            const selectClass = isLocked ? 'opacity-60 cursor-not-allowed bg-slate-100' : 'bg-blue-50/30';
-            const truckSelectClass = isLocked ? 'opacity-60 cursor-not-allowed bg-slate-100' : 'bg-white';
-            const editBtnHtml = isLocked ? '' : `<button onclick="window.toggleEditDateTime('${order.id}')" class="text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1 bg-blue-50 px-2 py-1 rounded-md transition"><i data-lucide="calendar-range" class="w-3 h-3"></i> เลื่อน</button>`;
-            const lockOverlay = isLocked ? `<div class="absolute top-4 right-4 bg-slate-800 text-white px-3 py-1 rounded-full text-[10px] font-bold z-20 flex items-center gap-1.5 shadow-md"><i data-lucide="lock" class="w-3 h-3"></i> ปิดงานแล้ว</div>` : '';
+            const isCash = order.paymentMethod === 'cash';
+            const isCredit = order.paymentMethod === 'credit';
+            const paymentTag = isCash ? '<span class="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded uppercase font-bold border border-amber-200">เงินสด</span>' 
+                             : (isCredit ? `<span class="text-[9px] bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded uppercase font-bold border border-indigo-200">เครดิต ${order.creditContractCode||''}</span>` 
+                             : '<span class="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded uppercase font-bold border border-slate-200">โอนเงิน</span>');
 
             const card = document.createElement('div');
-            card.className = `${cardBgColor} rounded-3xl overflow-hidden transition-all flex flex-col relative min-w-0`;
+            card.className = `bg-white rounded-3xl border-2 ${cardBorderColors[order.status]} shadow-sm hover:shadow-md overflow-hidden transition-all flex flex-col relative min-w-0`;
             
             card.innerHTML = `
                 <div class="h-2 w-full ${headerBarColors[order.status]}"></div>
-                ${lockOverlay}
                 
-                <div class="p-4 sm:p-5 border-b border-slate-100 flex-1 flex flex-col min-w-0 ${isLocked ? 'opacity-80' : ''}">
+                <div class="p-4 sm:p-5 border-b border-slate-100 flex-1 flex flex-col min-w-0">
                     <div class="flex justify-between items-start mb-3 gap-2">
                         <div class="flex-1 min-w-0">
-                            <h3 class="font-black text-slate-900 text-lg truncate pr-20" title="${order.name}">${order.name}</h3>
+                            <h3 class="font-black text-slate-900 text-lg truncate" title="${order.name}">${order.name}</h3>
                             <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
                                 <p class="text-[10px] text-slate-400 font-mono font-semibold">REF: ${order.orderNumber}</p>
                                 ${paymentTag}
                             </div>
                         </div>
                         <div class="text-right shrink-0">
-                            <div class="text-2xl font-black ${isLocked ? 'text-slate-600' : 'text-emerald-600'} leading-none">${order.volume} <span class="text-xs text-slate-500 font-medium">คิว</span></div>
+                            <div class="text-2xl font-black text-emerald-600 leading-none">${order.volume} <span class="text-xs text-slate-500 font-medium">คิว</span></div>
                             <div class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200 mt-1.5 inline-block">${order.strength} KSC</div>
                         </div>
                     </div>
                     
-                    <div class="mt-1.5 mb-3 text-xs font-bold ${isLocked ? 'text-slate-600 bg-slate-200 border-slate-300' : 'text-emerald-700 bg-emerald-50/80 border-emerald-200'} px-3 py-1.5 rounded-xl flex justify-between items-center">
-                        <span>ยอดสุทธิ:</span>
+                    <div class="mt-1.5 mb-3 text-xs font-bold text-emerald-700 bg-emerald-50/80 border border-emerald-200 px-3 py-1.5 rounded-xl flex justify-between items-center">
+                        <span class="text-emerald-600">ยอดสุทธิ:</span>
                         <span class="text-sm">฿${parseFloat(order.grandTotal || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 })}</span>
                     </div>
 
                     <div class="mb-3">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 flex items-center gap-1"><i data-lucide="network" class="w-3 h-3 ${isLocked ? 'text-slate-400' : 'text-blue-500'}"></i> โอนงานให้สาขา</label>
-                        <select onchange="window.updateOrderBranch('${order.id}', this.value)" ${disableAttr} class="modern-select w-full text-xs font-bold ${isLocked ? 'text-slate-500' : 'text-blue-700'} rounded-lg border border-blue-200 focus:ring-blue-500 focus:border-blue-500 p-2 outline-none ${selectClass}">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 flex items-center gap-1"><i data-lucide="network" class="w-3 h-3 text-blue-500"></i> โอนงานให้สาขา</label>
+                        <select onchange="window.updateOrderBranch('${order.id}', this.value)" class="modern-select w-full text-xs font-bold text-blue-700 rounded-lg border border-blue-200 focus:ring-blue-500 focus:border-blue-500 p-2 outline-none bg-blue-50/30">
                             <option value="">-- ส่วนกลาง (ไม่ได้ระบุสาขา) --</option>
                             ${allBranchesMemory.map(b => `<option value="${b.id}" ${assignedBranchId === b.id ? 'selected' : ''}>${b.name} (${b.province})</option>`).join('')}
                         </select>
                     </div>
 
-                    <div class="text-xs ${isLocked ? 'bg-slate-100' : 'bg-slate-50'} p-3 rounded-2xl border border-slate-200 mb-3">
+                    <div class="text-xs bg-slate-50 p-3 rounded-2xl border border-slate-200 mb-3">
                         <div class="flex items-center justify-between mb-1.5">
                             <span class="font-semibold text-slate-500">กำหนดจัดส่ง:</span>
-                            ${editBtnHtml}
+                            <button onclick="window.toggleEditDateTime('${order.id}')" class="text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1 bg-blue-50 px-2 py-1 rounded-md transition"><i data-lucide="calendar-range" class="w-3 h-3"></i> เลื่อน</button>
                         </div>
                         <div class="font-bold text-slate-800 flex items-center gap-1.5" id="dateTimeText-${order.id}">
                             <i data-lucide="calendar-clock" class="w-4 h-4 text-slate-400"></i> ${order.deliveryDateTime}
@@ -1715,20 +1779,19 @@
 
                     <div class="space-y-2 text-xs text-slate-600 mb-4 px-1">
                         <div class="flex gap-2 items-center"><i data-lucide="phone" class="w-4 h-4 text-slate-400"></i> ${order.phone}</div>
-                        ${order.reqTaxInvoice ? `<div class="flex gap-2 items-center ${isLocked ? 'text-slate-500 bg-slate-200 border-slate-300' : 'text-blue-600 bg-blue-50 border-blue-100'} font-bold w-fit px-2 py-1 rounded-md border"><i data-lucide="building-2" class="w-3.5 h-3.5"></i> ขอใบกำกับภาษี</div>` : ''}
+                        ${order.reqTaxInvoice ? `<div class="flex gap-2 items-center text-blue-600 font-bold bg-blue-50 w-fit px-2 py-1 rounded-md border border-blue-100"><i data-lucide="building-2" class="w-3.5 h-3.5"></i> ขอใบกำกับภาษี</div>` : ''}
                         ${batchingTimeText}
                     </div>
 
-                    <div class="mt-auto mb-4 ${isLocked ? 'bg-slate-100 opacity-60' : 'bg-slate-50'} border border-slate-200 p-3 rounded-2xl">
+                    <div class="mt-auto mb-4 bg-slate-50 border border-slate-200 p-3 rounded-2xl">
                         <label class="text-[10px] font-bold text-slate-500 uppercase mb-2 flex items-center gap-1"><i data-lucide="truck" class="w-3 h-3"></i> มอบหมายพนักงานส่ง</label>
-                        <select onchange="window.assignTruck('${order.id}', this.value)" ${disableAttr} class="modern-select w-full text-xs font-bold text-slate-700 rounded-xl border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 p-2.5 outline-none ${truckSelectClass}">
+                        <select onchange="window.assignTruck('${order.id}', this.value)" class="modern-select w-full text-xs font-bold text-slate-700 rounded-xl border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 p-2.5 outline-none bg-white">
                             <option value="">-- เลือกพนักงานคนขับ --</option>
                             ${allTrucksMemory.filter(t => !assignedBranchId || t.branchId === assignedBranchId).map(t => `<option value="${t.id}" ${assignedTruckId === t.id ? 'selected' : ''}>${t.driverName}</option>`).join('')}
                         </select>
-                        ${assignedBranchId ? `<p class="text-[9px] ${isLocked ? 'text-slate-500' : 'text-emerald-600'} mt-1.5 text-right font-medium">แสดงเฉพาะรถในสาขาที่เลือก</p>` : ''}
+                        ${assignedBranchId ? `<p class="text-[9px] text-emerald-600 mt-1.5 text-right font-medium">แสดงเฉพาะรถในสาขาที่เลือก</p>` : ''}
                     </div>
 
-                    <!-- Action Buttons -->
                     <div class="grid grid-cols-2 gap-2 mt-auto">
                         <div class="flex gap-1 min-w-0">
                             ${(!isCash && !isCredit && order.slipImage && order.slipImage.length > 0) ? `
@@ -1736,39 +1799,24 @@
                                     <i data-lucide="image" class="w-4 h-4 mb-0.5"></i> สลิปโอน
                                 </button>
                             ` : `<div class="flex-1 bg-slate-50 text-slate-400 text-[10px] sm:text-xs font-bold py-2 rounded-xl flex flex-col items-center justify-center border border-slate-100 truncate"><i data-lucide="image-off" class="w-4 h-4 mb-0.5"></i> ไม่มีสลิป</div>`}
-                            
-                            ${order.reqTaxInvoice ? `
-                                <button onclick="window.viewTaxInfo('${order.id}')" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center border border-blue-200 truncate">
-                                    <i data-lucide="file-text" class="w-4 h-4 mb-0.5"></i> ภาษี
-                                </button>
-                            ` : ''}
+                            ${order.reqTaxInvoice ? `<button onclick="window.viewTaxInfo('${order.id}')" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center border border-blue-200 truncate"><i data-lucide="file-text" class="w-4 h-4 mb-0.5"></i> ภาษี</button>` : ''}
                         </div>
                         <div class="flex gap-1 min-w-0">
-                            <button onclick="window.printDocument('${order.id}')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center shadow-sm truncate">
-                                <i data-lucide="printer" class="w-4 h-4 mb-0.5"></i> ใบเสร็จ
-                            </button>
-                            <button onclick="window.printDeliveryTicket('${order.id}')" ${!isTicketPrintable ? 'disabled class="flex-1 bg-slate-100 text-slate-400 text-[10px] sm:text-xs font-bold py-2 rounded-xl flex flex-col items-center justify-center border border-slate-200 cursor-not-allowed truncate"' : 'class="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center shadow-sm truncate"'}>
-                                <i data-lucide="receipt" class="w-4 h-4 mb-0.5"></i> ใบส่งของ
-                            </button>
+                            <button onclick="window.printDocument('${order.id}')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center shadow-sm truncate"><i data-lucide="printer" class="w-4 h-4 mb-0.5"></i> ใบเสร็จ</button>
+                            <button onclick="window.printDeliveryTicket('${order.id}')" ${!isTicketPrintable ? 'disabled class="flex-1 bg-slate-100 text-slate-400 text-[10px] sm:text-xs font-bold py-2 rounded-xl flex flex-col items-center justify-center border border-slate-200 cursor-not-allowed truncate"' : 'class="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-[10px] sm:text-xs font-bold py-2 rounded-xl transition flex flex-col items-center justify-center shadow-sm truncate"'}><i data-lucide="receipt" class="w-4 h-4 mb-0.5"></i> ใบส่งของ</button>
                         </div>
                     </div>
                 </div>
                 
-                <div class="p-3 sm:p-4 ${isLocked ? 'bg-slate-200' : 'bg-slate-50'} flex gap-2 items-center">
-                    <select onchange="window.updateOrderStatus('${order.id}', this.value)" ${disableAttr} class="modern-select flex-1 text-[11px] sm:text-xs font-bold rounded-xl border focus:ring-emerald-500 focus:border-emerald-500 p-2.5 outline-none cursor-pointer truncate ${statusColors[order.status]}">
+                <div class="p-3 sm:p-4 bg-slate-50 flex gap-2 items-center">
+                    <select onchange="window.updateOrderStatus('${order.id}', this.value)" class="modern-select flex-1 text-[11px] sm:text-xs font-bold rounded-xl border focus:ring-emerald-500 focus:border-emerald-500 p-2.5 outline-none cursor-pointer truncate ${statusColors[order.status]}">
                         <option value="received" ${order.status === 'received' ? 'selected' : ''}>📝 1. รอตรวจสอบ</option>
                         <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>📅 2. ยืนยันคิวแล้ว</option>
                         <option value="batching" ${order.status === 'batching' ? 'selected' : ''}>⚙️ 3. สั่งผสมปูน</option>
                         <option value="delivering" ${order.status === 'delivering' ? 'selected' : ''}>🚛 4. กำลังเดินทาง</option>
                         <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>✅ 5. ปิดงาน</option>
                     </select>
-                    
-                    <!-- 🔒 ซ่อนปุ่มถังขยะหากออเดอร์ปิดงานไปแล้ว -->
-                    ${isLocked ? '' : `
-                        <button onclick="window.deleteOrder('${order.id}')" class="w-10 h-10 flex items-center justify-center rounded-xl text-red-500 hover:bg-red-50 hover:border-red-200 border border-transparent transition shrink-0">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
-                    `}
+                    <button onclick="window.deleteOrder('${order.id}')" class="w-10 h-10 flex items-center justify-center rounded-xl text-red-500 hover:bg-red-50 hover:border-red-200 border border-transparent transition shrink-0"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                 </div>
             `;
             return card;
@@ -1793,8 +1841,7 @@
             allOrdersMemory.forEach(order => {
                 if (['received', 'confirmed', 'batching', 'delivering'].includes(order.status)) {
                     const weight = parseFloat(order.volume) || 0;
-                    // ป้องกันการแคลชหาก order.deliveryDateTime เป็น undefined
-                    const dateOnly = order.deliveryDateTime ? order.deliveryDateTime.split(' ')[0] : 'ไม่ระบุวันที่'; 
+                    const dateOnly = order.deliveryDateTime.split(' ')[0]; 
                     productionMap[dateOnly] = (productionMap[dateOnly] || 0) + weight;
                     totalPending += weight;
                 }
